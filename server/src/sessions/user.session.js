@@ -28,4 +28,8 @@ export const getUserById = (id) => {
 
 export const getUserBySocket = (socket) => {
   return userSessions.find((user) => user.socket === socket)
-}
+};
+
+export const getAllUsers = () => {
+  return userSessions;
+};
