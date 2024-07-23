@@ -7,13 +7,15 @@ class User {
     this.x = 0;
     this.y = 0;
     this.sequence = 0;
-    this.lastUpdateTime = Date.now();
+    this.status = 'waiting'; // 'waiting', 'playing'
+    this.animationStatus = 'stand'; // 'stand', 'walk' 등등
+    this.characterId = 0; 
+    this.gold = 0;
   }
 
   updatePosition(x, y) {
     this.x = x;
     this.y = y;
-    this.lastUpdateTime = Date.now();
   }
 
   getNextSequence() {
