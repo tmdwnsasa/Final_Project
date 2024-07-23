@@ -16,6 +16,6 @@ export const handlerError = (socket, error) => {
     console.error(`일반에러: ${error.message}`);
   }
 
-  const errorResponse = createResponse(-1, responseCode, {message}, null)
+  const errorResponse = createResponse(-1, responseCode, { message }, null);
   socket.write(errorResponse);
 };
