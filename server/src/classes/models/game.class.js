@@ -1,14 +1,14 @@
 import { createLocationPacket, gameStartNotification } from '../../utils/notification/game.notification.js';
 import IntervalManager from '../manager/interval.manager.js';
 
-const MAX_PLAYERS = 2;
+const MAX_PLAYERS = 4;
 
 class Game {
   constructor(id) {
     this.id = id;
     this.users = [];
+    this.startTime = Date.now();
     this.intervalManager = new IntervalManager();
-    this.state = 'waiting'; // 'waiting', 'inProgress'
   }
 
   addUser(user) {
@@ -47,7 +47,6 @@ class Game {
   //   this.users.forEach((user) => {
   //     maxLatency = Math.max(maxLatency, user.latency);
   //   });
-  //   console.log("맥스 레이턴시", maxLatency);
   //   return maxLatency;
   // }
 

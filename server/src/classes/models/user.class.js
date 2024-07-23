@@ -15,7 +15,8 @@ class User {
     this.lastUpdateTime = Date.now();
 
     this.sequence = 0;
-    this.status = 'waiting'; // 'waiting', 'playing'
+    this.status = 'waiting'; // 'waiting','matching', 'playing'
+    this.inParty = false; // 파티 중인지
     this.animationStatus = 'stand'; // 'stand', 'walk' 등등
     this.characterId = 0;
     this.gold = 0;
