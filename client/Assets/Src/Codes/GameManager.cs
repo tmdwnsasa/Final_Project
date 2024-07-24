@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     public int latency = 2;
 
     [Header("# Player Info")]
-    public uint playerId;
+    public uint characterId;
     public string deviceId;
 
     [Header("# Game Object")]
@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void GameStart(float x, float y) {
-        playerId = (uint)Random.Range(0, 4);
+        characterId = (uint)Random.Range(0, 4);
         player.gameObject.transform.position = new Vector2(x, y);
         player.deviceId = deviceId;
         player.gameObject.SetActive(true);

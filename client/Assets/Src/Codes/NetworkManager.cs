@@ -169,8 +169,8 @@ public class NetworkManager : MonoBehaviour
     void SendInitialPacket() {
         InitialPayload initialPayload = new InitialPayload
         {
-            deviceId = GameManager.instance.deviceId,
-            playerId = GameManager.instance.playerId,
+            playerId = GameManager.instance.deviceId,
+            characterId = GameManager.instance.characterId,
             latency = GameManager.instance.latency,
             frame = GameManager.instance.targetFrameRate,
         };
