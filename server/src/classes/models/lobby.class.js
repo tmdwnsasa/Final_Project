@@ -19,15 +19,15 @@ class Lobby {
     this.users.push(user);
   }
 
-  getUser(userId) {
-    return this.users.find((user) => user.id === userId);
+  getUser(playerId) {
+    return this.users.find((user) => user.playerId === playerId);
   }
 
-  removeUser(userId) {
+  removeUser(playerId) {
     // this.users = this.users.filter((user) => user.id !== userId);
     // this.intervalManager.removePlayer(userId);
 
-    this.users = this.users.filter((user) => user.id !== userId);
+    this.users = this.users.filter((user) => user.playerId !== playerId);
   }
 
   // getMaxLatency() {
@@ -41,7 +41,7 @@ class Lobby {
   getAllLocation() {
     const locationData = this.users.map((user) => {
       const { x, y } = user.calculatePosition();
-      return { id: user.id, x, y };
+      return { id: user.playerId, x, y };
     });
 
     return createLocationPacket(locationData);

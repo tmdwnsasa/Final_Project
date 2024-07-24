@@ -1,8 +1,8 @@
 import User from '../classes/models/user.class.js';
 import { userSessions } from './session.js';
 
-export const addUser = (id, playerId, latency, frame, socket) => {
-  const user = new User(id, playerId, latency, frame, socket);
+export const addUser = (playerId, characterId, latency, frame, socket) => {
+  const user = new User(playerId, characterId, latency, frame, socket);
   userSessions.push(user);
   return user;
 };
@@ -23,7 +23,7 @@ export const getNextSequence = (id) => {
 };
 
 export const getUserById = (id) => {
-  return userSessions.find((user) => user.id === id);
+  return userSessions.find((user) => user.playerId === id);
 };
 
 export const getUserBySocket = (socket) => {
