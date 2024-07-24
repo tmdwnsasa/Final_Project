@@ -1,3 +1,4 @@
+import { getGameAssets } from '../../init/assets.js';
 import { createPingPacket } from '../../utils/notification/game.notification.js';
 
 class User {
@@ -10,14 +11,20 @@ class User {
     this.y = 0;
     this.directionX = 0;
     this.directionY = 0;
-    this.speed = 3;
     this.lastUpdateTime = Date.now();
-
+    
     this.sequence = 0;
     this.status = 'waiting'; // 'waiting','matching', 'playing'
     this.inParty = false; // 파티 중인지
     this.animationStatus = 'stand'; // 'stand', 'walk' 등등
+    this.team = 'none';
+
     this.characterId = characterId;
+    this.hp = 150;
+    this.speed = 5;
+    this.power = 10;
+    this.defense = 0.1;
+    this.critical = 0.05;
     this.gold = 0;
   }
 
@@ -38,6 +45,21 @@ class User {
 
   getNextSequence() {
     return ++this.sequence;
+  }
+
+  changeCharacter(characterId) {
+    this.characterId = characterId;
+    const {characters} = getGameAssets();
+    const targetCharacter = characters.find((char) => char.id === characterId);
+    this.hp = targetCharacter.hp;
+    this.speed = targetCharacter.speed;
+    this.power = targetCharacter.power;
+    this.defense = targetCharacter.defense;
+    this.critical = targetCharacter.critical;
+  }
+
+  changeTeam(teamColor) {
+    this.team = teamColor;
   }
 
   ping() {
