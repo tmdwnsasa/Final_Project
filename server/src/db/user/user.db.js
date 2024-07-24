@@ -7,6 +7,11 @@ export const findUserByPlayerId = async (player_id) => {
     return toCamelCase(rows[0]);
 }
 
+export const findUserByName = async (name) => {
+    const [rows] = await pools.USER_DB.query(SQL_QUERIES.FIND_USER_BY_DEVICE_ID, [name])
+    return toCamelCase(rows[0]);
+}
+
 export const createUser = async (player_id, pw, name) => {
     await pools.USER_DB.query(SQL_QUERIES.CREATE_USER, [player_id, pw, name])
     return {player_id, pw, name};

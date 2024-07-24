@@ -1,32 +1,31 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
-import { findUserByDeviceId, updateUserLogin } from '../../db/user/user.db.js';
-import { addUser } from '../../sessions/user.session.js';
+import { createUser, findUserByName, findUserByPlayerId, updateUserLogin } from '../../db/user/user.db.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
+import bcrypt from 'bcrypt';
 
 const registerHandler = async ({ socket, userId, payload }) => {
   try {
     const { id, password, name } = payload;
 
-    let user = await findUserByDeviceId(id);
-    if (user) {
-      // id가  이미 있다.
-      // throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
-    } else {
-      await updateUserLogin(user.id);
+    if (id.length < 4 && pw.length < 4 && id.length < 15 && pw.length < 15) {
+      // 커스텀 에러 : 입력 필드가 잘못됬다.
     }
 
-    addUser(socket, user.id);
+    let idCheck = await findUserByPlayerId(id);
+    if (idCheck) {
+      // 커스텀 에러 : id가 이미 있다.
+    }
 
-    const initialResponse = createResponse(
-      HANDLER_IDS.INITIAL,
-      RESPONSE_SUCCESS_CODE,
-      { userId: user.id },
-      deviceId,
-    );
+    let nameCheck = await findUserByName(name);
+    if (nameCheck) {
+      // 커스텀 에러 : name이 이미 있다.
+    }
 
-    socket.write(initialResponse);
+    createUser(id, password, name);
+
+    const initialResponse = createResponse(HANDLER_IDS.INITIAL, RESPONSE_SUCCESS_CODE, { userId: user.id }, deviceId);
   } catch (err) {
     handlerError(socket, err);
   }
