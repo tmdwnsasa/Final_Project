@@ -68,6 +68,8 @@ public class LocationUpdatePayload {
     public float x { get; set; }
     [ProtoMember(2, IsRequired = true)]
     public float y { get; set; }
+    [ProtoMember(3, IsRequired = true)]
+    public bool isLobby { get; set; }
 }
 
 [ProtoContract]

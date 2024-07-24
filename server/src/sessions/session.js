@@ -1,4 +1,8 @@
 export const userSessions = [];
 export const gameSessions = [];
 export const matchMakingSessions = [];
-export const lobbySession = [];
+export let lobbySession;
+
+export const setLobbySession = (session) => {
+  lobbySession = session;
+};
