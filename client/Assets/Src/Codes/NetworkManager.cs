@@ -184,6 +184,7 @@ public class NetworkManager : MonoBehaviour
         {
             x = x,
             y = y,
+            isLobby = true,
         };
 
         SendPacket(locationUpdatePayload, (uint)Packets.HandlerIds.LocationUpdate);
