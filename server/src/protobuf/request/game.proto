@@ -12,7 +12,7 @@ message JoinGamePayload {
 }
 
 message LocationUpdatePayload {
-    string gameId = 1;
-    float x =2;
-    float y = 3;
+  float x = 1;
+  float y = 2;
+  bool isLobby = 3;
 }
