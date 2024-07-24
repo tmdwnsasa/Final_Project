@@ -1,4 +1,4 @@
 export const userSessions = [];
 export const gameSessions = [];
-export const matchMakingSessions = [];
+export const matchQueueSession = [];
 export const lobbySession = [];
