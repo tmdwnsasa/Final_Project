@@ -1,8 +1,7 @@
 import { createPingPacket } from '../../utils/notification/game.notification.js';
 
 class User {
-  constructor(id, playerId, latency, frame, socket) {
-    this.id = id;
+  constructor(playerId, characterId, latency, frame, socket) {
     this.playerId = playerId;
     this.latency = latency;
     this.frame = 1 / frame;
@@ -18,7 +17,7 @@ class User {
     this.status = 'waiting'; // 'waiting','matching', 'playing'
     this.inParty = false; // 파티 중인지
     this.animationStatus = 'stand'; // 'stand', 'walk' 등등
-    this.characterId = 0;
+    this.characterId = characterId;
     this.gold = 0;
   }
 
@@ -44,14 +43,14 @@ class User {
   ping() {
     const now = Date.now();
 
-    console.log(`[${this.id}] ping`);
+    console.log(`[${this.playerId}] ping`);
     this.socket.write(createPingPacket(now));
   }
 
   handlePong(data) {
     const now = Date.now();
     this.latency = (now - data.timestamp) / 2;
-    console.log(`Received pong from user ${this.id} at ${now} with latency ${this.latency}ms`);
+    console.log(`Received pong from user ${this.playerId} at ${now} with latency ${this.latency}ms`);
   }
 
   calculatePosition(latency) {

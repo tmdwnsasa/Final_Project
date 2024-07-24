@@ -34,10 +34,10 @@ public class Packets : MonoBehaviour
 public class InitialPayload
 {
     [ProtoMember(1, IsRequired = true)]
-    public string deviceId { get; set; }
+    public string playerId { get; set; }
 
     [ProtoMember(2, IsRequired = true)]
-    public uint playerId { get; set; }
+    public uint characterId { get; set; }
     
     [ProtoMember(3, IsRequired = true)]
     public float latency { get; set; }
