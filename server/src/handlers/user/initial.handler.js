@@ -3,7 +3,7 @@ import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.j
 import { createResponse } from '../../utils/response/createResponse.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createUser, findUserByDeviceID, updateUserLogin } from '../../db/user/user.db.js';
-import { getAllGameSessions } from '../../sessions/game.session.js';
+import { getLobbySession } from '../../sessions/lobby.session.js';
 
 const initialHandler = async ({ socket, userId, payload }) => {
   try {
@@ -20,14 +20,14 @@ const initialHandler = async ({ socket, userId, payload }) => {
     addUser(deviceId, playerId, latency, frame, socket);
 
     user = getUserById(deviceId);
-    const gameSession = getAllGameSessions()[0];
-    if (!gameSession) {
-      throw new CustomError(ErrorCodes.GAME_NOT_FOUND, '게임 세션을 찾을 수 없습니다.');
+    const lobbySession = getLobbySession();
+    if (!lobbySession) {
+      throw new CustomError(ErrorCodes.GAME_NOT_FOUND, '로비 세션을 찾을 수 없습니다.');
     }
 
-    const existUser = gameSession.getUser(user.id);
+    const existUser = lobbySession.getUser(user.id);
     if (!existUser) {
-      gameSession.addUser(user);
+      lobbySession.addUser(user);
     }
 
     const newX = x ? x : 0;
