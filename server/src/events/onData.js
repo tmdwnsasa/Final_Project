@@ -23,29 +23,37 @@ export const onData = (socket) => async (data) => {
 
       try {
         switch (packetType) {
-          case PACKET_TYPE.PING:
-            {
-              const protoMessages = getProtoMessages();
-              const Ping = protoMessages.common.Ping;
-              const pingMessage = Ping.decode(packet);
-              const user = getUserBySocket(socket);
-              if (!user) {
-                throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
-              }
-              user.handlePong(pingMessage);
-            }
-            break;
+          // case PACKET_TYPE.PING:
+          //   {
+          //     const protoMessages = getProtoMessages();
+          //     const Ping = protoMessages.common.Ping;
+          //     const pingMessage = Ping.decode(packet);
+          //     const user = getUserBySocket(socket);
+          //     if (!user) {
+          //       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
+          //     }
+          //     user.handlePong(pingMessage);
+          //   }
+          //   break;
           case PACKET_TYPE.NORMAL: {
-            const { handlerId, userId, payload, sequence } = packetParser(packet);
+            // const { handlerId, userId, payload, sequence } = packetParser(packet);
 
-            const user = getUserById(userId);
-            if (user && user.sequence !== sequence) {
-              throw new CustomError(ErrorCodes.INVALID_SEQUENCE, '잘못된 호출값입니다');
-            }
+            // const user = getUserById(userId);
+            // if (user && user.sequence !== sequence) {
+            //   throw new CustomError(ErrorCodes.INVALID_SEQUENCE, "잘못된 호출값입니다");
+            // }
 
-            const handler = getHandlerById(handlerId).handler;
+            // const handler = getHandlerById(handlerId).handler;
 
-            await handler({ socket, userId, payload });
+            // await handler({ socket, userId, payload });
+
+            const { handlerId, payload, userId } = packetParser(packet);
+            const handler = getHandlerById(handlerId);
+            await handler({
+              socket,
+              userId,
+              payload,
+            });
           }
         }
       } catch (err) {

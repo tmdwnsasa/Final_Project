@@ -1,27 +1,27 @@
-import { getGameSession } from '../../sessions/game.session.js';
+import { getAllGameSessions } from '../../sessions/game.session.js';
+import { handlerError } from '../../utils/error/errorHandler.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
-import { handlerError } from '../../utils/error/errorHandler.js';
 
-const updateLocationHandler = ({ socket, userId, payload }) => {
+const updateLocationHandler = async ({ socket, userId, payload }) => {
   try {
-    const { gameId, x, y } = payload;
-    const gameSession = getGameSession(gameId);
+    const { x, y } = payload;
+    const gameSession = getAllGameSessions()[0];
+
     if (!gameSession) {
-      throw new CustomError(ErrorCodes.GAME_NOT_FOUND, '게임 세션을 찾을 수 없습니다');
+      throw new CustomError(ErrorCodes.GAME_NOT_FOUND, '게임 세션을 찾을 수 없습니다.');
     }
 
     const user = gameSession.getUser(userId);
     if (!user) {
-      throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니디');
+      throw new CustomError(ErrorCodes.USER_NOT_FOUND, '게임 세션에서 유저를 찾을 수 없습니다.');
     }
-
-    user.updatePosition(x, y);
+    user.updateDirection(x, y);
     const packet = gameSession.getAllLocation();
 
     socket.write(packet);
-  } catch (err) {
-    handlerError(socket, err);
+  } catch (error) {
+    handlerError(socket, error);
   }
 };
 
