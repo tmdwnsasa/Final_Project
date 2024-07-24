@@ -3,7 +3,7 @@ import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.j
 import { createResponse } from '../../utils/response/createResponse.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createUser, findUserByDeviceID, updateUserLogin } from '../../db/user/user.db.js';
-import { getLobbySession } from '../../sessions/session.js';
+import { getLobbySession } from '../../sessions/lobby.session.js';
 
 const initialHandler = async ({ socket, userId, payload }) => {
   try {

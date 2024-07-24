@@ -1,8 +1,8 @@
 import { handlerError } from '../../utils/error/errorHandler.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
-import { getLobbySession } from '../../sessions/session.js';
 import { getAllGameSessions } from '../../sessions/game.session.js';
+import { getLobbySession } from '../../sessions/lobby.session.js';
 
 const updateLocationHandler = async ({ socket, userId, payload }) => {
   try {
