@@ -10,10 +10,6 @@ const handlers = {
     handler: initialHandler,
     protoType: 'initial.InitialPayload',
   },
-  [HANDLER_IDS.CREATE_GAME]: {
-    handler: createGameHandler,
-    protoType: 'game.CreateGamePayload',
-  },
   [HANDLER_IDS.JOIN_GAME]: {
     handler: joinGameHandler,
     protoType: 'game.JoinGamePayload',
