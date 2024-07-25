@@ -9,13 +9,7 @@ class Lobby {
   }
 
   addUser(user) {
-    // this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
-    // if (this.users.length === MAX_PLAYERS) {
-    //   setTimeout(() => {
-    //     this.startGame();
-    //   }, 3000);
-    // }
-
+    this.intervalManager.addPlayer(user.playerId, user.ping.bind(user), 1000);
     this.users.push(user);
   }
 
@@ -24,23 +18,22 @@ class Lobby {
   }
 
   removeUser(playerId) {
-    // this.users = this.users.filter((user) => user.id !== userId);
-    // this.intervalManager.removePlayer(userId);
-
     this.users = this.users.filter((user) => user.playerId !== playerId);
+    this.intervalManager.removePlayer(userId);
   }
 
-  // getMaxLatency() {
-  //   let maxLatency = 0;
-  //   this.users.forEach((user) => {
-  //     maxLatency = Math.max(maxLatency, user.latency);
-  //   });
-  //   return maxLatency;
-  // }
+  getMaxLatency() {
+    let maxLatency = 0;
+    this.users.forEach((user) => {
+      maxLatency = Math.max(maxLatency, user.latency);
+    });
+    return maxLatency;
+  }
 
   getAllLocation() {
+    const maxLatency = this.getMaxLatency();
     const locationData = this.users.map((user) => {
-      const { x, y } = user.calculatePosition();
+      const { x, y } = user.calculatePosition(maxLatency);
       return { id: user.playerId, x, y };
     });
 

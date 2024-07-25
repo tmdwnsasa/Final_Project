@@ -38,11 +38,8 @@ public class InitialPayload
 
     [ProtoMember(2, IsRequired = true)]
     public uint characterId { get; set; }
-    
-    [ProtoMember(3, IsRequired = true)]
-    public float latency { get; set; }
 
-    [ProtoMember(4, IsRequired = true)]
+    [ProtoMember(3, IsRequired = true)]
     public float frame { get; set; }
 }
 
@@ -60,6 +57,13 @@ public class CommonPacket
 
     [ProtoMember(4)]
     public byte[] payload { get; set; }
+}
+
+[ProtoContract]
+public class Ping
+{
+    [ProtoMember(1)]
+    public long timestamp { get; set; }
 }
 
 [ProtoContract]

@@ -2,9 +2,9 @@ import { getGameAssets } from '../../init/assets.js';
 import { createPingPacket } from '../../utils/notification/game.notification.js';
 
 class User {
-  constructor(playerId, characterId, latency, frame, socket) {
+  constructor(playerId, characterId, frame, socket) {
     this.playerId = playerId;
-    this.latency = latency;
+    this.latency = 0;
     this.frame = 1 / frame;
     this.socket = socket;
     this.x = 0;
@@ -12,7 +12,7 @@ class User {
     this.directionX = 0;
     this.directionY = 0;
     this.lastUpdateTime = Date.now();
-    
+
     this.sequence = 0;
     this.status = 'waiting'; // 'waiting','matching', 'playing'
     this.inParty = false; // 파티 중인지
@@ -49,7 +49,7 @@ class User {
 
   changeCharacter(characterId) {
     this.characterId = characterId;
-    const {characters} = getGameAssets();
+    const { characters } = getGameAssets();
     const targetCharacter = characters.find((char) => char.id === characterId);
     this.hp = targetCharacter.hp;
     this.speed = targetCharacter.speed;
@@ -65,18 +65,18 @@ class User {
   ping() {
     const now = Date.now();
 
-    console.log(`[${this.playerId}] ping`);
+    //console.log(`[${this.playerId}] ping: ${now}`);
     this.socket.write(createPingPacket(now));
   }
 
   handlePong(data) {
     const now = Date.now();
     this.latency = (now - data.timestamp) / 2;
-    console.log(`Received pong from user ${this.playerId} at ${now} with latency ${this.latency}ms`);
+    //console.log(`Received pong from user ${this.playerId} at ${now} with latency ${this.latency}ms`);
   }
 
   calculatePosition(latency) {
-    const timeDiff = this.latency / 1000; // 레이턴시를 초 단위로 계산
+    const timeDiff = latency / 1000; // 레이턴시를 초 단위로 계산
     const distance = this.speed * this.frame + this.speed * this.frame * timeDiff;
 
     this.x = this.x + distance * this.directionX;

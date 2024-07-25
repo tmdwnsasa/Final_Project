@@ -7,7 +7,7 @@ import { getLobbySession } from '../../sessions/lobby.session.js';
 
 const initialHandler = async ({ socket, userId, payload }) => {
   try {
-    const { playerId, characterId, latency, frame } = payload;
+    const { playerId, characterId, frame } = payload;
     let user = await findUserByDeviceID(playerId);
 
     if (!user) {
@@ -17,7 +17,7 @@ const initialHandler = async ({ socket, userId, payload }) => {
     }
 
     const { x, y } = user;
-    addUser(playerId, characterId, latency, frame, socket);
+    addUser(playerId, characterId, frame, socket);
 
     user = getUserById(playerId);
     const lobbySession = getLobbySession();
