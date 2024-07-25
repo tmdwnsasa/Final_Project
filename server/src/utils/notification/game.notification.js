@@ -41,3 +41,13 @@ export const createPingPacket = (timestamp) => {
   const pingPacket = ping.encode(message).finish();
   return makeNotification(pingPacket, PACKET_TYPE.PING);
 };
+
+export const createGameEndPacket = (data) => {
+  const protoMessages = getProtoMessages();
+  const gameEnd = protoMessages//.추가;
+
+  const payload = { data };
+  const message = gameEnd.create(payload);
+  const gameEndPacket = gameEnd.encode(message).finish();
+  return makeNotification(gameEndPacket, PACKET_TYPE.GAME_END);
+};
