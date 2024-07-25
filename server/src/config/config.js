@@ -1,46 +1,43 @@
-import {
-  CLIENT_VERSION,
-  DB1_HOST,
-  DB1_NAME,
-  DB1_PASSWORD,
-  DB1_PORT,
-  DB1_USER,
-  DB2_HOST,
-  DB2_NAME,
-  DB2_PASSWORD,
-  DB2_PORT,
-  DB2_USER,
-  HOST,
-  PORT,
-} from '../constants/env.js';
-import { PACKET_TYPE_LENGTH, TOTAL_LENGTH } from '../constants/header.js';
+import * as env from '../constants/env.js';
+import * as header from '../constants/header.js';
 
 export const config = {
   server: {
-    port: PORT,
-    host: HOST,
+    port: env.PORT,
+    host: env.HOST,
   },
   client: {
-    version: CLIENT_VERSION,
+    version: env.CLIENT_VERSION,
   },
   packet: {
-    totalLength: TOTAL_LENGTH,
-    typeLength: PACKET_TYPE_LENGTH,
+    totalLength: header.TOTAL_LENGTH,
+    typeLength: header.PACKET_TYPE_LENGTH,
   },
   database: {
     GAME_DB: {
-      name: DB1_NAME,
-      user: DB1_USER,
-      password: DB1_PASSWORD,
-      host: DB1_HOST,
-      port: DB1_PORT,
+      name: env.GAME_DB_NAME,
+      user: env.GAME_DB_USER,
+      password: env.GAME_DB_PASSWORD,
+      host: env.GAME_DB_HOST,
+      port: env.GAME_DB_PORT,
     },
     USER_DB: {
-      name: DB2_NAME,
-      user: DB2_USER,
-      password: DB2_PASSWORD,
-      host: DB2_HOST,
-      port: DB2_PORT,
+      name: env.USER_DB_NAME,
+      user: env.USER_DB_USER,
+      password: env.USER_DB_PASSWORD,
+      host: env.USER_DB_HOST,
+      port: env.USER_DB_PORT,
+    },
+    ERROR_DB: {
+      name: env.ERROR_DB_NAME,
+      user: env.ERROR_DB_USER,
+      password: env.ERROR_DB_PASSWORD,
+      host: env.ERROR_DB_HOST,
+      port: env.ERROR_DB_PORT,
+    },
+    REDIS: {
+      host: env.REDIS_HOST,
+      port: env.REDIS_PORT,
     },
   },
 };
