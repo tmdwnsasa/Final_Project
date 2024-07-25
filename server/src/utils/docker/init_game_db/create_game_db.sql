@@ -1,12 +1,12 @@
 CREATE DATABASE IF NOT EXISTS GAME_DB;
 USE GAME_DB;
 
-CREATE TABLE score (
+CREATE TABLE IF NOT EXISTS score (
     player_id INT PRIMARY KEY,
     score INT NOT NULL
 );
 
-CREATE TABLE rating (
+CREATE TABLE IF NOT EXISTS rating (
     player_id INT,
     character_id INT,
     win INT,
@@ -14,13 +14,13 @@ CREATE TABLE rating (
     PRIMARY KEY (player_id, character_id)
 );
 
-CREATE TABLE possession (
+CREATE TABLE IF NOT EXISTS possession (
     possession_id INT AUTO_INCREMENT PRIMARY KEY,
     player_id INT,
     character_id INT
 );
 
-CREATE TABLE character (
+CREATE TABLE IF NOT EXISTS `character` (
     character_id INT AUTO_INCREMENT PRIMARY KEY,
     character_name VARCHAR(255), 
     hp INT NOT NULL,
@@ -31,11 +31,11 @@ CREATE TABLE character (
     price INT NOT NULL
 );
 
-CREATE TABLE character_skills (
+CREATE TABLE IF NOT EXISTS character_skills (
     skill_id INT AUTO_INCREMENT PRIMARY KEY,
     skill_name VARCHAR(255), 
     character_id INT,
     damage INT,
     cool_time INT NOT NULL,
-    FOREIGN KEY (character_id) REFERENCES character(character_id)
+    FOREIGN KEY (character_id) REFERENCES `character`(character_id)
 );
