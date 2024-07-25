@@ -24,6 +24,11 @@ export const getAllGameSessions = () => {
 
 export const getGameSessionByPlayerId = (playerId) => {
   return gameSessions.find((session) => {
-    session.find((user) => playerId === user.id);
+    const check = session.find((user) => playerId === user.id);
+    if (check !== -1) {
+      return true;
+    } else {
+      return false;
+    }
   });
 };

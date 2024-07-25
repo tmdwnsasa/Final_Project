@@ -2,7 +2,9 @@ export const RESPONSE_SUCCESS_CODE = 0;
 
 export const HANDLER_IDS = {
   INITIAL: 0,
-  UPDATE_LOCATION: 2,
+  REGISTER: 1,
+  LOGIN: 2,
+  UPDATE_LOCATION: 3,
   CREATE_GAME: 4,
   JOIN_GAME: 5,
 };

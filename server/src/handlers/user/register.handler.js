@@ -23,9 +23,10 @@ const registerHandler = async ({ socket, userId, payload }) => {
       // 커스텀 에러 : name이 이미 있다.
     }
 
+    const hashpassword = await bcrypt.hash(password, 10);
     createUser(id, password, name);
 
-    const initialResponse = createResponse(HANDLER_IDS.INITIAL, RESPONSE_SUCCESS_CODE, { userId: user.id }, deviceId);
+    //const initialResponse = createResponse(HANDLER_IDS.INITIAL, RESPONSE_SUCCESS_CODE, { userId: user.id }, deviceId);
   } catch (err) {
     handlerError(socket, err);
   }

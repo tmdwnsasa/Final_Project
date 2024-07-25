@@ -5,6 +5,7 @@ import { handlerError } from '../../utils/error/errorHandler.js';
 import { createUser, findUserByDeviceID, updateUserLogin } from '../../db/user/user.db.js';
 import { getLobbySession } from '../../sessions/lobby.session.js';
 
+// latency관련 삭제 요망
 const initialHandler = async ({ socket, userId, payload }) => {
   try {
     const { deviceId, playerId, latency, frame } = payload;

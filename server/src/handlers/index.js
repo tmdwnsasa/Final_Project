@@ -4,11 +4,21 @@ import createGameHandler from './game/createGame.handler.js';
 import joinGameHandler from './game/joinGame.handler.js';
 import updateLocationHandler from './game/updateLocation.handler.js';
 import initialHandler from './user/initial.handler.js';
+import loginHandler from './user/login.handler.js';
+import registerHandler from './user/register.handler.js';
 
 const handlers = {
   [HANDLER_IDS.INITIAL]: {
     handler: initialHandler,
     protoType: 'initial.InitialPayload',
+  },
+  [HANDLER_IDS.REGISTER]: {
+    handler: registerHandler,
+    protoType: 'initial.RegisterPayload',
+  },
+  [HANDLER_IDS.LOGIN]: {
+    handler: loginHandler,
+    protoType: 'initial.LoginPayload',
   },
   [HANDLER_IDS.CREATE_GAME]: {
     handler: createGameHandler,
