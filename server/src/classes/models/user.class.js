@@ -12,7 +12,7 @@ class User {
     this.directionX = 0;
     this.directionY = 0;
     this.lastUpdateTime = Date.now();
-    
+
     this.sequence = 0;
     this.status = 'waiting'; // 'waiting','matching', 'playing'
     this.inParty = false; // 파티 중인지
@@ -49,7 +49,7 @@ class User {
 
   changeCharacter(characterId) {
     this.characterId = characterId;
-    const {characters} = getGameAssets();
+    const { characters } = getGameAssets();
     const targetCharacter = characters.find((char) => char.id === characterId);
     this.hp = targetCharacter.hp;
     this.speed = targetCharacter.speed;
@@ -65,14 +65,14 @@ class User {
   ping() {
     const now = Date.now();
 
-    console.log(`[${this.playerId}] ping: ${now}`);
+    //console.log(`[${this.playerId}] ping: ${now}`);
     this.socket.write(createPingPacket(now));
   }
 
   handlePong(data) {
     const now = Date.now();
     this.latency = (now - data.timestamp) / 2;
-    console.log(`Received pong from user ${this.playerId} at ${now} with latency ${this.latency}ms`);
+    //console.log(`Received pong from user ${this.playerId} at ${now} with latency ${this.latency}ms`);
   }
 
   calculatePosition(latency) {
