@@ -23,9 +23,12 @@ export const gameEndHandler = async ({ socket, userId, data }) => {
     await createMatchLog(sessionId);
     console.log('매치로그가 DB에 저장되었습니다');
 
-    //로비세션에 유저 다시 추가
     const lobbySession = getLobbySession();
-    lobbySession.addUser(userId);
+    //게임 종료된 세션 내 유저들 상태를 waiting으로 변경하고 대기실 세션에 추가함
+    gameSession.users.forEach((user) => {
+      user.status = 'waiting';
+      lobbySession.addUser(user);
+    });
 
     //해당 게임세션 삭제
     removeGameSession(sessionId);
@@ -39,10 +42,12 @@ export const gameEndHandler = async ({ socket, userId, data }) => {
     //     uint32 kill = 2
     //     uint32 death = 3
     // }
+
     // const data = {
-      // winnerTeam,
-      // users, }
+    // winnerTeam,
+    // users, }
     const packet = createGameEndPacket(data);
+    
     //패킷 통지
     socket.write(packet);
   } catch (err) {
