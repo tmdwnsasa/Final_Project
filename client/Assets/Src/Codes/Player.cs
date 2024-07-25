@@ -35,7 +35,7 @@ public class Player : MonoBehaviour
         }
         myText.GetComponent<MeshRenderer>().sortingOrder = 6;
         
-        anim.runtimeAnimatorController = animCon[GameManager.instance.playerId];
+        anim.runtimeAnimatorController = animCon[GameManager.instance.characterId];
     }
 
     // Update is called once per frame

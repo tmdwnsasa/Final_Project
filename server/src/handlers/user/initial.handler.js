@@ -3,31 +3,31 @@ import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.j
 import { createResponse } from '../../utils/response/createResponse.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createUser, findUserByDeviceID, updateUserLogin } from '../../db/user/user.db.js';
-import { getAllGameSessions } from '../../sessions/game.session.js';
+import { getLobbySession } from '../../sessions/lobby.session.js';
 
 const initialHandler = async ({ socket, userId, payload }) => {
   try {
-    const { deviceId, playerId, latency, frame } = payload;
-    let user = await findUserByDeviceID(deviceId);
+    const { playerId, characterId, latency, frame } = payload;
+    let user = await findUserByDeviceID(playerId);
 
     if (!user) {
-      user = await createUser(deviceId);
+      user = await createUser(playerId);
     } else {
-      await updateUserLogin(user.id);
+      await updateUserLogin(user.playerId);
     }
 
     const { x, y } = user;
-    addUser(deviceId, playerId, latency, frame, socket);
+    addUser(playerId, characterId, latency, frame, socket);
 
-    user = getUserById(deviceId);
-    const gameSession = getAllGameSessions()[0];
-    if (!gameSession) {
-      throw new CustomError(ErrorCodes.GAME_NOT_FOUND, '게임 세션을 찾을 수 없습니다.');
+    user = getUserById(playerId);
+    const lobbySession = getLobbySession();
+    if (!lobbySession) {
+      throw new CustomError(ErrorCodes.GAME_NOT_FOUND, '로비 세션을 찾을 수 없습니다.');
     }
 
-    const existUser = gameSession.getUser(user.id);
+    const existUser = lobbySession.getUser(user.playerId);
     if (!existUser) {
-      gameSession.addUser(user);
+      lobbySession.addUser(user);
     }
 
     const newX = x ? x : 0;
@@ -39,8 +39,8 @@ const initialHandler = async ({ socket, userId, payload }) => {
     const initialResponse = createResponse(
       HANDLER_IDS.INITIAL,
       RESPONSE_SUCCESS_CODE,
-      { userI: user.id, x: newX, y: newY },
-      deviceId,
+      { userId: user.playerId, x: newX, y: newY },
+      playerId,
     );
 
     // 소켓을 통해 클라이언트에게 응답 메시지 전송

@@ -169,8 +169,8 @@ public class NetworkManager : MonoBehaviour
     void SendInitialPacket() {
         InitialPayload initialPayload = new InitialPayload
         {
-            deviceId = GameManager.instance.deviceId,
-            playerId = GameManager.instance.playerId,
+            playerId = GameManager.instance.deviceId,
+            characterId = GameManager.instance.characterId,
             latency = GameManager.instance.latency,
             frame = GameManager.instance.targetFrameRate,
         };
@@ -184,6 +184,7 @@ public class NetworkManager : MonoBehaviour
         {
             x = x,
             y = y,
+            isLobby = true,
         };
 
         SendPacket(locationUpdatePayload, (uint)Packets.HandlerIds.LocationUpdate);
