@@ -171,12 +171,36 @@ public class NetworkManager : MonoBehaviour
         {
             playerId = GameManager.instance.deviceId,
             characterId = GameManager.instance.characterId,
-            latency = GameManager.instance.latency,
             frame = GameManager.instance.targetFrameRate,
         };
 
         // handlerId는 0으로 가정
         SendPacket(initialPayload, (uint)Packets.HandlerIds.Init);
+    }
+
+    async void SendPongPacket(byte[] packetData) {
+        Ping response = Packets.Deserialize<Ping>(packetData);
+        Ping ping = new Ping
+        {
+            timestamp = response.timestamp,
+        };
+
+        var pingPacketWriter = new ArrayBufferWriter<byte>();
+        Packets.Serialize(pingPacketWriter, ping);
+        byte[] data = pingPacketWriter.WrittenSpan.ToArray();
+
+        // 헤더 생성
+        byte[] header = CreatePacketHeader(data.Length, Packets.PacketType.Ping);
+
+        // 패킷 생성
+        byte[] packet = new byte[header.Length + data.Length];
+        Array.Copy(header, 0, packet, 0, header.Length);
+        Array.Copy(data, 0, packet, header.Length, data.Length);
+
+        await Task.Delay(GameManager.instance.latency);
+        
+        // 패킷 전송
+        stream.Write(packet, 0, packet.Length);
     }
 
     public void SendLocationUpdatePacket(float x, float y) {
@@ -233,6 +257,9 @@ public class NetworkManager : MonoBehaviour
 
             switch (packetType)
             {
+                case Packets.PacketType.Ping:
+                    SendPongPacket(packetData);
+                    break;
                 case Packets.PacketType.Normal:
                     HandleNormalPacket(packetData);
                     break;

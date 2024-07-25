@@ -1,9 +1,9 @@
 import { createPingPacket } from '../../utils/notification/game.notification.js';
 
 class User {
-  constructor(playerId, characterId, latency, frame, socket) {
+  constructor(playerId, characterId, frame, socket) {
     this.playerId = playerId;
-    this.latency = latency;
+    this.latency = 0;
     this.frame = 1 / frame;
     this.socket = socket;
     this.x = 0;
@@ -43,7 +43,7 @@ class User {
   ping() {
     const now = Date.now();
 
-    console.log(`[${this.playerId}] ping`);
+    console.log(`[${this.playerId}] ping: ${now}`);
     this.socket.write(createPingPacket(now));
   }
 
@@ -54,7 +54,7 @@ class User {
   }
 
   calculatePosition(latency) {
-    const timeDiff = this.latency / 1000; // 레이턴시를 초 단위로 계산
+    const timeDiff = latency / 1000; // 레이턴시를 초 단위로 계산
     const distance = this.speed * this.frame + this.speed * this.frame * timeDiff;
 
     this.x = this.x + distance * this.directionX;

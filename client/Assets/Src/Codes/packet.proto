@@ -6,7 +6,3 @@ message CommonPacket {
   string version = 3;
   bytes payload = 4;
 }
-
-message InitialPacket {
-  string deviceId = 1;
-}

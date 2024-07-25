@@ -6,6 +6,5 @@ package initial;
 message InitialPayload {
   string playerId = 1;
   uint32 characterId = 2;
-  float latency = 3;
-  float frame = 4;
+  float frame = 3;
 }
