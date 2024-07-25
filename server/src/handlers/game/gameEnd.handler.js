@@ -1,16 +1,14 @@
-import { getGameSession, removeGameSession } from '../../sessions/game.session';
-import { getLobbySession } from '../../sessions/lobby.session';
-import { createGameEndPacket } from '../../utils/notification/game.notification';
+import { createMatchHistory, createMatchLog } from '../../db/game/game.db.js';
+import { getGameSession, removeGameSession } from '../../sessions/game.session.js';
+import { getLobbySession } from '../../sessions/lobby.session.js';
+import { createGameEndPacket } from '../../utils/notification/game.notification.js';
 
-export const gameEndHandler = async ({ socket, userId, payload }) => {
+//바깥에서 hp가 0이 된 팀을 받아와야되나
+//db에 저장할게 많은거같으니 data로 묶어서 받아와야 할듯
+export const gameEndHandler = async ({ socket, userId, data }) => {
   try {
-    /*
-    const { 요청 payload내용 } = payload;
-    payload에 뭐가 오는지
-    hp 검증?
-    추가 검증들 로직 생성
-     */
-    const gameSession = getGameSession(/*payload에 해당 게임세션을 특정할 키가 있어야 할듯*/);
+    const { sessionId } = data;
+    const gameSession = getGameSession(sessionId);
     if (!gameSession) {
       throw new CustomError(ErrorCodes.GAME_NOT_FOUND, '게임 세션을 찾을 수 없습니다');
     }
@@ -20,20 +18,17 @@ export const gameEndHandler = async ({ socket, userId, payload }) => {
       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니디');
     }
 
-    // const allUser = gameSession.getAllUser(); //해당 메서드 아직 없음 필요할까?
-    // if (allUser.length < 4) {
-    // console.log('유저수가 비정상적인 게임 종료요청입니다');
-    // }
-    // await createMatchHistory();
-    // console.log('매치정보가 DB에 저장되었습니다');
-    // DB내용 추가예정
+    await createMatchHistory(sessionId);
+    console.log('매치전적이 DB에 저장되었습니다');
+    await createMatchLog(sessionId);
+    console.log('매치로그가 DB에 저장되었습니다');
 
     //로비세션에 유저 다시 추가
     const lobbySession = getLobbySession();
     lobbySession.addUser(userId);
 
     //해당 게임세션 삭제
-    removeGameSession();
+    removeGameSession(sessionId);
 
     //   대전 결과 패킷 - 통지
     // string winnerTeam = 1
@@ -44,6 +39,9 @@ export const gameEndHandler = async ({ socket, userId, payload }) => {
     //     uint32 kill = 2
     //     uint32 death = 3
     // }
+    // const data = {
+      // winnerTeam,
+      // users, }
     const packet = createGameEndPacket(data);
     //패킷 통지
     socket.write(packet);
