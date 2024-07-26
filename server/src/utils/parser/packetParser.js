@@ -19,6 +19,7 @@ export const packetParser = (data) => {
   const handlerId = packet.handlerId;
   const userId = packet.userId;
   const clientVersion = packet.version;
+  const sequence = packet.sequence;
 
   // clientVersion 검증
   if (clientVersion !== config.client.version) {
@@ -49,5 +50,5 @@ export const packetParser = (data) => {
     throw new CustomError(ErrorCodes.MISSING_FIELDS, `필수 필드가 누락되었습니다: ${missingFields.join(', ')}`);
   }
 
-  return { handlerId, userId, payload };
+  return { handlerId, userId, payload, sequence };
 };
