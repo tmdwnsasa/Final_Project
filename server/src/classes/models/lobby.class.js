@@ -23,6 +23,10 @@ class Lobby {
     return this.users.find((user) => user.id === userId);
   }
 
+  getAllUsers(userId) {
+    return this.users;
+  }
+
   removeUser(userId) {
     // this.users = this.users.filter((user) => user.id !== userId);
     // this.intervalManager.removePlayer(userId);

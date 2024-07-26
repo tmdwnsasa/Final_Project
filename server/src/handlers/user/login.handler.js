@@ -27,14 +27,16 @@ const loginHandler = async ({ socket, userId, payload }) => {
     //addUser();
     // 인게임인지 아닌지
     const gameSession = getGameSessionByPlayerId(id);
-    const lobbySession = getLobbySession();
 
     if (gameSession !== -1) {
       // 게임 세션에 사람 추가 / 게임 입장 통지
       gameSession.addUser(user);
+      const Response = createResponse(HANDLER_IDS.JOIN_GAME, RESPONSE_SUCCESS_CODE, { sessionId: sessionId }, userId);
     } else {
       // 대기실 세션에 사람 추가 / 대기실 입장 통지
+      const lobbySession = getLobbySession();
       lobbySession.addUser(user);
+      const Response = createResponse(HANDLER_IDS.JOIN_LOBBY, RESPONSE_SUCCESS_CODE, { sessionId: sessionId }, userId);
     }
 
     const sessionId = uuidv4();
@@ -43,7 +45,7 @@ const loginHandler = async ({ socket, userId, payload }) => {
     //클라이언트
     const initialResponse = createResponse(HANDLER_IDS.LOGIN, RESPONSE_SUCCESS_CODE, { sessionId: sessionId }, userId);
 
-    socket.write(initialResponse);
+    socket.write(Response);
   } catch (err) {
     handlerError(socket, err);
   }

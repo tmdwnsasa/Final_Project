@@ -10,3 +10,7 @@ export const createLobbySession = () => {
 export const getLobbySession = () => {
   return lobbySession;
 };
+
+export const getAllUsers = () => {
+  lobbySession.getAllUsers();
+};
