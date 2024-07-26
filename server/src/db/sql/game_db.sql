@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS rating
 
 CREATE TABLE IF NOT EXISTS possession
 (
-    possession_id INT PRIMARY KEY,
+    possession_id INT PRIMARY KEY AUTO_INCREMENT,
     player_id VARCHAR(36),
     character_id INT
 );
@@ -41,3 +41,25 @@ CREATE TABLE IF NOT EXISTS match_history
     damage INT,
     PRIMARY KEY(game_session_id, player_id)
 );
+
+CREATE TABLE IF NOT EXISTS `character`
+(
+    character_id INT AUTO_INCREMENT PRIMARY KEY,
+    character_name VARCHAR(36),
+    hp INT,
+    speed INT,
+    power INT,
+    defense INT,
+    critical INT,
+    price INT
+);
+
+CREATE TABLE IF NOT EXISTS character_skills
+(
+    skill_id INT AUTO_INCREMENT PRIMARY KEY,
+    skill_name VARCHAR(255),
+    character_id INT,
+    damage_factor INT,
+    cool_time INT,
+    FOREIGN KEY (character_id) REFERENCES `character`(character_id)
+)
