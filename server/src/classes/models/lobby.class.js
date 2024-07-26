@@ -19,7 +19,7 @@ class Lobby {
 
   removeUser(playerId) {
     this.users = this.users.filter((user) => user.playerId !== playerId);
-    this.intervalManager.removePlayer(userId);
+    this.intervalManager.removePlayer(playerId);
   }
 
   getMaxLatency() {
