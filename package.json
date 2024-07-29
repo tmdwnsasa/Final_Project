@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server/src/server.js",
     "dev": "nodemon server/src/server.js",
-    "migrate": "node server/src/db/migration/createSchemas.js"
+    "migrate": "node server/src/db/migration/createSchemas.js",
+    "insertGameContent": "node server/src/db/game/game.db.content.js"
   },
   "keywords": [],
   "author": "",

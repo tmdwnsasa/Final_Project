@@ -15,7 +15,7 @@ export const createMatchLog = async (
   bluePlayer1Id,
   bluePlayer2Id,
   winTeam,
-  startTime
+  startTime,
 ) => {
   const endTime = Date.now();
   await pools.GAME_DB.query(GAME_SQL_QUERIES.CREATE_MATCH_LOG, [
@@ -69,4 +69,20 @@ export const getUserScore = async (playerId) => {
 export const getUserRating = async (playerId) => {
   const [rows] = await pools.GAME_DB.query(GAME_SQL_QUERIES.FIND_USER_RATING_BY_PLAYER_ID, [playerId]);
   return toCamelCase(rows[0]);
+};
+
+export const createCharacter = async (characterName, hp, speed, power, defense, critical, price) => {
+  await pools.GAME_DB.query(GAME_SQL_QUERIES.CREATE_CHARACTER, [
+    characterName,
+    hp,
+    speed,
+    power,
+    defense,
+    critical,
+    price,
+  ]);
+};
+
+export const createCharacterSkill = async (skillName, skillType, characterId, damageFactor, coolTime, range, scale) => {
+  await pools.GAME_DB.query(GAME_SQL_QUERIES.CREATE_CHARACTER_SKILLS, [skillName, skillType, characterId, damageFactor, coolTime, range, scale]);
 };
