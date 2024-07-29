@@ -1,5 +1,6 @@
 import { updateUserLocation } from '../db/user/user.db.js';
 import { getAllGameSessions } from '../sessions/game.session.js';
+import { getLobbySession } from '../sessions/lobby.session.js';
 import { getUserBySocket, removeUser } from '../sessions/user.session.js';
 
 export const onEnd = (socket) => async () => {
@@ -14,7 +15,7 @@ export const onEnd = (socket) => async () => {
   const { x, y } = user.getPosition();
   await updateUserLocation(user.id, x, y);
 
-  const gameSession = getAllGameSessions()[0];
-  gameSession.removeUser(user.id);
+  const lobbySession = getLobbySession();
+  lobbySession.removeUser(user.id);
   removeUser(socket);
 };
