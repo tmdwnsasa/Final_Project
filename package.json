@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "start": "node server/src/server.js",
-    "dev": "nodemon server/src/server.js"
+    "dev": "nodemon server/src/server.js",
+    "migrate": "node server/src/db/migration/createSchemas.js"
   },
   "keywords": [],
   "author": "",
@@ -15,7 +16,7 @@
     "dotenv": "^16.4.5",
     "lodash": "^4.17.21",
     "long": "^5.2.3",
-    "mysql2": "^3.9.8",
+    "mysql2": "^3.11.0",
     "protobufjs": "^7.3.0",
     "redis": "^4.6.15",
     "uuid": "^9.0.1"
