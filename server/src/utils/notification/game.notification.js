@@ -22,6 +22,16 @@ export const createLocationPacket = (users) => {
   return makeNotification(locationPacket, PACKET_TYPE.LOCATION);
 };
 
+export const createChattingPacket = (playerId, message, type) => {
+  const protoMessages = getProtoMessages();
+  const chatting = protoMessages.uiNotification.ChattingUpdate;
+
+  const payload = { playerId, message, type };
+  const packetMessage = chatting.create(payload);
+  const chattingPacket = chatting.encode(packetMessage).finish();
+  return makeNotification(chattingPacket, PACKET_TYPE.CHATTING);
+};
+
 export const gameStartNotification = (gameId, timestamp) => {
   const protoMessages = getProtoMessages();
   const Start = protoMessages.gameNotification.Start;
@@ -44,7 +54,7 @@ export const createPingPacket = (timestamp) => {
 
 export const createGameEndPacket = (data) => {
   const protoMessages = getProtoMessages();
-  const gameEnd = protoMessages//.추가;
+  const gameEnd = protoMessages; //.추가;
 
   const payload = { data };
   const message = gameEnd.create(payload);

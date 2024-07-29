@@ -1,12 +1,14 @@
 import { HANDLER_IDS } from '../constants/handlerIds.js';
+import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
 import createGameHandler from './game/createGame.handler.js';
 import joinGameHandler from './game/joinGame.handler.js';
+import updateChattingHandler from './game/updateChatting.handler.js';
 import updateLocationHandler from './game/updateLocation.handler.js';
 import initialHandler from './user/initial.handler.js';
 
 const handlers = {
-  [HANDLER_IDS.INITIAL]: {
+  [HANDLER_IDS.LOGIN]: {
     handler: initialHandler,
     protoType: 'initial.InitialPayload',
   },
@@ -17,6 +19,10 @@ const handlers = {
   [HANDLER_IDS.UPDATE_LOCATION]: {
     handler: updateLocationHandler,
     protoType: 'game.LocationUpdatePayload',
+  },
+  [HANDLER_IDS.CHATTING]: {
+    handler: updateChattingHandler,
+    protoType: 'ui.ChattingPayload',
   },
 };
 
