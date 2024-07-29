@@ -49,8 +49,8 @@ CREATE TABLE IF NOT EXISTS `character`
     hp INT,
     speed INT,
     power INT,
-    defense INT,
-    critical INT,
+    defense FLOAT,
+    critical FLOAT,
     price INT
 );
 
@@ -58,8 +58,11 @@ CREATE TABLE IF NOT EXISTS character_skills
 (
     skill_id INT AUTO_INCREMENT PRIMARY KEY,
     skill_name VARCHAR(255),
+    skill_type INT,
     character_id INT,
-    damage_factor INT,
+    damage_factor FLOAT NULL,
     cool_time INT,
+    `range` INT NULL,
+    `scale` INT NULL,
     FOREIGN KEY (character_id) REFERENCES `character`(character_id)
 )
