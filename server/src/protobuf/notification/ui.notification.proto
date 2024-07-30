@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package uiNotification;
+
+// 위치 정보 메시지 구조
+message ChattingUpdate {
+  string playerId = 1;
+  string message = 2;
+  int32 type = 3;
+}
