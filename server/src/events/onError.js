@@ -11,6 +11,13 @@ export const onError = (socket) => (err) => {
     handlerError(socket, new CustomError(500, `소켓 오류: ${err.message}`));
   }
 
-  // 세션에서 유저 삭제
+  const user = getUserBySocket(socket);
+  if (!user) {
+    console.log('유저를 찾을 수 없습니다.');
+    return;
+  }
+
+  const lobbySession = getLobbySession();
+  lobbySession.removeUser(user.id);
   removeUser(socket);
 };
