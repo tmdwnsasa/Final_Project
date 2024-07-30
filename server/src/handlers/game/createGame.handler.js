@@ -8,22 +8,26 @@ import { createResponse } from '../../utils/response/createResponse.js';
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
 
 const createGameHandler = ({ redTeam, blueTeam, payload }) => {
+  // console.log('User class in createGameHandler:', User); //디버깅용
+
   try {
     const gameId = uuidv4();
     const gameSession = addGameSession(gameId);
 
+    //Red Team
     redTeam.forEach(({ socket, id }) => {
       const user = getUserById(id);
       if (!user) {
-        throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
+        throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다: ',id );
       }
       gameSession.addUser(user);
     });
 
+    //Blue Team
     blueTeam.forEach(({ socket, id }) => {
       const user = getUserById(id);
       if (!user) {
-        throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
+        throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다: ',id );
       }
       gameSession.addUser(user);
     });
@@ -32,17 +36,18 @@ const createGameHandler = ({ redTeam, blueTeam, payload }) => {
       HANDLER_IDS.CREATE_GAME,
       RESPONSE_SUCCESS_CODE,
       { gameId, message: '게임이 생성되었습니다' },
-      [...redTeam, ...blueTeam].map((player) => player.id)
+      [...redTeam, ...blueTeam].map((player) => player.id),
     );
 
-    [...redTeam, ...blueTeam].forEach(({socket}) => {
-      socket.write(createGameResponse);
+    [...redTeam, ...blueTeam].forEach(({ socket }) => {
+        socket.write(createGameResponse);
     });
   } catch (err) {
-    [...redTeam, ...blueTeam].forEach(({socket}) => {
-      handlerError(socket, err);
+    [...redTeam, ...blueTeam].forEach(({ socket }) => {
+        handlerError(socket, err);
     });
   }
 };
 
 export default createGameHandler;
+
