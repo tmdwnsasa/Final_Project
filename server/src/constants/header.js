@@ -7,4 +7,5 @@ export const PACKET_TYPE = {
   GAME_START: 2,
   LOCATION: 3,
   GAME_END: 4,
+  CHATTING: 5,
 };
