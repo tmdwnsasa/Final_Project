@@ -15,10 +15,16 @@ export const packetNames = {
     JoinGamePayload: 'game.JoinGamePayload',
     LocationUpdatePayload: 'game.LocationUpdatePayload',
   },
+  ui: {
+    ChattingPayload: 'ui.ChattingPayload',
+  },
   response: {
     Response: 'response.Response',
   },
   gameNotification: {
     LocationUpdate: 'gameNotification.LocationUpdate',
+  },
+  uiNotification: {
+    ChattingUpdate: 'uiNotification.ChattingUpdate',
   },
 };

@@ -1,4 +1,4 @@
-import { createLocationPacket } from '../../utils/notification/game.notification.js';
+import { createChattingPacket, createLocationPacket } from '../../utils/notification/game.notification.js';
 import IntervalManager from '../manager/interval.manager.js';
 
 class Lobby {
@@ -42,6 +42,13 @@ class Lobby {
     });
 
     return createLocationPacket(locationData);
+  }
+
+  sendChattingAll(userId, message, type) {
+    const packet = createChattingPacket(userId, message, type);
+    this.users.forEach((user) => {
+      user.socket.write(packet);
+    });
   }
 }
 

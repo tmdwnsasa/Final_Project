@@ -9,4 +9,5 @@ export const HANDLER_IDS = {
   JOIN_LOBBY: 6,
   CHARACTER_CHOICE: 7,
   CHARACTER_SELECT: 8,
+  CHATTING: 10,
 };

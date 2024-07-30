@@ -36,19 +36,12 @@ export const onData = (socket) => async (data) => {
             }
             break;
           case PACKET_TYPE.NORMAL: {
-            // const { handlerId, userId, payload, sequence } = packetParser(packet);
+            const { handlerId, userId, payload, sequence } = packetParser(packet);
 
-            // const user = getUserById(userId);
-            // if (user && user.sequence !== sequence) {
-            //   throw new CustomError(ErrorCodes.INVALID_SEQUENCE, "잘못된 호출값입니다");
-            // }
-
-            // const handler = getHandlerById(handlerId).handler;
-
-            // await handler({ socket, userId, payload });
-
-            const { handlerId, payload, userId } = packetParser(packet);
-            console.log(handlerId, payload, userId);
+            const user = getUserById(userId);
+            if (user && user.sequence !== sequence) {
+              throw new CustomError(ErrorCodes.INVALID_SEQUENCE, '잘못된 호출값입니다');
+            }
             const handler = getHandlerById(handlerId);
             await handler({
               socket,
