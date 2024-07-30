@@ -84,5 +84,23 @@ export const createCharacter = async (characterName, hp, speed, power, defense, 
 };
 
 export const createCharacterSkill = async (skillName, skillType, characterId, damageFactor, coolTime, range, scale) => {
-  await pools.GAME_DB.query(GAME_SQL_QUERIES.CREATE_CHARACTER_SKILLS, [skillName, skillType, characterId, damageFactor, coolTime, range, scale]);
+  await pools.GAME_DB.query(GAME_SQL_QUERIES.CREATE_CHARACTER_SKILLS, [
+    skillName,
+    skillType,
+    characterId,
+    damageFactor,
+    coolTime,
+    range,
+    scale,
+  ]);
+};
+
+export const findPossessionByPlayerID = async (player_id) => {
+  const rows = await pools.GAME_DB.query(GAME_SQL_QUERIES.FIND_POSSESSION_BY_PLAYER_ID, [player_id]);
+  return toCamelCase(rows[0]);
+};
+
+export const createPossession = async (player_id, character_id) => {
+  await pools.GAME_DB.query(GAME_SQL_QUERIES.CREATE_POSSESSION, [player_id, character_id]);
+  return { player_id, character_id };
 };
