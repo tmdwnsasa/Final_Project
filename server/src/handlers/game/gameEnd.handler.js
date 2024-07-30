@@ -66,8 +66,8 @@ export const GameEndHandler = async ({ socket, userId, data }) => {
     // let startTime = Date.now();
     // let playerId = 'a';
 
-    await createMatchHistory(gameSession.sessionId, playerId, kill, death, damage);
-    console.log('매치전적이 DB에 저장되었습니다');
+    const users = redTeam.concat(blueTeam);
+    await saveMatchHistory(users,gameSession.sessionId);
     
     await createMatchLog(
       gameSession.sessionId,
@@ -190,3 +190,14 @@ const asyncSaveScoreRating = async (winTeam, loseTeam) => {
   await loseSaveRating(loseTeam);
   console.log('score, rating DB저장 완료');
 };
+
+async function saveMatchHistory(users, sessionId) {
+  for (const user of users) {
+    try {
+      await createMatchHistory(sessionId, user.playerId, user.kill, user.death, user.damage);
+      console.log(`${user.playerId}님의 전적 저장완료`);
+    } catch (err) {
+      console.error(`매치전적 저장 중 에러 발생:`, err);
+    }
+  }
+}

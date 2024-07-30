@@ -1,9 +1,15 @@
-// const lobbySession = getLobbySession();
-    // //게임 종료된 세션 내 유저들 상태를 waiting으로 변경하고 대기실 세션에 추가함
-    // gameSession.users.forEach((user) => {
-    //   user.status = 'waiting';
-    //   lobbySession.addUser(user);
-    // });
+import { getGameSession, removeGameSession } from '../../sessions/game.session';
+import { getLobbySession } from '../../sessions/lobby.session';
 
-    // //해당 게임세션 삭제
-    // removeGameSession(sessionId);
+
+export const returnLobbyHandler = ({ socket, userId, data }) => {
+  const gameSession = getGameSession();
+  const lobbySession = getLobbySession();
+  const user = gameSession.getUser(userId);
+  gameSession.removeUser(userId)
+  lobbySession.addUser(user);
+  removeGameSession();
+  const payload = {};
+  const packet = createResponse(null,null,payload,userId);
+  socket.write(packet);
+};
