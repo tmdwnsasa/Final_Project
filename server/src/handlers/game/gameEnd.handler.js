@@ -10,8 +10,7 @@ import {
   updateUserRating,
   updateUserScore,
 } from '../../db/game/game.db.js';
-import { getGameSession, removeGameSession } from '../../sessions/game.session.js';
-import { getLobbySession } from '../../sessions/lobby.session.js';
+import { getGameSession } from '../../sessions/game.session.js';
 import { matchQueueSession } from '../../sessions/session.js';
 import { getUserBySocket } from '../../sessions/user.session.js';
 import { createGameEndPacket } from '../../utils/notification/game.notification.js';
@@ -60,94 +59,6 @@ export const GameEndHandler = async ({ socket, userId, data }) => {
     console.log('222', redTeam);
     console.log('333', blueTeam);
 
-    //유저 DB에 저장된 score찾기
-    async function winSaveScore(winTeam) {
-      for (const user of winTeam) {
-        try {
-          const findUserScore = await findUserScoreTable(user.playerId);
-          if (!findUserScore) {
-            await createUserScore(user.playerId, 50);
-            console.log(`${user.playerId}님의 Score가 생성`);
-          } else {
-            const score = await getUserScore(user.playerId);
-            await updateUserScore(user.playerId, score + 50);
-            console.log(`${user.playerId}님의 Score가 갱신`);
-          }
-        } catch (err) {
-          console.error(`${user.playerId}님의 Score저장 중 에러 발생:`, err);
-        }
-      }
-    }
-
-    async function loseSaveScore(loseTeam) {
-      for (const user of loseTeam) {
-        try {
-          const findUserScore = await findUserScoreTable(user.playerId);
-          if (!findUserScore) {
-            await createUserScore(user.playerId, 0);
-            console.log(`${user.playerId}님의 Score가 생성`);
-          } else {
-            let score = await getUserScore(user.playerId);
-            if (score - 25 <= 0) {
-              score = 0;
-              await updateUserScore(user.playerId, score);
-            } else {
-              await updateUserScore(user.playerId, score - 25);
-            }
-            console.log(`${user.playerId}님의 Score가 갱신`);
-          }
-        } catch (err) {
-          console.error(`${user.playerId}님의 Score저장 중 에러 발생:`, err);
-        }
-      }
-    }
-
-    //유저DB에 rating 찾기
-    async function winSaveRating(winTeam) {
-      for (const user of winTeam) {
-        try {
-          const findUserRating = await findUserRatingTable(user.playerId);
-          if (!findUserRating) {
-            await createUserRating(user.playerId, user.characterId, 1, 0);
-            console.log(`${user.playerId}님의 Rating이 생성`);
-          } else {
-            const ratingTable = await getUserRating(user.playerId);
-            await updateUserRating(user.playerId, user.characterId, ++ratingTable.win, ratingTable.lose);
-            console.log(`${user.playerId}님의 Rating이 갱신`);
-          }
-        } catch (err) {
-          console.error(`${user.playerId}님의 Rating저장 중 에러 발생:`, err);
-        }
-      }
-    }
-
-    async function loseSaveRating(loseTeam) {
-      for (const user of loseTeam) {
-        try {
-          const findUserRating = await findUserRatingTable(user.playerId);
-          if (!findUserRating) {
-            await createUserRating(user.playerId, user.characterId, 0, 1);
-            console.log(`${user.playerId}님의 Rating이 생성`);
-          } else {
-            const ratingTable = await getUserRating(user.playerId);
-            await updateUserRating(user.playerId, user.characterId, ratingTable.win, ++ratingTable.lose);
-            console.log(`${user.playerId}님의 Rating이 갱신`);
-          }
-        } catch (err) {
-          console.error(`${user.playerId}님의 Rating저장 중 에러 발생:`, err);
-        }
-      }
-    }
-
-    //순차적으로 저장
-    const asyncSaveScoreRating = async (winTeam, loseTeam) => {
-      await winSaveScore(winTeam);
-      await loseSaveScore(loseTeam);
-      await winSaveRating(winTeam);
-      await loseSaveRating(loseTeam);
-      console.log('score, rating DB저장 완료');
-    };
-
     await asyncSaveScoreRating(winTeam, loseTeam);
     // let kill = 2;
     // let death = 0;
@@ -157,6 +68,7 @@ export const GameEndHandler = async ({ socket, userId, data }) => {
 
     await createMatchHistory(gameSession.sessionId, playerId, kill, death, damage);
     console.log('매치전적이 DB에 저장되었습니다');
+    
     await createMatchLog(
       gameSession.sessionId,
       redTeam[0].playerId,
@@ -167,16 +79,6 @@ export const GameEndHandler = async ({ socket, userId, data }) => {
       startTime,
     );
     console.log('매치로그가 DB에 저장되었습니다');
-
-    // const lobbySession = getLobbySession();
-    // //게임 종료된 세션 내 유저들 상태를 waiting으로 변경하고 대기실 세션에 추가함
-    // gameSession.users.forEach((user) => {
-    //   user.status = 'waiting';
-    //   lobbySession.addUser(user);
-    // });
-
-    // //해당 게임세션 삭제
-    // removeGameSession(sessionId);
 
     //   대전 결과 패킷 - 통지
     // string winnerTeam = 1
@@ -198,4 +100,93 @@ export const GameEndHandler = async ({ socket, userId, data }) => {
   } catch (err) {
     console.log('gameEndHandler에서 발생한 오류:', err);
   }
+};
+
+//유저 DB에 저장된 score찾기
+async function winSaveScore(winTeam) {
+  for (const user of winTeam) {
+    try {
+      const findUserScore = await findUserScoreTable(user.playerId);
+      if (!findUserScore) {
+        await createUserScore(user.playerId, 50);
+        console.log(`${user.playerId}님의 Score가 생성`);
+      } else {
+        const score = await getUserScore(user.playerId);
+        await updateUserScore(user.playerId, score + 50);
+        console.log(`${user.playerId}님의 Score가 갱신`);
+      }
+    } catch (err) {
+      console.error(`${user.playerId}님의 Score저장 중 에러 발생:`, err);
+    }
+  }
+}
+
+async function loseSaveScore(loseTeam) {
+  for (const user of loseTeam) {
+    try {
+      const findUserScore = await findUserScoreTable(user.playerId);
+      if (!findUserScore) {
+        await createUserScore(user.playerId, 0);
+        console.log(`${user.playerId}님의 Score가 생성`);
+      } else {
+        let score = await getUserScore(user.playerId);
+        if (score - 25 <= 0) {
+          score = 0;
+          await updateUserScore(user.playerId, score);
+        } else {
+          await updateUserScore(user.playerId, score - 25);
+
+          console.log(`${user.playerId}님의 Score가 갱신`);
+        }
+      }
+    } catch (err) {
+      console.error(`${user.playerId}님의 Score저장 중 에러 발생:`, err);
+    }
+  }
+}
+
+//유저DB에 rating 찾기
+async function winSaveRating(winTeam) {
+  for (const user of winTeam) {
+    try {
+      const findUserRating = await findUserRatingTable(user.playerId);
+      if (!findUserRating) {
+        await createUserRating(user.playerId, user.characterId, 1, 0);
+        console.log(`${user.playerId}님의 Rating이 생성`);
+      } else {
+        const ratingTable = await getUserRating(user.playerId);
+        await updateUserRating(user.playerId, user.characterId, ++ratingTable.win, ratingTable.lose);
+        console.log(`${user.playerId}님의 Rating이 갱신`);
+      }
+    } catch (err) {
+      console.error(`${user.playerId}님의 Rating저장 중 에러 발생:`, err);
+    }
+  }
+}
+
+async function loseSaveRating(loseTeam) {
+  for (const user of loseTeam) {
+    try {
+      const findUserRating = await findUserRatingTable(user.playerId);
+      if (!findUserRating) {
+        await createUserRating(user.playerId, user.characterId, 0, 1);
+        console.log(`${user.playerId}님의 Rating이 생성`);
+      } else {
+        const ratingTable = await getUserRating(user.playerId);
+        await updateUserRating(user.playerId, user.characterId, ratingTable.win, ++ratingTable.lose);
+        console.log(`${user.playerId}님의 Rating이 갱신`);
+      }
+    } catch (err) {
+      console.error(`${user.playerId}님의 Rating저장 중 에러 발생:`, err);
+    }
+  }
+}
+
+//순차적으로 저장
+const asyncSaveScoreRating = async (winTeam, loseTeam) => {
+  await winSaveScore(winTeam);
+  await loseSaveScore(loseTeam);
+  await winSaveRating(winTeam);
+  await loseSaveRating(loseTeam);
+  console.log('score, rating DB저장 완료');
 };
