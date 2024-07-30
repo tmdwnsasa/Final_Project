@@ -1,21 +1,21 @@
-CREATE TABLE IF NOT EXISTS score
-(
+CREATE DATABASE IF NOT EXISTS GAME_DB;
+USE GAME_DB;
+
+CREATE TABLE IF NOT EXISTS score (
     player_id VARCHAR(36) PRIMARY KEY,
-    score INT
+    score INT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS rating
-(
+CREATE TABLE IF NOT EXISTS rating (
     player_id VARCHAR(36),
     character_id INT,
     win INT,
     lose INT,
-    PRIMARY KEY(player_id, character_id)
+    PRIMARY KEY (player_id, character_id)
 );
 
-CREATE TABLE IF NOT EXISTS possession
-(
-    possession_id INT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS possession (
+    possession_id INT AUTO_INCREMENT PRIMARY KEY,
     player_id VARCHAR(36),
     character_id INT
 );
@@ -42,24 +42,22 @@ CREATE TABLE IF NOT EXISTS match_history
     PRIMARY KEY(game_session_id, player_id)
 );
 
-CREATE TABLE IF NOT EXISTS `character`
-(
+CREATE TABLE IF NOT EXISTS `character` (
     character_id INT AUTO_INCREMENT PRIMARY KEY,
-    character_name VARCHAR(36),
-    hp INT,
-    speed INT,
-    power INT,
-    defense INT,
-    critical INT,
-    price INT
+    character_name VARCHAR(255), 
+    hp INT NOT NULL,
+    speed INT NOT NULL,
+    power INT NOT NULL,
+    defense INT NOT NULL,
+    critical INT NOT NULL,
+    price INT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS character_skills
-(
+CREATE TABLE IF NOT EXISTS character_skills (
     skill_id INT AUTO_INCREMENT PRIMARY KEY,
-    skill_name VARCHAR(255),
+    skill_name VARCHAR(255), 
     character_id INT,
     damage_factor INT,
-    cool_time INT,
+    cool_time INT NOT NULL,
     FOREIGN KEY (character_id) REFERENCES `character`(character_id)
-)
+);

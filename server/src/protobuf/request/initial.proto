@@ -4,8 +4,7 @@ package initial;
 
 // 최초 패킷 구조
 message InitialPayload {
-  string deviceId = 1;
-  uint32 playerId = 2;
-  float latency = 3;
-  float frame = 4;
+  string playerId = 1;
+  uint32 characterId = 2;
+  float frame = 3;
 }

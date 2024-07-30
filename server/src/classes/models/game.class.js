@@ -12,70 +12,56 @@ class Game {
   }
 
   addUser(user) {
-    // if (this.users.length >= MAX_PLAYERS) {
-    //   throw new Error('Game session is full');
-    // }
-    // this.users.push(user);
-
-    // this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
-    // if (this.users.length === MAX_PLAYERS) {
-    //   setTimeout(() => {
-    //     this.startGame();
-    //   }, 3000);
-    // }
-
+    if (this.users.length >= MAX_PLAYERS) {
+      throw new Error('Game session is full');
+    }
     this.users.push(user);
+
+    this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
+    if (this.users.length === MAX_PLAYERS) {
+      setTimeout(() => {
+        this.startGame();
+      }, 3000);
+    }
   }
 
-  getUser(userId) {
-    return this.users.find((user) => user.id === userId);
+  getUser(playerId) {
+    return this.users.find((user) => user.playerId === playerId);
   }
 
-  getAllUsers(userId) {
+  getAllUsers() {
     return this.users;
   }
 
-  removeUser(userId) {
-    // this.users = this.users.filter((user) => user.id !== userId);
-    // this.intervalManager.removePlayer(userId);
-
-    // if (this.users.length < MAX_PLAYERS) {
-    //   this.state = "waiting";
-    // }
-
-    this.users = this.users.filter((user) => user.id !== userId);
+  removeUser(playerId) {
+    this.users = this.users.filter((user) => user.playerId !== playerId);
+    this.intervalManager.removePlayer(playerId);
   }
 
-  // getMaxLatency() {
-  //   let maxLatency = 0;
-  //   this.users.forEach((user) => {
-  //     maxLatency = Math.max(maxLatency, user.latency);
-  //   });
-  //   return maxLatency;
-  // }
+  getMaxLatency() {
+    let maxLatency = 0;
+    this.users.forEach((user) => {
+      maxLatency = Math.max(maxLatency, user.latency);
+    });
+    return maxLatency;
+  }
 
-  // startGame() {
-  //   this.state = "inProgress";
-  //   const startPacket = gameStartNotification(this.id, Date.now());
-  //   console.log(this.getMaxLatency());
-
-  //   this.users.forEach((user) => {
-  //     user.socket.write(startPacket);
-  //   });
-  // }
+  startGame() {
+    // 대전 게임 시작 구현 필요
+    // 아래는 기존 강의 내용 코드 참고용
+    // this.state = "inProgress";
+    // const startPacket = gameStartNotification(this.id, Date.now());
+    // console.log(this.getMaxLatency());
+    // this.users.forEach((user) => {
+    //   user.socket.write(startPacket);
+    // });
+  }
 
   getAllLocation() {
-    // const maxLatency = this.getMaxLatency();
-
-    // const locationData = this.users.map((user) => {
-    //   const { x, y } = user.calculatePosition(maxLatency);
-    //   return { id: user.id, x, y };
-    // });
-    // return createLocationPacket(locationData);
-
+    const maxLatency = this.getMaxLatency();
     const locationData = this.users.map((user) => {
-      const { x, y } = user.calculatePosition();
-      return { id: user.id, x, y };
+      const { x, y } = user.calculatePosition(maxLatency);
+      return { id: user.playerId, x, y };
     });
 
     return createLocationPacket(locationData);

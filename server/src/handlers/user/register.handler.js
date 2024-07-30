@@ -7,13 +7,13 @@ import bcrypt from 'bcrypt';
 
 const registerHandler = async ({ socket, userId, payload }) => {
   try {
-    const { id, password, name } = payload;
-
-    if (id.length < 4 && pw.length < 4 && id.length < 15 && pw.length < 15) {
+    const { playerId, password, name } = payload;
+    console.log(playerId, password, name);
+    if (playerId.length <= 4 && pw.length <= 4 && playerId.length <= 15 && pw.length <= 15) {
       // 커스텀 에러 : 입력 필드가 잘못됬다.
     }
 
-    let idCheck = await findUserByPlayerId(id);
+    let idCheck = await findUserByPlayerId(playerId);
     if (idCheck) {
       // 커스텀 에러 : id가 이미 있다.
     }
@@ -24,7 +24,7 @@ const registerHandler = async ({ socket, userId, payload }) => {
     }
 
     const hashpassword = await bcrypt.hash(password, 10);
-    createUser(id, password, name);
+    createUser(playerId, password, name);
 
     //const initialResponse = createResponse(HANDLER_IDS.INITIAL, RESPONSE_SUCCESS_CODE, { userId: user.id }, deviceId);
   } catch (err) {

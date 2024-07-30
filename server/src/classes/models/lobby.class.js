@@ -9,43 +9,36 @@ class Lobby {
   }
 
   addUser(user) {
-    // this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
-    // if (this.users.length === MAX_PLAYERS) {
-    //   setTimeout(() => {
-    //     this.startGame();
-    //   }, 3000);
-    // }
-
+    this.intervalManager.addPlayer(user.playerId, user.ping.bind(user), 1000);
     this.users.push(user);
   }
 
-  getUser(userId) {
-    return this.users.find((user) => user.id === userId);
+  getUser(playerId) {
+    return this.users.find((user) => user.playerId === playerId);
   }
 
-  getAllUsers(userId) {
+  getAllUsers() {
     return this.users;
   }
 
-  removeUser(userId) {
-    // this.users = this.users.filter((user) => user.id !== userId);
-    // this.intervalManager.removePlayer(userId);
-
-    this.users = this.users.filter((user) => user.id !== userId);
+  removeUser(playerId) {
+    this.users = this.users.filter((user) => user.playerId !== playerId);
+    this.intervalManager.removePlayer(playerId);
   }
 
-  // getMaxLatency() {
-  //   let maxLatency = 0;
-  //   this.users.forEach((user) => {
-  //     maxLatency = Math.max(maxLatency, user.latency);
-  //   });
-  //   return maxLatency;
-  // }
+  getMaxLatency() {
+    let maxLatency = 0;
+    this.users.forEach((user) => {
+      maxLatency = Math.max(maxLatency, user.latency);
+    });
+    return maxLatency;
+  }
 
   getAllLocation() {
+    const maxLatency = this.getMaxLatency();
     const locationData = this.users.map((user) => {
-      const { x, y } = user.calculatePosition();
-      return { id: user.id, x, y };
+      const { x, y } = user.calculatePosition(maxLatency);
+      return { id: user.playerId, x, y };
     });
 
     return createLocationPacket(locationData);
