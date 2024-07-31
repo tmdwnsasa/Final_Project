@@ -41,10 +41,6 @@ class User {
     this.directionY = y;
   }
 
-  getPosition() {
-    return { x: this.x, y: this.y };
-  }
-
   getNextSequence() {
     return ++this.sequence;
   }
