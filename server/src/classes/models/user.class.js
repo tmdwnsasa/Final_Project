@@ -1,13 +1,13 @@
+import { config } from '../../config/config.js';
 import { getGameAssets } from '../../init/assets.js';
 import { createPingPacket } from '../../utils/notification/game.notification.js';
 
 class User {
-  constructor(playerId, characterId, name, frame, socket, sessionId) {
+  constructor(playerId, characterId, name, socket, sessionId) {
     this.playerId = playerId;
     this.name = name;
     this.sessionId = sessionId;
     this.latency = 0;
-    this.frame = 1 / frame;
     this.socket = socket;
     this.x = 0;
     this.y = 0;
@@ -79,7 +79,7 @@ class User {
 
   calculatePosition(latency) {
     const timeDiff = latency / 1000; // 레이턴시를 초 단위로 계산
-    const distance = this.speed * this.frame + this.speed * this.frame * timeDiff;
+    const distance = this.speed * config.server.frame + this.speed * config.server.frame * timeDiff;
 
     this.x = this.x + distance * this.directionX;
     this.y = this.y + distance * this.directionY;

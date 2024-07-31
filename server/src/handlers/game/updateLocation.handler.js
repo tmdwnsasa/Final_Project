@@ -1,8 +1,10 @@
+import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { getAllGameSessions } from '../../sessions/game.session.js';
 import { getLobbySession } from '../../sessions/lobby.session.js';
+import { createResponse } from '../../utils/response/createResponse.js';
 
 const updateLocationHandler = async ({ socket, userId, payload }) => {
   try {
@@ -19,7 +21,12 @@ const updateLocationHandler = async ({ socket, userId, payload }) => {
         throw new CustomError(ErrorCodes.USER_NOT_FOUND, '로비 세션에서 유저를 찾을 수 없습니다.');
       }
       user.updateDirection(x, y);
-      const packet = lobbySession.getAllLocation();
+      const packet = createResponse(
+        HANDLER_IDS.UPDATE_LOCATION,
+        RESPONSE_SUCCESS_CODE,
+        { message: 'Change Direction' },
+        user.id,
+      );
 
       socket.write(packet);
     } else {
@@ -34,7 +41,12 @@ const updateLocationHandler = async ({ socket, userId, payload }) => {
         throw new CustomError(ErrorCodes.USER_NOT_FOUND, '게임 세션에서 유저를 찾을 수 없습니다.');
       }
       user.updateDirection(x, y);
-      const packet = gameSession.getAllLocation();
+      const packet = createResponse(
+        HANDLER_IDS.UPDATE_LOCATION,
+        RESPONSE_SUCCESS_CODE,
+        { message: 'Change Direction' },
+        user.id,
+      );
 
       socket.write(packet);
     }
