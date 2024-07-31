@@ -176,6 +176,8 @@ export const GameEndHandler = async ({ socket, userId, data }) => {
     // });
 
     // //해당 게임세션 삭제
+    // //게임세션 삭제 전에 해당 게임세션의 함수인 removeGameInterval()을 호출해줘야 함
+    // removeGameInterval()
     // removeGameSession(sessionId);
 
     //   대전 결과 패킷 - 통지
