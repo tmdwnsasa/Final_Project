@@ -2,8 +2,10 @@ import { HANDLER_IDS } from '../constants/handlerIds.js';
 import { packetNames } from '../protobuf/packetNames.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
+import giveCharacterHandler from './game/character.handler.js';
 import createGameHandler from './game/createGame.handler.js';
 import joinGameHandler from './game/joinGame.handler.js';
+import joinLobbyHandler from './game/joinLobby.handler.js';
 import updateChattingHandler from './game/updateChatting.handler.js';
 import updateLocationHandler from './game/updateLocation.handler.js';
 import loginHandler from './user/login.handler.js';
@@ -26,9 +28,17 @@ const handlers = {
     handler: joinGameHandler,
     protoType: packetNames.game.JoinGamePayload,
   },
+  [HANDLER_IDS.JOIN_LOBBY]: {
+    handler: joinLobbyHandler,
+    protoType: packetNames.game.JoinLobbyPayload,
+  },
   [HANDLER_IDS.UPDATE_LOCATION]: {
     handler: updateLocationHandler,
     protoType: packetNames.game.LocationUpdatePayload,
+  },
+  [HANDLER_IDS.EARN_CHARACTER]: {
+    handler: giveCharacterHandler,
+    protoType: packetNames.character.GiveCharacterPayload,
   },
   [HANDLER_IDS.CHATTING]: {
     handler: updateChattingHandler,

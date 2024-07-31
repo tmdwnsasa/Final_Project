@@ -44,22 +44,22 @@ const loginHandler = async ({ socket, userId, payload }) => {
     } else {
       // 케릭터 선택
       const possession = await findPossessionByPlayerID(playerId);
-      console.log(possession);
+
       // 첫 로그인
       if (possession.length === 0) {
         response = createResponse(
-          HANDLER_IDS.CHARACTER_CHOICE,
+          HANDLER_IDS.CHOICE_CHARACTER,
           RESPONSE_SUCCESS_CODE,
-          { playerId: playerId, sessionId: sessionId },
+          { playerId: playerId, name: user.name, sessionId: sessionId },
           userId,
         );
       }
       // 이후 로그인
       else {
         response = createResponse(
-          HANDLER_IDS.CHARACTER_SELECT,
+          HANDLER_IDS.SELECT_CHARACTER,
           RESPONSE_SUCCESS_CODE,
-          { playerId: playerId, sessionId: sessionId, possession: possession },
+          { playerId: playerId, name: user.name, sessionId: sessionId, possession: possession },
           userId,
         );
       }
