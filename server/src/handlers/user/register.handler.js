@@ -26,7 +26,8 @@ const registerHandler = async ({ socket, userId, payload }) => {
     const hashpassword = await bcrypt.hash(password, 10);
     createUser(playerId, password, name);
 
-    //const initialResponse = createResponse(HANDLER_IDS.INITIAL, RESPONSE_SUCCESS_CODE, { userId: user.id }, deviceId);
+    const Response = createResponse(HANDLER_IDS.REGISTER, RESPONSE_SUCCESS_CODE, { message: '회원가입 완료' }, userId);
+    socket.write(Response);
   } catch (err) {
     handlerError(socket, err);
   }
