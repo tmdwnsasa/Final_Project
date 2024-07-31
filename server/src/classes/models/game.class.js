@@ -9,6 +9,8 @@ class Game {
     this.users = [];
     this.startTime = Date.now();
     this.intervalManager = new IntervalManager();
+
+    this.intervalManager.addInterval(this.id, this.sendAllLocation.bind(this), config.server.frame * 1000, 'location');
   }
 
   addUser(user) {
@@ -17,7 +19,7 @@ class Game {
     }
     this.users.push(user);
 
-    this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
+    this.intervalManager.addInterval(user.id, user.ping.bind(user), 1000, 'ping');
     if (this.users.length === MAX_PLAYERS) {
       setTimeout(() => {
         this.startGame();
@@ -35,7 +37,7 @@ class Game {
 
   removeUser(playerId) {
     this.users = this.users.filter((user) => user.playerId !== playerId);
-    this.intervalManager.removePlayer(playerId);
+    this.intervalManager.removeInterval(playerId, 'ping');
   }
 
   getMaxLatency() {
@@ -57,14 +59,23 @@ class Game {
     // });
   }
 
-  getAllLocation() {
+  sendAllLocation() {
     const maxLatency = this.getMaxLatency();
+
     const locationData = this.users.map((user) => {
       const { x, y } = user.calculatePosition(maxLatency);
       return { id: user.playerId, x, y };
     });
 
-    return createLocationPacket(locationData);
+    const packet = createLocationPacket(locationData);
+
+    this.users.forEach((user) => {
+      user.socket.write(packet);
+    });
+  }
+
+  removeGameInterval() {
+    this.intervalManager.removeInterval(this.id, 'location');
   }
 }
 

@@ -8,8 +8,8 @@ import bcrypt from 'bcrypt';
 const registerHandler = async ({ socket, userId, payload }) => {
   try {
     const { playerId, password, name } = payload;
-    console.log(playerId, password, name);
-    if (playerId.length <= 4 && pw.length <= 4 && playerId.length <= 15 && pw.length <= 15) {
+
+    if (playerId.length <= 4 && password.length <= 4 && playerId.length <= 15 && password.length <= 15) {
       // 커스텀 에러 : 입력 필드가 잘못됬다.
     }
 

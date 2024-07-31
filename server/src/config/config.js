@@ -5,6 +5,7 @@ export const config = {
   server: {
     port: env.PORT,
     host: env.HOST,
+    frame: 1 / 60,
   },
   client: {
     version: env.CLIENT_VERSION,

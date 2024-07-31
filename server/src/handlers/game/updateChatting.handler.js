@@ -18,7 +18,7 @@ const updateChattingHandler = async ({ socket, userId, payload }) => {
       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '로비 세션에서 유저를 찾을 수 없습니다.');
     }
 
-    lobbySession.sendChattingAll(user.name, message, type);
+    lobbySession.sendAllChatting(user.name, message, type);
   } catch (error) {
     handlerError(socket, error);
   }
