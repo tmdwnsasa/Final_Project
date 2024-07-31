@@ -11,6 +11,10 @@ message JoinGamePayload {
     int64 timestamp = 2;
 }
 
+message JoinLobbyPayload {
+  uint32 characterId = 1;
+}
+
 message LocationUpdatePayload {
   float x = 1;
   float y = 2;

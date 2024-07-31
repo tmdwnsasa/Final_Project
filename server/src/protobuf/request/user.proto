@@ -11,4 +11,5 @@ message RegisterPayload {
 message LoginPayload {
     string playerId = 1;
     string password = 2;
+    float frame = 3;
 }

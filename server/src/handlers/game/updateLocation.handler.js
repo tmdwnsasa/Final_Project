@@ -7,7 +7,6 @@ import { getLobbySession } from '../../sessions/lobby.session.js';
 const updateLocationHandler = async ({ socket, userId, payload }) => {
   try {
     const { x, y, isLobby } = payload;
-
     if (isLobby) {
       // 로비 세션
       const lobbySession = getLobbySession();

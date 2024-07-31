@@ -14,7 +14,7 @@ import User from '../../classes/models/user.class.js';
 
 const loginHandler = async ({ socket, userId, payload }) => {
   try {
-    const { playerId, password } = payload;
+    const { playerId, password, frame } = payload;
 
     //있는 계정인지 확인
     let user = await findUserByPlayerId(playerId);
@@ -34,7 +34,7 @@ const loginHandler = async ({ socket, userId, payload }) => {
 
     const sessionId = uuidv4();
     //레디스로 sessionId를 넣는다.
-    addUser(playerId, null, null, socket, sessionId);
+    addUser(playerId, null, user.name, frame, socket, sessionId);
 
     if (gameSession !== -1 && gameSession !== undefined) {
       // 게임 세션에 사람 추가 / 게임 입장 통지
@@ -44,22 +44,22 @@ const loginHandler = async ({ socket, userId, payload }) => {
     } else {
       // 케릭터 선택
       const possession = await findPossessionByPlayerID(playerId);
-      console.log(possession);
+
       // 첫 로그인
       if (possession.length === 0) {
         response = createResponse(
-          HANDLER_IDS.CHARACTER_CHOICE,
+          HANDLER_IDS.CHOICE_CHARACTER,
           RESPONSE_SUCCESS_CODE,
-          { playerId: playerId, sessionId: sessionId },
+          { playerId: playerId, name: user.name, sessionId: sessionId },
           userId,
         );
       }
       // 이후 로그인
       else {
         response = createResponse(
-          HANDLER_IDS.CHARACTER_SELECT,
+          HANDLER_IDS.SELECT_CHARACTER,
           RESPONSE_SUCCESS_CODE,
-          { playerId: playerId, sessionId: sessionId, possession: possession },
+          { playerId: playerId, name: user.name, sessionId: sessionId, possession: possession },
           userId,
         );
       }
