@@ -2,8 +2,9 @@ import { getGameAssets } from '../../init/assets.js';
 import { createPingPacket } from '../../utils/notification/game.notification.js';
 
 class User {
-  constructor(playerId, characterId, frame, socket, sessionId) {
+  constructor(playerId, characterId, name, frame, socket, sessionId) {
     this.playerId = playerId;
+    this.name = name;
     this.sessionId = sessionId;
     this.latency = 0;
     this.frame = 1 / frame;

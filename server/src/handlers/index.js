@@ -57,6 +57,5 @@ export const getProtoTypeNameByHandlerId = (handlerId) => {
   if (!handlers[handlerId]) {
     throw new CustomError(ErrorCodes.UNKNOWN_HANDLER_ID, `프로토타입을 찾을 수 없습니다: ID ${handlerId}`);
   }
-  console.log(handlers[handlerId].protoType);
   return handlers[handlerId].protoType;
 };

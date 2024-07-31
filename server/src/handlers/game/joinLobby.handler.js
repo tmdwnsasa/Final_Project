@@ -6,11 +6,11 @@ import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
-//여기 부터 시작
+
 const joinLobbyHandler = ({ socket, userId, payload }) => {
   try {
     const { characterId } = payload;
-    const lobbySession = getLobbySession(userId);
+    const lobbySession = getLobbySession();
     if (!lobbySession) {
       // 커스텀 에러 로비를 찾을 수 없습니다.
     }
@@ -26,14 +26,14 @@ const joinLobbyHandler = ({ socket, userId, payload }) => {
       lobbySession.addUser(user);
     }
 
-    const joinGameResponse = createResponse(
+    const joinLobbyResponse = createResponse(
       HANDLER_IDS.JOIN_LOBBY,
       RESPONSE_SUCCESS_CODE,
       { message: '대기실에 참가했습니다' },
       user.id,
     );
 
-    socket.write(joinGameResponse);
+    socket.write(joinLobbyResponse);
   } catch (err) {
     handlerError(socket, err);
   }
