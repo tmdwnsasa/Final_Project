@@ -18,7 +18,7 @@ message LocationUpdate {
 message MatchResultPayload {
   string winnerTeam = 1;
   string loserTeam = 2;
-  repeated UserHistory users = 3;
+  repeated UserState users = 3;
 
   message UserState {
     string playerId = 1;

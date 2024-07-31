@@ -17,34 +17,34 @@ import { createGameEndPacket } from '../../utils/notification/game.notification.
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import CustomError from '../../utils/error/customError.js';
 
-export const GameEndHandler = async ({ socket, userId, data }) => {
+export const gameEndHandler = async ( socket, userId, data ) => {
   try {
-    const { sessionId } = data;
-    const gameSession = getGameSession(sessionId);
-    if (!gameSession) {
-      throw new CustomError(ErrorCodes.GAME_NOT_FOUND, '게임 세션을 찾을 수 없습니다');
-    }
+    // const { sessionId } = data;
+    // const gameSession = getGameSession(sessionId);
+    // if (!gameSession) {
+    //   throw new CustomError(ErrorCodes.GAME_NOT_FOUND, '게임 세션을 찾을 수 없습니다');
+    // }
 
-    const user = gameSession.getUser(userId);
-    if (!user) {
-      throw new CustomError(ErrorCodes.USER_NOT_FOUND, `${gameSession}게임에 ${userId}님을 찾을 수 없습니다`);
-    }
+    // const user = gameSession.getUser(userId);
+    // if (!user) {
+    //   throw new CustomError(ErrorCodes.USER_NOT_FOUND, `${gameSession}게임에 ${userId}님을 찾을 수 없습니다`);
+    // }
 
-    const findUser = await getUserBySocket(socket); //유저세션에서 해당 유저 찾기
-    if (!findUser) {
-      console.log(`유저세션에 유저가 존재하지 않습니다`);
-      return;
-    }
+    // const findUser = await getUserBySocket(socket); //유저세션에서 해당 유저 찾기
+    // if (!findUser) {
+    //   console.log(`유저세션에 유저가 존재하지 않습니다`);
+    //   return;
+    // }
 
-    // const gameSession = {
-    //   sessionId: 'abcdef',
-    //   users: [
-    //     { playerId: 'aaa', characterId: 1, socket: 'a' },
-    //     { playerId: 'mmm', characterId: 2, socket: 'b' },
-    //     { playerId: 'qqq', characterId: 3, socket: 'c' },
-    //     { playerId: 'xxx', characterId: 4, socket: 'd' },
-    //   ],
-    // };
+    const gameSession = {
+      sessionId: 'abcdef',
+      users: [
+        { playerId: 'aaa', characterId: 1, socket: 'a' },
+        { playerId: 'mmm', characterId: 2, socket: 'b' },
+        { playerId: 'qqq', characterId: 3, socket: 'c' },
+        { playerId: 'xxx', characterId: 4, socket: 'd' },
+      ],
+    };
 
     //현재 서버에서 관리하는 게임세션에는 redTeam blueTeam이 구분이 안되어있어서 매치큐에서 편성하는 코드 긁어옴
     const players = gameSession.users.splice(0, 4);
@@ -60,7 +60,7 @@ export const GameEndHandler = async ({ socket, userId, data }) => {
     console.log('222', redTeam);
     console.log('333', blueTeam);
 
-    await asyncSaveScoreRating(winTeam, loseTeam);
+    // await asyncSaveScoreRating(winTeam, loseTeam);
     // let kill = 2;
     // let death = 0;
     // let damage = 200;
@@ -68,18 +68,18 @@ export const GameEndHandler = async ({ socket, userId, data }) => {
     // let playerId = 'a';
 
     const users = redTeam.concat(blueTeam);
-    await saveMatchHistory(users, gameSession.sessionId);
+    // await saveMatchHistory(users, gameSession.sessionId);
 
-    await createMatchLog(
-      gameSession.sessionId,
-      redTeam[0].playerId,
-      redTeam[1].playerId,
-      blueTeam[0].playerId,
-      blueTeam[1].playerId,
-      winnerTeam,
-      startTime,
-    );
-    console.log('매치로그가 DB에 저장되었습니다');
+    // await createMatchLog(
+    //   gameSession.sessionId,
+    //   redTeam[0].playerId,
+    //   redTeam[1].playerId,
+    //   blueTeam[0].playerId,
+    //   blueTeam[1].playerId,
+    //   winnerTeam,
+    //   startTime,
+    // );
+    // console.log('매치로그가 DB에 저장되었습니다');
 
     //   대전 결과 패킷 - 통지
     // string winnerTeam = 1
@@ -105,7 +105,7 @@ export const GameEndHandler = async ({ socket, userId, data }) => {
     const packet = createGameEndPacket(payload);
 
     //패킷 통지
-    gameSession.users.forEach((user) => user.socket.write(packet));
+    socket.write(packet);
   } catch (err) {
     console.log('gameEndHandler에서 발생한 오류:', err);
   }
