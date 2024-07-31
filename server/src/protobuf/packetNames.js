@@ -6,9 +6,17 @@ export const packetNames = {
   initial: {
     InitialPayload: 'initial.InitialPayload',
   },
+  character: {
+    GiveCharacterPayload: 'character.GiveCharacterPayload',
+  },
+  user: {
+    RegisterPayload: 'user.RegisterPayload',
+    LoginPayload: 'user.LoginPayload',
+  },
   game: {
     CreateGamePayload: 'game.CreateGamePayload',
     JoinGamePayload: 'game.JoinGamePayload',
+    JoinLobbyPayload: 'game.JoinLobbyPayload',
     LocationUpdatePayload: 'game.LocationUpdatePayload',
   },
   ui: {

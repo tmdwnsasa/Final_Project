@@ -29,6 +29,10 @@ class Game {
     return this.users.find((user) => user.playerId === playerId);
   }
 
+  getAllUsers() {
+    return this.users;
+  }
+
   removeUser(playerId) {
     this.users = this.users.filter((user) => user.playerId !== playerId);
     this.intervalManager.removePlayer(playerId);
