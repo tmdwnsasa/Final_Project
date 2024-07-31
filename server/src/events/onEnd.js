@@ -11,9 +11,7 @@ export const onEnd = (socket) => async () => {
     return;
   }
 
-  const { x, y } = user.getPosition();
-
   const lobbySession = getLobbySession();
-  lobbySession.removeUser(user.id);
+  lobbySession.removeUser(user.playerId);
   removeUser(socket);
 };
