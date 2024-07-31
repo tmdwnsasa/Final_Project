@@ -52,6 +52,7 @@ export const GameEndHandler = async ({ socket, userId, data }) => {
     const blueTeam = players.slice(2, 4);
     const myTeam = redTeam.some((user) => user.socket === 'b');
     const winnerTeam = myTeam ? 'RedTeam' : 'BlueTeam';
+    const loserTeam = !myTeam ? 'RedTeam' : 'BlueTeam';
     const winTeam = myTeam ? redTeam : blueTeam;
     const loseTeam = !myTeam ? redTeam : blueTeam;
 
@@ -67,8 +68,8 @@ export const GameEndHandler = async ({ socket, userId, data }) => {
     // let playerId = 'a';
 
     const users = redTeam.concat(blueTeam);
-    await saveMatchHistory(users,gameSession.sessionId);
-    
+    await saveMatchHistory(users, gameSession.sessionId);
+
     await createMatchLog(
       gameSession.sessionId,
       redTeam[0].playerId,
@@ -89,14 +90,22 @@ export const GameEndHandler = async ({ socket, userId, data }) => {
     //     uint32 kill = 2
     //     uint32 death = 3
     // }
+    const allUsers = [
+      { playerId: 'abc', kill: 2, death: 0 },
+      { playerId: 'def', kill: 0, death: 0 },
+      { playerId: 'ghi', kill: 0, death: 1 },
+      { playerId: 'jkl', kill: 0, death: 1 },
+    ];
 
-    // const data = {
-    // winnerTeam,
-    // users, }
-    // const packet = createGameEndPacket(data);
+    const payload = {
+      winnerTeam,
+      loserTeam,
+      users: allUsers,
+    };
+    const packet = createGameEndPacket(payload);
 
-    // //패킷 통지
-    // socket.write(packet);
+    //패킷 통지
+    gameSession.users.forEach((user) => user.socket.write(packet));
   } catch (err) {
     console.log('gameEndHandler에서 발생한 오류:', err);
   }

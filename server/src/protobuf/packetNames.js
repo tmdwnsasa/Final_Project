@@ -23,6 +23,7 @@ export const packetNames = {
   },
   gameNotification: {
     LocationUpdate: 'gameNotification.LocationUpdate',
+    MatchResultPayload: 'gameNotification.MatchResultPayload',
   },
   uiNotification: {
     ChattingUpdate: 'uiNotification.ChattingUpdate',

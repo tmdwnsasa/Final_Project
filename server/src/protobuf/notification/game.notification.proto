@@ -13,3 +13,16 @@ message LocationUpdate {
     float y = 4;
   }
 }
+
+// 대결 종료 정보 메시지 구조
+message MatchResultPayload {
+  string winnerTeam = 1;
+  string loserTeam = 2;
+  repeated UserHistory users = 3;
+
+  message UserState {
+    string playerId = 1;
+    uint32 kill = 2;
+    uint32 death = 3;
+  }
+}
