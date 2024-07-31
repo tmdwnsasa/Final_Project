@@ -1,0 +1,14 @@
+syntax = 'proto3';
+
+package user;
+
+message RegisterPayload {
+    string playerId = 1;
+    string password = 2;
+    string name = 3;
+}
+
+message LoginPayload {
+    string playerId = 1;
+    string password = 2;
+}
