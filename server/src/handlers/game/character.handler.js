@@ -7,7 +7,6 @@ import CustomError from '../../utils/error/customError.js';
 const giveCharacterHandler = async ({ socket, userId, payload }) => {
   try {
     const { characterId } = payload;
-    console.log(characterId);
 
     const user = findUserByPlayerId(userId);
 

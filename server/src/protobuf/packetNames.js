@@ -3,9 +3,6 @@ export const packetNames = {
     Packet: 'common.Packet',
     Ping: 'common.Ping',
   },
-  initial: {
-    InitialPayload: 'initial.InitialPayload',
-  },
   character: {
     GiveCharacterPayload: 'character.GiveCharacterPayload',
   },

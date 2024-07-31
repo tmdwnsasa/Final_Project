@@ -5,11 +5,11 @@ class BaseManager {
     }
   }
 
-  addPlayer(playerId, ...args) {
+  addInterval(playerId, ...args) {
     throw new Error('Method not implemented');
   }
 
-  removePlayer(playerId) {
+  removeInterval(playerId) {
     throw new Error('Method not implemented');
   }
 
