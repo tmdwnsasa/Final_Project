@@ -1,3 +1,4 @@
+import { config } from '../../config/config.js';
 import { createChattingPacket, createLocationPacket } from '../../utils/notification/game.notification.js';
 import IntervalManager from '../manager/interval.manager.js';
 
@@ -6,10 +7,12 @@ class Lobby {
     this.users = [];
     this.startTime = Date.now();
     this.intervalManager = new IntervalManager();
+
+    this.intervalManager.addInterval('lobby', this.sendAllLocation.bind(this), config.server.frame * 1000, 'location');
   }
 
   addUser(user) {
-    this.intervalManager.addPlayer(user.playerId, user.ping.bind(user), 1000);
+    this.intervalManager.addInterval(user.playerId, user.ping.bind(user), 1000, 'ping');
     this.users.push(user);
   }
 
@@ -23,7 +26,7 @@ class Lobby {
 
   removeUser(playerId) {
     this.users = this.users.filter((user) => user.playerId !== playerId);
-    this.intervalManager.removePlayer(playerId);
+    this.intervalManager.removeInterval(playerId, 'ping');
   }
 
   getMaxLatency() {
@@ -34,17 +37,22 @@ class Lobby {
     return maxLatency;
   }
 
-  getAllLocation() {
+  sendAllLocation() {
     const maxLatency = this.getMaxLatency();
+
     const locationData = this.users.map((user) => {
       const { x, y } = user.calculatePosition(maxLatency);
       return { id: user.playerId, x, y };
     });
 
-    return createLocationPacket(locationData);
+    const packet = createLocationPacket(locationData);
+
+    this.users.forEach((user) => {
+      user.socket.write(packet);
+    });
   }
 
-  sendChattingAll(userId, message, type) {
+  sendAllChatting(userId, message, type) {
     const packet = createChattingPacket(userId, message, type);
     this.users.forEach((user) => {
       user.socket.write(packet);

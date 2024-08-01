@@ -19,6 +19,6 @@ export const onError = (socket) => (err) => {
   }
 
   const lobbySession = getLobbySession();
-  lobbySession.removeUser(user.id);
+  lobbySession.removeUser(user.playerId);
   removeUser(socket);
 };
