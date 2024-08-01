@@ -4,9 +4,9 @@ import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
 import giveCharacterHandler from './game/character.handler.js';
 import createGameHandler from './game/createGame.handler.js';
+import { gameEndHandler } from './game/gameEnd.handler.js';
 import joinGameHandler from './game/joinGame.handler.js';
 import joinLobbyHandler from './game/joinLobby.handler.js';
-import matchMakingHandler from './game/matchMaking.handler.js';
 import updateChattingHandler from './game/updateChatting.handler.js';
 import updateLocationHandler from './game/updateLocation.handler.js';
 import loginHandler from './user/login.handler.js';
@@ -44,10 +44,6 @@ const handlers = {
   [HANDLER_IDS.CHATTING]: {
     handler: updateChattingHandler,
     protoType: 'ui.ChattingPayload',
-  },
-  [HANDLER_IDS.MATCHMAKING]:{
-    handler: matchMakingHandler,
-    protoType:packetNames.game.MatchingPayload,
   },
 };
 

@@ -24,3 +24,11 @@ message LocationUpdatePayload {
 message MatchingPayload {
   string sessionID = 1;
 }
+
+message GameEndPayload {
+  string message = 1;
+}
+
+message ReturnLobbyPayload {
+  string message = 1;
+}

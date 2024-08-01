@@ -1,6 +1,6 @@
+import { config } from '../../config/config.js';
 import { createLocationPacket, gameStartNotification } from '../../utils/notification/game.notification.js';
 import IntervalManager from '../manager/interval.manager.js';
-import { config } from '../../config/config.js';
 
 const MAX_PLAYERS = 4;
 
@@ -50,14 +50,16 @@ class Game {
   }
 
   startGame() {
-    // 대전 게임 시작 구현 필요
-    // 아래는 기존 강의 내용 코드 참고용
-    // this.state = "inProgress";
-    // const startPacket = gameStartNotification(this.id, Date.now());
-    // console.log(this.getMaxLatency());
-    // this.users.forEach((user) => {
-    //   user.socket.write(startPacket);
-    // });
+    const battleStartData = [
+      { playerId: this.users[0].id, team: 'red1', x: -1, y: 2 },
+      { playerId: this.users[1], id, team: 'red2', x: 1, y: 2 },
+      { playerId: this.users[2], id, team: 'blue1', x: -1, y: -2 },
+      { playerId: this.users[3], id, team: 'blue2', x: 1, y: -2 },
+    ];
+    const battleStartPacket = gameStartNotification(battleStartData);
+    this.users.forEach((user) => {
+      user.socket.write(battleStartPacket);
+    });
   }
 
   sendAllLocation() {
