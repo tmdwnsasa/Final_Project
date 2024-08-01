@@ -14,6 +14,17 @@ message LocationUpdate {
   }
 }
 
+message BattleStart {
+  repeated UserTeam users = 1;
+
+  message UserTeam {
+    string playerId = 1;
+    string team = 2;
+    float x = 3;
+    float y = 4;
+  }
+}
+
 // 대결 종료 정보 메시지 구조
 message MatchResultPayload {
   string result = 1;
