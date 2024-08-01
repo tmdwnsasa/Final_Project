@@ -32,13 +32,13 @@ export const createChattingPacket = (playerId, message, type) => {
   return makeNotification(chattingPacket, PACKET_TYPE.CHATTING);
 };
 
-export const gameStartNotification = (gameId, timestamp) => {
+export const gameStartNotification = (users) => {
   const protoMessages = getProtoMessages();
-  const Start = protoMessages.gameNotification.Start;
+  const BattleStart = protoMessages.gameNotification.BattleStart;
 
-  const payload = { gameId, timestamp };
-  const message = Start.create(payload);
-  const startPacket = Start.encode(message).finish();
+  const payload = { users };
+  const message = BattleStart.create(payload);
+  const startPacket = BattleStart.encode(message).finish();
   return makeNotification(startPacket, PACKET_TYPE.GAME_START);
 };
 

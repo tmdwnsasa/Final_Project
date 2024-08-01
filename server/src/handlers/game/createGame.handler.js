@@ -17,6 +17,7 @@ const createGameHandler = ({ redTeam, blueTeam, payload }) => {
       if (!user) {
         throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
       }
+      user.team = 'red';
       gameSession.addUser(user);
     });
 
@@ -25,6 +26,7 @@ const createGameHandler = ({ redTeam, blueTeam, payload }) => {
       if (!user) {
         throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
       }
+      user.team = 'blue';
       gameSession.addUser(user);
     });
 
@@ -38,6 +40,8 @@ const createGameHandler = ({ redTeam, blueTeam, payload }) => {
     [...redTeam, ...blueTeam].forEach(({socket}) => {
       socket.write(createGameResponse);
     });
+
+    gameSession.startGame();
   } catch (err) {
     [...redTeam, ...blueTeam].forEach(({socket}) => {
       handlerError(socket, err);

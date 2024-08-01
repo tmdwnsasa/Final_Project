@@ -1,6 +1,6 @@
-import createGameHandler from '../handlers/game/createGame.handler';
-import { matchQueueSession } from './session';
-import { getUserBySocket } from './user.session';
+import createGameHandler from '../handlers/game/createGame.handler.js';
+import { matchQueueSession } from './session.js';
+import { getUserBySocket } from './user.session.js';
 
 export const addUserinQueue = (socket, data) => {
   const user = getUserBySocket(socket);
