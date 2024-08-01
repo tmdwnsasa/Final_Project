@@ -52,11 +52,10 @@ export const createPingPacket = (timestamp) => {
   return makeNotification(pingPacket, PACKET_TYPE.PING);
 };
 
-export const createGameEndPacket = (data) => {
+export const createGameEndPacket = (payload) => {
   const protoMessages = getProtoMessages();
-  const gameEnd = protoMessages; //.추가;
+  const gameEnd = protoMessages.gameNotification.MatchResultPayload;
 
-  const payload = { data };
   const message = gameEnd.create(payload);
   const gameEndPacket = gameEnd.encode(message).finish();
   return makeNotification(gameEndPacket, PACKET_TYPE.GAME_END);

@@ -20,3 +20,11 @@ message LocationUpdatePayload {
   float y = 2;
   bool isLobby = 3;
 }
+
+message GameEndPayload {
+  string message = 1;
+}
+
+message ReturnLobbyPayload {
+  string message = 1;
+}
