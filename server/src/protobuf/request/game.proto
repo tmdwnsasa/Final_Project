@@ -20,3 +20,7 @@ message LocationUpdatePayload {
   float y = 2;
   bool isLobby = 3;
 }
+
+message MatchingPayload {
+  string sessionID = 1;
+}

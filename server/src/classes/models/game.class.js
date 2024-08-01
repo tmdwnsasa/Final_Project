@@ -1,5 +1,6 @@
 import { createLocationPacket, gameStartNotification } from '../../utils/notification/game.notification.js';
 import IntervalManager from '../manager/interval.manager.js';
+import { config } from '../../config/config.js';
 
 const MAX_PLAYERS = 4;
 
