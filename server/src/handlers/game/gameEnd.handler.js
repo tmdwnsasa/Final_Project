@@ -16,8 +16,9 @@ import { getUserBySocket } from '../../sessions/user.session.js';
 import { createGameEndPacket } from '../../utils/notification/game.notification.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import CustomError from '../../utils/error/customError.js';
+import { getLobbySession } from '../../sessions/lobby.session.js';
 
-export const gameEndHandler = async ( socket, userId, data ) => {
+export const gameEndHandler = async ({ socket, userId, data }) => {
   try {
     // const { sessionId } = data;
     // const gameSession = getGameSession(sessionId);
@@ -51,12 +52,12 @@ export const gameEndHandler = async ( socket, userId, data ) => {
     const redTeam = players.slice(0, 2);
     const blueTeam = players.slice(2, 4);
     const myTeam = redTeam.some((user) => user.socket === 'b');
-    const winnerTeam = myTeam ? 'RedTeam' : 'BlueTeam';
-    const loserTeam = !myTeam ? 'RedTeam' : 'BlueTeam';
+    const winnerTeamState = myTeam ? 'Win' : 'Lose';
+    const loserTeamState = !myTeam ? 'Win' : 'Lose';
     const winTeam = myTeam ? redTeam : blueTeam;
     const loseTeam = !myTeam ? redTeam : blueTeam;
 
-    console.log('111', winnerTeam);
+    // console.log('111', winnerTeam);
     console.log('222', redTeam);
     console.log('333', blueTeam);
 
@@ -97,12 +98,15 @@ export const gameEndHandler = async ( socket, userId, data ) => {
       { playerId: 'jkl', kill: 0, death: 1 },
     ];
 
-    const payload = {
-      winnerTeam,
-      loserTeam,
+    const winPayload = {
+      result: winnerTeamState,
       users: allUsers,
     };
-    const packet = createGameEndPacket(payload);
+    const losePayload = {
+      result: loserTeamState,
+      users: allUsers,
+    };
+    const packet = createGameEndPacket(losePayload);
 
     //패킷 통지
     socket.write(packet);

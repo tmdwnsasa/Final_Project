@@ -16,9 +16,8 @@ message LocationUpdate {
 
 // 대결 종료 정보 메시지 구조
 message MatchResultPayload {
-  string winnerTeam = 1;
-  string loserTeam = 2;
-  repeated UserState users = 3;
+  string result = 1;
+  repeated UserState users = 2;
 
   message UserState {
     string playerId = 1;
