@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server/src/server.js",
     "dev": "nodemon server/src/server.js",
-    "migrate": "node db_server/utils/migration/createSchema.js",
+    "dbServer": "node db_server/db-server.js",
     "insertGameContent": "node server/src/db/game/game.db.content.js"
   },
   "keywords": [],

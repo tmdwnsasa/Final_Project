@@ -1,27 +1,6 @@
-import readline from 'readline';
 import mysql from 'mysql2/promise';
 import fs from 'fs/promises';
-import { shards } from '../shardUtils.js';
 
-const migrationConfirm = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
-migrationConfirm.question(
-  '해당 작업은 DB의 정보를 모두 제거하고 새로운 스키마로 재설정 합니다. 진행하시겠습니까? (Y/N):',
-  async (answer) => {
-    if (answer.trim().toUpperCase() === 'Y') {
-      for (const shard of Object.values(shards)) {
-        console.log(shard);
-        await resetAllData(shard);
-      }
-    } else {
-      console.log('진행 취소됨');
-    }
-    migrationConfirm.close();
-  },
-);
 
 const readSQLFile = async (filePath) => {
   try {
@@ -33,7 +12,7 @@ const readSQLFile = async (filePath) => {
   }
 };
 
-const resetAllData = async (shard) => {
+export const resetAllData = async (shard) => {
   const connection = await mysql.createConnection(shard);
 
   const dropDatabaseSQL = `
