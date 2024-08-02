@@ -38,12 +38,12 @@ export const gameEndHandler = async ({ socket, userId, data }) => {
     // }
 
     const gameSession = {
-      sessionId: 'abcdef',
+      sessionId: 'abcddd1',
       users: [
-        { playerId: 'aaa', characterId: 1, socket: 'a' },
-        { playerId: 'mmm', characterId: 2, socket: 'b' },
-        { playerId: 'qqq', characterId: 3, socket: 'c' },
-        { playerId: 'xxx', characterId: 4, socket: 'd' },
+        { playerId: 'aaa', characterId: 1, socket: 'a', kill: 2, death: 0, damage: 112 },
+        { playerId: 'mmm', characterId: 2, socket: 'b', kill: 0, death: 0, damage: 88 },
+        { playerId: 'qqq', characterId: 3, socket: 'c', kill: 0, death: 0, damage: 21 },
+        { playerId: 'xxx', characterId: 4, socket: 'd', kill: 0, death: 0, damage: 0 },
       ],
     };
 
@@ -53,34 +53,35 @@ export const gameEndHandler = async ({ socket, userId, data }) => {
     const blueTeam = players.slice(2, 4);
     const myTeam = redTeam.some((user) => user.socket === 'b');
     const winnerTeamState = myTeam ? 'Win' : 'Lose';
+    const winnerTeam = myTeam ? 'RedTeam' : 'BlueTeam';
     const loserTeamState = !myTeam ? 'Win' : 'Lose';
     const winTeam = myTeam ? redTeam : blueTeam;
     const loseTeam = !myTeam ? redTeam : blueTeam;
 
     // console.log('111', winnerTeam);
-    console.log('222', redTeam);
-    console.log('333', blueTeam);
+    // console.log('222', redTeam);
+    // console.log('333', blueTeam);
 
-    // await asyncSaveScoreRating(winTeam, loseTeam);
+    await asyncSaveScoreRating(winTeam, loseTeam);
     // let kill = 2;
     // let death = 0;
     // let damage = 200;
-    // let startTime = Date.now();
+    let startTime = Date.now();
     // let playerId = 'a';
 
     const users = redTeam.concat(blueTeam);
-    // await saveMatchHistory(users, gameSession.sessionId);
+    await saveMatchHistory(users, gameSession.sessionId);
 
-    // await createMatchLog(
-    //   gameSession.sessionId,
-    //   redTeam[0].playerId,
-    //   redTeam[1].playerId,
-    //   blueTeam[0].playerId,
-    //   blueTeam[1].playerId,
-    //   winnerTeam,
-    //   startTime,
-    // );
-    // console.log('매치로그가 DB에 저장되었습니다');
+    await createMatchLog(
+      gameSession.sessionId,
+      redTeam[0].playerId,
+      redTeam[1].playerId,
+      blueTeam[0].playerId,
+      blueTeam[1].playerId,
+      winnerTeam,
+      startTime,
+    );
+    console.log('매치로그가 DB에 저장되었습니다');
 
     //   대전 결과 패킷 - 통지
     // string winnerTeam = 1
@@ -106,7 +107,7 @@ export const gameEndHandler = async ({ socket, userId, data }) => {
       result: loserTeamState,
       users: allUsers,
     };
-    const packet = createGameEndPacket(losePayload);
+    const packet = createGameEndPacket(winPayload);
 
     //패킷 통지
     socket.write(packet);
