@@ -21,6 +21,9 @@ export const packetNames = {
   ui: {
     ChattingPayload: 'ui.ChattingPayload',
   },
+  skill: {
+    nearAttackPayload: 'skill.nearAttackPayload',
+  },
   response: {
     Response: 'response.Response',
   },
@@ -32,5 +35,8 @@ export const packetNames = {
   },
   uiNotification: {
     ChattingUpdate: 'uiNotification.ChattingUpdate',
+  },
+  skillNotification: {
+    SkillUpdate: 'skillNotification.skillUpdate',
   },
 };

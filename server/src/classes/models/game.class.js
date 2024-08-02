@@ -95,6 +95,13 @@ class Game {
   removeGameInterval() {
     this.intervalManager.removeInterval(this.id, 'location');
   }
+
+  updateAttack(userId, x, y, rangeX, rangeY) {
+    const packet = createGameSkillPacket(userId, x, y, rangeX, rangeY);
+    this.users.forEach((user) => {
+      user.socket.write(packet);
+    });
+  }
 }
 
 export default Game;
