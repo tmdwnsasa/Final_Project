@@ -21,6 +21,10 @@ message LocationUpdatePayload {
   bool isLobby = 3;
 }
 
+message MatchingPayload {
+  string sessionID = 1;
+}
+
 message GameEndPayload {
   string message = 1;
 }

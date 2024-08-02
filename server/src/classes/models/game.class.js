@@ -52,9 +52,9 @@ class Game {
   startGame() {
     const battleStartData = [
       { playerId: this.users[0].id, team: 'red1', x: -1, y: 2 },
-      { playerId: this.users[1], id, team: 'red2', x: 1, y: 2 },
-      { playerId: this.users[2], id, team: 'blue1', x: -1, y: -2 },
-      { playerId: this.users[3], id, team: 'blue2', x: 1, y: -2 },
+      { playerId: this.users[1].id, team: 'red2', x: 1, y: 2 },
+      { playerId: this.users[2].id, team: 'blue1', x: -1, y: -2 },
+      { playerId: this.users[3].id, team: 'blue2', x: 1, y: -2 },
     ];
     const battleStartPacket = gameStartNotification(battleStartData);
     this.users.forEach((user) => {
