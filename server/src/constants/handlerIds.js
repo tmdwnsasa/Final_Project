@@ -11,4 +11,5 @@ export const HANDLER_IDS = {
   SELECT_CHARACTER: 8,
   EARN_CHARACTER: 9,
   CHATTING: 10,
+  SKILL: 50,
 };
