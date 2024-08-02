@@ -1,9 +1,8 @@
 import { matchQueueSession } from './session.js';
-import { getUserBySocket } from './user.session.js';
 
-export const addUserToQueue = (socket) => {
-  const user = getUserBySocket(socket);
+export const addUserToQueue = (user) => {
   matchQueueSession.push(user);
+
 };
 
 export const removeUserFromQueue = (socket) => {
@@ -16,10 +15,12 @@ export const removeUserFromQueue = (socket) => {
 
 export const getQueueLength = () => matchQueueSession.length;
 
+
+export const getAllPlayersInQueue = () => {
+  return matchQueueSession.map(user => user.playerId);
+};
+
 export const getUsersForGame = () => {
-  if (matchQueueSession.length >= 4) {
-    return matchQueueSession.splice(0, 4);
-  }
-  return null;
+  return matchQueueSession;
 };
 

@@ -11,12 +11,6 @@ const createGameHandler = ({ redTeam, blueTeam, payload }) => {
   // console.log('User class in createGameHandler:', User); //디버깅용
 
   try {
-    const { sessionId } = payload;
-
-    if (user.sessionId !== sessionId) {
-      throw new Error('세션ID 일치하지 않습니다');
-    };
-
     const gameId = uuidv4();
     const gameSession = addGameSession(gameId);
 
@@ -43,7 +37,7 @@ const createGameHandler = ({ redTeam, blueTeam, payload }) => {
     const createGameResponse = createResponse(
       HANDLER_IDS.CREATE_GAME,
       RESPONSE_SUCCESS_CODE,
-      { gameId, message: '게임이 생성되었습니다' },
+      { gameId, message: '대결 시작!' },
       [...redTeam, ...blueTeam].map((player) => player.id),
     );
 

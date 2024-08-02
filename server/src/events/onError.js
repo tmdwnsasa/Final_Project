@@ -1,5 +1,6 @@
 import { getLobbySession } from '../sessions/lobby.session.js';
 import { getUserBySocket, removeUser } from '../sessions/user.session.js';
+import { removeUserFromQueue } from '../sessions/matchQueue.session.js';
 import CustomError from '../utils/error/customError.js';
 import { handlerError } from '../utils/error/errorHandler.js';
 
@@ -21,4 +22,7 @@ export const onError = (socket) => (err) => {
   const lobbySession = getLobbySession();
   lobbySession.removeUser(user.playerId);
   removeUser(socket);
+
+  removeUserFromQueue(socket);
+
 };
