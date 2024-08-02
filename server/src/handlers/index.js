@@ -9,6 +9,7 @@ import joinGameHandler from './game/joinGame.handler.js';
 import joinLobbyHandler from './game/joinLobby.handler.js';
 import { returnLobbyHandler } from './game/returnLobby.handler.js';
 import matchMakingHandler from './game/matchMaking.handler.js';
+import updateSkillHandler from './game/updateAttack.handler.js';
 import updateChattingHandler from './game/updateChatting.handler.js';
 import updateLocationHandler from './game/updateLocation.handler.js';
 import loginHandler from './user/login.handler.js';
@@ -47,7 +48,6 @@ const handlers = {
     handler: updateChattingHandler,
     protoType: 'ui.ChattingPayload',
   },
-
   [HANDLER_IDS.GAME_END]: {
     handler: gameEndHandler,
     protoType: packetNames.game.GameEndPayload,
@@ -60,6 +60,11 @@ const handlers = {
   [HANDLER_IDS.MATCHMAKING]: {
     handler: matchMakingHandler,
     protoType: packetNames.game.MatchingPayload,
+  },
+
+  [HANDLER_IDS.SKILL]: {
+    handler: updateSkillHandler,
+    protoType: packetNames.skill.nearAttackPayload,
   },
 };
 
