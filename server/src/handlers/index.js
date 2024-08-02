@@ -7,6 +7,7 @@ import createGameHandler from './game/createGame.handler.js';
 import { gameEndHandler } from './game/gameEnd.handler.js';
 import joinGameHandler from './game/joinGame.handler.js';
 import joinLobbyHandler from './game/joinLobby.handler.js';
+import updateSkillHandler from './game/updateAttack.handler.js';
 import { returnLobbyHandler } from './game/returnLobby.handler.js';
 import matchMakingHandler from './game/matchMaking.handler.js';
 import updateSkillHandler from './game/updateAttack.handler.js';
