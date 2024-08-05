@@ -14,8 +14,13 @@ message LocationUpdate {
   }
 }
 
+message MatchMakingComplete {
+  string message = 1;
+}
+
 message BattleStart {
   repeated UserTeam users = 1;
+  string message =2;
 
   message UserTeam {
     string playerId = 1;

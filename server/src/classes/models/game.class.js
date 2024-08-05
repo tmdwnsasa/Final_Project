@@ -51,12 +51,16 @@ class Game {
 
   startGame() {
     const battleStartData = [
-      { playerId: this.users[0].id, team: 'red1', x: -1, y: 2 },
-      { playerId: this.users[1].id, team: 'red2', x: 1, y: 2 },
-      { playerId: this.users[2].id, team: 'blue1', x: -1, y: -2 },
-      { playerId: this.users[3].id, team: 'blue2', x: 1, y: -2 },
+      { playerId: this.users[0].playerId, team: 'red1', x: 73, y: 2 },
+      { playerId: this.users[1].playerId, team: 'red2', x: 73, y: -2 },
+      { playerId: this.users[2].playerId, team: 'blue1', x: 87, y: 2 },
+      { playerId: this.users[3].playerId, team: 'blue2', x: 87, y: -2 },
     ];
+    this.users.forEach((user, index) => {
+      user.updatePosition(battleStartData[index].x, battleStartData[index].y);
+    });
     const battleStartPacket = gameStartNotification(battleStartData);
+    console.log(battleStartData);
     this.users.forEach((user) => {
       user.socket.write(battleStartPacket);
     });
