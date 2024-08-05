@@ -59,11 +59,6 @@ export const findUserScoreTable = async (connection, playerId) => {
   return toCamelCase(rows[0]);
 };
 
-export const findUserRatingTable = async (connection, playerId) => {
-  const [rows] = await connection.query(GAME_SQL_QUERIES.FIND_USER_RATING_BY_PLAYER_ID, [playerId]);
-  return toCamelCase(rows[0]);
-};
-
 export const getUserScore = async (connection, playerId) => {
   const [rows] = await connection.query(GAME_SQL_QUERIES.FIND_USER_SCORE_BY_PLAYER_ID, [playerId]);
   return toCamelCase(rows[0].score);
@@ -108,14 +103,7 @@ export const createPossession = async (player_id, character_id) => {
   return { player_id, character_id };
 };
 
-export async function dbSaveTransaction(
-  winTeam,
-  loseTeam,
-  users,
-  gameSession,
-  winnerTeam,
-  startTime,
-) {
+export async function dbSaveTransaction(winTeam, loseTeam, users, gameSession, winnerTeam, startTime) {
   const connection = await pools.GAME_DB.getConnection();
   try {
     await connection.beginTransaction();
