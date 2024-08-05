@@ -22,10 +22,10 @@ const updateSkillHandler = async ({ socket, userId, payload }) => {
 
     const startX = x - rangeX / 2;
     const startY = y - rangeY / 2;
-    const EndX = startX + rangeX;
-    const EndY = startY + rangeY;
+    const endX = startX + rangeX;
+    const endY = startY + rangeY;
 
-    //gameSession.CheckAttack();
+    gameSession.getOpposingTeam(user, startX, startY, endX, endY);
   } catch (error) {
     handlerError(socket, error);
   }

@@ -41,3 +41,12 @@ message MatchResultPayload {
     uint32 death = 3;
   }
 }
+
+message AttackedSuccess {
+  repeated UserAttackState users = 1;
+
+  message UserAttackState {
+    string playerId = 1;
+    float hp = 2;
+  }
+}

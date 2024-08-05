@@ -1,5 +1,6 @@
 import { config } from '../../config/config.js';
 import {
+  createAttackedSuccessPacket,
   createChattingPacket,
   createGameSkillPacket,
   createLocationPacket,
@@ -44,6 +45,35 @@ class Game {
   removeUser(playerId) {
     this.users = this.users.filter((user) => user.playerId !== playerId);
     this.intervalManager.removeInterval(playerId, 'ping');
+  }
+
+  getAttackedOpposingTeam(attackUser, startX, startY, endX, endY) {
+    let team;
+    if (attackUser.team.includes('red')) {
+      team = 'red';
+    } else {
+      team = 'blue';
+    }
+
+    const attackedData = [];
+
+    // 상대 팀 유저 배열
+    const opposingTeam = this.users.findAll((user) => !user.team.includes(team));
+    opposingTeam.forEach((user) => {
+      if (user.x > startX && user.y < startY && user.x < endX && user.y > endY) {
+        // 상대방 히트
+        user.hp -= attackUser.power;
+        attackedData.push({ playerId: user.playerId, hp: user.hp });
+      }
+    });
+
+    if (!attackedData.length) {
+      const packet = createAttackedSuccessPacket(attackedData);
+
+      this.users.forEach((user) => {
+        user.socket.write(packet);
+      });
+    }
   }
 
   getMaxLatency() {
