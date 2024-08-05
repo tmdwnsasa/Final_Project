@@ -1,5 +1,6 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
 import { createUser, findUserByName, findUserByPlayerId, updateUserLogin } from '../../db/user/user.db.js';
+import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
@@ -12,8 +13,8 @@ const registerHandler = async ({ socket, userId, payload }) => {
     if (
       playerId.length <= 4 &&
       password.length <= 4 &&
-      playerId.length <= 15 &&
-      password.length <= 15 &&
+      playerId.length >= 15 &&
+      password.length >= 15 &&
       name.length < 5
     ) {
       throw new CustomError(ErrorCodes.VALIDATE_ERROR, '아이디, 패스워드, 이름이 너무 짧거나 깁니다.');

@@ -56,8 +56,8 @@ class Game {
   startGame() {
     const battleStartData = [
       { playerId: this.users[0]?.playerId, team: 'red1', x: 73, y: 2 },
-      { playerId: this.users[1]?.playerId, team: 'red2', x: 73, y: -2 },
-      { playerId: this.users[2]?.playerId, team: 'blue1', x: 87, y: 2 },
+      { playerId: this.users[1]?.playerId, team: 'blue1', x: 87, y: 2 },
+      { playerId: this.users[2]?.playerId, team: 'red2', x: 73, y: -2 },
       { playerId: this.users[3]?.playerId, team: 'blue2', x: 87, y: -2 },
     ];
     this.users.forEach((user, index) => {
@@ -75,7 +75,7 @@ class Game {
 
     const locationData = this.users.map((user) => {
       const { x, y } = user.calculatePosition(maxLatency);
-      return { playerId: user.playerId, characterId: user.characterId, x, y };
+      return { playerId: user.name, characterId: user.characterId, x, y };
     });
 
     const packet = createLocationPacket(locationData);
