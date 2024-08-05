@@ -15,7 +15,7 @@ const registerHandler = async ({ socket, userId, payload }) => {
       password.length <= 4 ||
       playerId.length >= 15 ||
       password.length >= 15 ||
-      name.length < 5
+      name.length > 5
     ) {
       throw new CustomError(ErrorCodes.VALIDATE_ERROR, '아이디, 패스워드, 이름이 너무 짧거나 깁니다.');
     }
