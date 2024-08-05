@@ -1,5 +1,9 @@
 import { config } from '../../config/config.js';
-import { createLocationPacket, gameStartNotification } from '../../utils/notification/game.notification.js';
+import {
+  createChattingPacket,
+  createLocationPacket,
+  gameStartNotification,
+} from '../../utils/notification/game.notification.js';
 import IntervalManager from '../manager/interval.manager.js';
 
 const MAX_PLAYERS = 4;
@@ -71,11 +75,18 @@ class Game {
 
     const locationData = this.users.map((user) => {
       const { x, y } = user.calculatePosition(maxLatency);
-      return { id: user.playerId, x, y };
+      return { playerId: user.playerId, characterId: user.characterId, x, y };
     });
 
     const packet = createLocationPacket(locationData);
 
+    this.users.forEach((user) => {
+      user.socket.write(packet);
+    });
+  }
+
+  sendAllChatting(userId, message, type) {
+    const packet = createChattingPacket(userId, message, type);
     this.users.forEach((user) => {
       user.socket.write(packet);
     });

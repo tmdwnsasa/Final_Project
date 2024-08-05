@@ -44,7 +44,7 @@ const handlers = {
   },
   [HANDLER_IDS.CHATTING]: {
     handler: updateChattingHandler,
-    protoType: 'ui.ChattingPayload',
+    protoType: packetNames.ui.ChattingPayload,
   },
   [HANDLER_IDS.RETURN_LOBBY]: {
     handler: returnLobbyHandler,
