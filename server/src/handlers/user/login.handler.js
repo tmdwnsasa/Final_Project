@@ -1,6 +1,6 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
 import { findUserByPlayerId, updateUserLogin } from '../../db/user/user.db.js';
-import { addUser } from '../../sessions/user.session.js';
+import { addUser, getUserById } from '../../sessions/user.session.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
@@ -10,7 +10,6 @@ import { getLobbySession } from '../../sessions/lobby.session.js';
 import { findPossessionByPlayerID } from '../../db/game/game.db.js';
 import CustomError from '../../utils/error/customError.js';
 import { getGameSessionByPlayerId } from '../../sessions/game.session.js';
-import User from '../../classes/models/user.class.js';
 
 const loginHandler = async ({ socket, userId, payload }) => {
   try {
@@ -19,6 +18,11 @@ const loginHandler = async ({ socket, userId, payload }) => {
     //있는 계정인지 확인
     let user = await findUserByPlayerId(playerId);
     let response = null;
+
+    const loggedIn = getUserById(playerId);
+    if (loggedIn) {
+      throw new CustomError(ErrorCodes.LOGGED_IN_ALREADY, '이미 로그인 되어 있습니다');
+    }
 
     if (!user) {
       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
