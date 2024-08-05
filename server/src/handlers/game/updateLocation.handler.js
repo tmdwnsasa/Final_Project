@@ -21,14 +21,14 @@ const updateLocationHandler = async ({ socket, userId, payload }) => {
         throw new CustomError(ErrorCodes.USER_NOT_FOUND, '로비 세션에서 유저를 찾을 수 없습니다.');
       }
       user.updateDirection(x, y);
-      const packet = createResponse(
-        HANDLER_IDS.UPDATE_LOCATION,
-        RESPONSE_SUCCESS_CODE,
-        { message: 'Change Direction' },
-        user.id,
-      );
+      // const packet = createResponse(
+      //   HANDLER_IDS.UPDATE_LOCATION,
+      //   RESPONSE_SUCCESS_CODE,
+      //   { message: 'Change Direction' },
+      //   user.id,
+      // );
 
-      socket.write(packet);
+      // socket.write(packet);
     } else {
       // 게임 세션
       const gameSession = getAllGameSessions()[0];
@@ -41,14 +41,14 @@ const updateLocationHandler = async ({ socket, userId, payload }) => {
         throw new CustomError(ErrorCodes.USER_NOT_FOUND, '게임 세션에서 유저를 찾을 수 없습니다.');
       }
       user.updateDirection(x, y);
-      const packet = createResponse(
-        HANDLER_IDS.UPDATE_LOCATION,
-        RESPONSE_SUCCESS_CODE,
-        { message: 'Change Direction' },
-        user.id,
-      );
+      // const packet = createResponse(
+      //   HANDLER_IDS.UPDATE_LOCATION,
+      //   RESPONSE_SUCCESS_CODE,
+      //   { message: 'Change Direction' },
+      //   user.id,
+      // );
 
-      socket.write(packet);
+      // socket.write(packet);
     }
   } catch (error) {
     handlerError(socket, error);

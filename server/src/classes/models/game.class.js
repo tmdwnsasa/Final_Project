@@ -51,10 +51,10 @@ class Game {
 
   startGame() {
     const battleStartData = [
-      { playerId: this.users[0].playerId, team: 'red1', x: 73, y: 2 },
-      { playerId: this.users[1].playerId, team: 'red2', x: 73, y: -2 },
-      { playerId: this.users[2].playerId, team: 'blue1', x: 87, y: 2 },
-      { playerId: this.users[3].playerId, team: 'blue2', x: 87, y: -2 },
+      { playerId: this.users[0]?.playerId, team: 'red1', x: 73, y: 2 },
+      { playerId: this.users[1]?.playerId, team: 'red2', x: 73, y: -2 },
+      { playerId: this.users[2]?.playerId, team: 'blue1', x: 87, y: 2 },
+      { playerId: this.users[3]?.playerId, team: 'blue2', x: 87, y: -2 },
     ];
     this.users.forEach((user, index) => {
       user.updatePosition(battleStartData[index].x, battleStartData[index].y);

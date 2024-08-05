@@ -4,8 +4,8 @@ import { handlerError } from './error/errorHandler.js';
 import CustomError from './error/customError.js';
 import { v4 as uuidv4 } from 'uuid';
 import { ErrorCodes } from './error/errorCodes.js';
-import {createMatchingCompleteNotification} from './notification/game.notification.js';
-
+import { createMatchingCompleteNotification } from './notification/game.notification.js';
+import { getLobbySession } from '../sessions/lobby.session.js';
 
 const createGame = ({ redTeam, blueTeam }) => {
   try {
@@ -42,6 +42,16 @@ const createGame = ({ redTeam, blueTeam }) => {
     });
 
     gameSession.startGame();
+
+    //게임맵으로 이동후 해당 플레이어들 로비세션에서 삭제
+    const lobbySession = getLobbySession();
+
+    console.log('In lobby session:', lobbySession.users);
+
+    [...redTeam, ...blueTeam].forEach(({ id }) => {
+      lobbySession.removeUser(id);
+    });
+    console.log('Removed from lobby session:', lobbySession.users);
   } catch (err) {
     [...redTeam, ...blueTeam].forEach(({ socket }) => {
       handlerError(socket, err);
