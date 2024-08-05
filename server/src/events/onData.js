@@ -40,6 +40,7 @@ export const onData = (socket) => async (data) => {
 
             const user = getUserById(userId);
             if (user && user.sequence !== sequence) {
+              // console.log(user.sequence, sequence,handlerId)
               throw new CustomError(ErrorCodes.INVALID_SEQUENCE, '잘못된 호출값입니다');
             }
             const handler = getHandlerById(handlerId);
