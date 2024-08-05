@@ -4,12 +4,14 @@
 import { loadProtos } from './loadProtos.js';
 import { createLobbySession } from '../sessions/lobby.session.js';
 
+
 const initServer = async () => {
   try {
     // await loadGameAssets();
     await loadProtos();
     // await testAllConnections(pools);
-    createLobbySession();
+    createLobbySession(); 
+    
   } catch (err) {
     console.error(err);
     process.exit(1);

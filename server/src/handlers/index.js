@@ -3,9 +3,11 @@ import { packetNames } from '../protobuf/packetNames.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
 import giveCharacterHandler from './game/character.handler.js';
-import createGameHandler from './game/createGame.handler.js';
+import createGame from '../utils/createGame.js';
 import joinGameHandler from './game/joinGame.handler.js';
 import joinLobbyHandler from './game/joinLobby.handler.js';
+import { returnLobbyHandler } from './game/returnLobby.handler.js';
+import matchMakingHandler from './game/matchMaking.handler.js';
 import updateChattingHandler from './game/updateChatting.handler.js';
 import updateLocationHandler from './game/updateLocation.handler.js';
 import loginHandler from './user/login.handler.js';
@@ -21,7 +23,7 @@ const handlers = {
     protoType: packetNames.user.LoginPayload,
   },
   [HANDLER_IDS.CREATE_GAME]: {
-    handler: createGameHandler,
+    handler: createGame,
     protoType: packetNames.game.CreateGamePayload,
   },
   [HANDLER_IDS.JOIN_GAME]: {
@@ -43,6 +45,15 @@ const handlers = {
   [HANDLER_IDS.CHATTING]: {
     handler: updateChattingHandler,
     protoType: 'ui.ChattingPayload',
+  },
+  [HANDLER_IDS.RETURN_LOBBY]: {
+    handler: returnLobbyHandler,
+    protoType: packetNames.game.ReturnLobbyPayload,
+  },
+
+  [HANDLER_IDS.MATCHMAKING]: {
+    handler: matchMakingHandler,
+    protoType: packetNames.game.MatchingPayload,
   },
 };
 
