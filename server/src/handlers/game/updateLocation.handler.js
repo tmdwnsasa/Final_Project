@@ -2,7 +2,7 @@ import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.j
 import { handlerError } from '../../utils/error/errorHandler.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
-import { getAllGameSessions } from '../../sessions/game.session.js';
+import { getAllGameSessions, getGameSessionByPlayerId } from '../../sessions/game.session.js';
 import { getLobbySession } from '../../sessions/lobby.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
@@ -23,15 +23,11 @@ const updateLocationHandler = async ({ socket, userId, payload }) => {
       user.updateDirection(x, y);
     } else {
       // 게임 세션
-      const gameSession = getAllGameSessions()[0];
+      const gameSession = getGameSessionByPlayerId(userId);
       if (!gameSession) {
         throw new CustomError(ErrorCodes.GAME_NOT_FOUND, '게임 세션을 찾을 수 없습니다.');
       }
 
-      const user = gameSession.getUser(userId);
-      if (!user) {
-        throw new CustomError(ErrorCodes.USER_NOT_FOUND, '게임 세션에서 유저를 찾을 수 없습니다.');
-      }
       user.updateDirection(x, y);
     }
   } catch (error) {
