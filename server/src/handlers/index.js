@@ -9,7 +9,6 @@ import joinLobbyHandler from './game/joinLobby.handler.js';
 import { returnLobbyHandler } from './game/returnLobby.handler.js';
 import matchMakingHandler from './game/matchMaking.handler.js';
 import updateSkillHandler from './game/updateAttack.handler.js';
-
 import updateChattingHandler from './game/updateChatting.handler.js';
 import updateLocationHandler from './game/updateLocation.handler.js';
 import loginHandler from './user/login.handler.js';
