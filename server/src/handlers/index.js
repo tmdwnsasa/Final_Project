@@ -6,6 +6,7 @@ import giveCharacterHandler from './game/character.handler.js';
 import createGame from '../utils/createGame.js';
 import joinGameHandler from './game/joinGame.handler.js';
 import joinLobbyHandler from './game/joinLobby.handler.js';
+import updateSkillHandler from './game/updateAttack.handler.js';
 import { returnLobbyHandler } from './game/returnLobby.handler.js';
 import matchMakingHandler from './game/matchMaking.handler.js';
 import updateSkillHandler from './game/updateAttack.handler.js';
@@ -45,7 +46,7 @@ const handlers = {
   },
   [HANDLER_IDS.CHATTING]: {
     handler: updateChattingHandler,
-    protoType: packetNames.ui.ChattingPayload,
+    protoType: 'ui.ChattingPayload',
   },
   [HANDLER_IDS.RETURN_LOBBY]: {
     handler: returnLobbyHandler,
