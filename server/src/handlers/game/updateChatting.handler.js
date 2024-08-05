@@ -2,6 +2,7 @@ import { handlerError } from '../../utils/error/errorHandler.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { getLobbySession } from '../../sessions/lobby.session.js';
+import { getGameSessionByPlayerId } from '../../sessions/game.session.js';
 
 const updateChattingHandler = async ({ socket, userId, payload }) => {
   try {
