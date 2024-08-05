@@ -43,7 +43,8 @@ const loginHandler = async ({ socket, userId, payload }) => {
       response = createResponse(HANDLER_IDS.JOIN_GAME, RESPONSE_SUCCESS_CODE, { sessionId: sessionId }, userId);
     } else {
       // 케릭터 선택
-      const possession = await findPossessionByPlayerID(playerId);
+      const possessionDB = await findPossessionByPlayerID(playerId);
+      const possession = possessionDB.map((data) => data.characterId);
 
       // 첫 로그인
       if (possession.length === 0) {
