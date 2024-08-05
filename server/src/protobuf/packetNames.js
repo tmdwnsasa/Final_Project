@@ -28,6 +28,7 @@ export const packetNames = {
   gameNotification: {
     LocationUpdate: 'gameNotification.LocationUpdate',
     BattleStart: 'gameNotification.BattleStart',
+    MatchMakingComplete : 'gameNotification.MatchMakingComplete',
     MatchResultPayload: 'gameNotification.MatchResultPayload',
   },
   uiNotification: {
