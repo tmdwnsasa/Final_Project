@@ -19,6 +19,7 @@ const loginHandler = async ({ socket, userId, payload }) => {
     let user = await findUserByPlayerId(playerId);
     let response = null;
 
+    //재로그인 방지
     const loggedIn = getUserById(playerId);
     if (loggedIn) {
       throw new CustomError(ErrorCodes.LOGGED_IN_ALREADY, '이미 로그인 되어 있습니다');
@@ -29,8 +30,9 @@ const loginHandler = async ({ socket, userId, payload }) => {
     } else {
       await updateUserLogin(playerId);
     }
+
     if (!(await bcrypt.compare(password, user.pw))) {
-      // 커스텀 에러 : 비밀번호 불일치
+      throw new CustomError(ErrorCodes.MISMATCH_PASSWORD, '비밀번호가 틀렸습니다.');
     }
 
     // 인게임인지 아닌지
@@ -38,7 +40,8 @@ const loginHandler = async ({ socket, userId, payload }) => {
 
     const sessionId = uuidv4();
     //레디스로 sessionId를 넣는다.
-    addUser(playerId, null, user.name, socket, sessionId);
+    const test = addUser(playerId, null, user.name, socket, sessionId);
+    console.log(test);
 
     if (gameSession !== -1 && gameSession !== undefined) {
       // 게임 세션에 사람 추가 / 게임 입장 통지
