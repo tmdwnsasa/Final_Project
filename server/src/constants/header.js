@@ -8,4 +8,5 @@ export const PACKET_TYPE = {
   LOCATION: 3,
   GAME_END: 4,
   CHATTING: 5,
+  MATCHMAKING:6
 };
