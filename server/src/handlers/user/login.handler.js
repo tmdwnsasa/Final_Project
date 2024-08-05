@@ -40,8 +40,7 @@ const loginHandler = async ({ socket, userId, payload }) => {
 
     const sessionId = uuidv4();
     //레디스로 sessionId를 넣는다.
-    const test = addUser(playerId, null, user.name, socket, sessionId);
-    console.log(test);
+    addUser(playerId, null, user.name, socket, sessionId);
 
     if (gameSession !== -1 && gameSession !== undefined) {
       // 게임 세션에 사람 추가 / 게임 입장 통지
@@ -52,9 +51,8 @@ const loginHandler = async ({ socket, userId, payload }) => {
       // 케릭터 선택
       const possessionDB = await findPossessionByPlayerID(playerId);
       const possession = possessionDB.map((data) => data.characterId);
-
       // 첫 로그인
-      if (possession.length === 0) {
+      if (possessionDB.length === 0) {
         response = createResponse(
           HANDLER_IDS.CHOICE_CHARACTER,
           RESPONSE_SUCCESS_CODE,
@@ -62,6 +60,7 @@ const loginHandler = async ({ socket, userId, payload }) => {
           userId,
         );
       }
+
       // 이후 로그인
       else {
         response = createResponse(
