@@ -5,4 +5,5 @@ package ui;
 message ChattingPayload {
   string message = 1;
   int32 type = 2;
+  bool isLobby = 3;
 }

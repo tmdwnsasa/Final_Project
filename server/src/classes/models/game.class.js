@@ -1,5 +1,9 @@
 import { config } from '../../config/config.js';
-import { createLocationPacket, gameStartNotification } from '../../utils/notification/game.notification.js';
+import {
+  createChattingPacket,
+  createLocationPacket,
+  gameStartNotification,
+} from '../../utils/notification/game.notification.js';
 import IntervalManager from '../manager/interval.manager.js';
 
 const MAX_PLAYERS = 4;
@@ -52,8 +56,8 @@ class Game {
   startGame() {
     const battleStartData = [
       { playerId: this.users[0]?.playerId, team: 'red1', x: 73, y: 2 },
-      { playerId: this.users[1]?.playerId, team: 'red2', x: 73, y: -2 },
-      { playerId: this.users[2]?.playerId, team: 'blue1', x: 87, y: 2 },
+      { playerId: this.users[1]?.playerId, team: 'blue1', x: 87, y: 2 },
+      { playerId: this.users[2]?.playerId, team: 'red2', x: 73, y: -2 },
       { playerId: this.users[3]?.playerId, team: 'blue2', x: 87, y: -2 },
     ];
     this.users.forEach((user, index) => {
@@ -71,11 +75,18 @@ class Game {
 
     const locationData = this.users.map((user) => {
       const { x, y } = user.calculatePosition(maxLatency);
-      return { id: user.playerId, x, y };
+      return { playerId: user.name, characterId: user.characterId, x, y };
     });
 
     const packet = createLocationPacket(locationData);
 
+    this.users.forEach((user) => {
+      user.socket.write(packet);
+    });
+  }
+
+  sendAllChatting(userId, message, type) {
+    const packet = createChattingPacket(userId, message, type);
     this.users.forEach((user) => {
       user.socket.write(packet);
     });
