@@ -32,6 +32,7 @@ export const packetNames = {
     BattleStart: 'gameNotification.BattleStart',
     MatchMakingComplete: 'gameNotification.MatchMakingComplete',
     MatchResultPayload: 'gameNotification.MatchResultPayload',
+    AttackedSuccess: 'gameNotification.AttackedSuccess',
   },
   uiNotification: {
     ChattingUpdate: 'uiNotification.ChattingUpdate',

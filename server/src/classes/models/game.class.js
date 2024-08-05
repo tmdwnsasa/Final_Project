@@ -58,16 +58,18 @@ class Game {
     const attackedData = [];
 
     // 상대 팀 유저 배열
-    const opposingTeam = this.users.findAll((user) => !user.team.includes(team));
+    const opposingTeam = this.users.filter((user) => !user.team.includes(team));
     opposingTeam.forEach((user) => {
+      console.log(`userX , Y : ${user.x}, ${user.y} StartX, Y : ${startX}, ${startY}, EndX, Y : ${endX} , ${endY}`);
       if (user.x > startX && user.y < startY && user.x < endX && user.y > endY) {
         // 상대방 히트
+        console.log('Hit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
         user.hp -= attackUser.power;
-        attackedData.push({ playerId: user.playerId, hp: user.hp });
+        attackedData.push({ playerId: user.name, hp: user.hp });
       }
     });
 
-    if (!attackedData.length) {
+    if (attackedData.length) {
       const packet = createAttackedSuccessPacket(attackedData);
 
       this.users.forEach((user) => {
