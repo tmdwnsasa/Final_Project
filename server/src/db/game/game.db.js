@@ -2,7 +2,7 @@ import pools from '../database.js';
 import { toCamelCase } from '../../utils/transformCase.js';
 import { GAME_SQL_QUERIES } from './game.queries.js';
 import { formatDate } from '../../utils/dateFormatter.js';
-import { asyncSaveScoreRating, saveMatchHistory } from '../../handlers/game/gameEnd.handler.js';
+import { asyncSaveScoreRating, saveMatchHistory } from '../../utils/gameEnd.js';
 
 export const createMatchHistory = async (connection, sessionId, playerId, kill, death, damage) => {
   await connection.query(GAME_SQL_QUERIES.CREATE_MATCH_HISTORY, [sessionId, playerId, kill, death, damage]);

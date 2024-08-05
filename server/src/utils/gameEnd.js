@@ -9,12 +9,12 @@ import {
   getUserScore,
   updateUserRating,
   updateUserScore,
-} from '../../db/game/game.db.js';
-import { getGameSession } from '../../sessions/game.session.js';
-import { getUserBySocket } from '../../sessions/user.session.js';
-import { createGameEndPacket } from '../../utils/notification/game.notification.js';
-import { ErrorCodes } from '../../utils/error/errorCodes.js';
-import CustomError from '../../utils/error/customError.js';
+} from '../db/game/game.db.js';
+import { getGameSession } from '../sessions/game.session.js';
+import { getUserBySocket } from '../sessions/user.session.js';
+import { createGameEndPacket } from './notification/game.notification.js';
+import { ErrorCodes } from './error/errorCodes.js';
+import CustomError from './error/customError.js';
 
 export const gameEndHandler = async ({ socket, userId, data }) => {
   try {
