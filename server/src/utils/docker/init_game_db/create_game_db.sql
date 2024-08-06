@@ -44,8 +44,8 @@ CREATE TABLE IF NOT EXISTS `character` (
     character_id INT AUTO_INCREMENT PRIMARY KEY,
     character_name VARCHAR(255), 
     hp INT NOT NULL,
-    speed INT NOT NULL,
-    power INT NOT NULL,
+    speed FLOAT NOT NULL,
+    power FLOAT NOT NULL,
     defense FLOAT NOT NULL,
     critical FLOAT NOT NULL,
     price INT NOT NULL
@@ -64,16 +64,16 @@ CREATE TABLE IF NOT EXISTS character_skills (
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 근씨 아저씨
-INSERT INTO `character` (character_name, hp, speed, power, defense, critical, price) VALUES ('근씨 아저씨', 150, 5, 10, 0.1, 0.05, 5000);
+INSERT INTO `character` (character_name, hp, speed, power, defense, critical, price) VALUES ('근씨 아저씨', 150, 5.0, 10.0, 0.1, 0.05, 5000);
 
 -- 원씨 아줌마
-INSERT INTO `character` (character_name, hp, speed, power, defense, critical, price) VALUES ('원씨 아줌마', 100, 4, 12, 0.08, 0.1, 5000);
+INSERT INTO `character` (character_name, hp, speed, power, defense, critical, price) VALUES ('원씨 아줌마', 100, 4.0, 12.0, 0.08, 0.1, 5000);
 
 -- 힐씨 아줌마
-INSERT INTO `character` (character_name, hp, speed, power, defense, critical, price) VALUES ('힐씨 아줌마', 80, 5, 7, 0.09, 0, 5000);
+INSERT INTO `character` (character_name, hp, speed, power, defense, critical, price) VALUES ('힐씨 아줌마', 80, 5.0, 7.0, 0.09, 0, 5000);
 
 -- 탱씨 아저씨
-INSERT INTO `character` (character_name, hp, speed, power, defense, critical, price) VALUES ('탱씨 아저씨', 200, 4, 8, 0.15, 0.05, 5000);
+INSERT INTO `character` (character_name, hp, speed, power, defense, critical, price) VALUES ('탱씨 아저씨', 200, 4.0, 8.0, 0.15, 0.05, 5000);
 
 -- 근씨 아저씨 스킬들
 INSERT INTO character_skills (skill_name, skill_type, character_id, damage_factor, cool_time, `range`, `scale`) VALUES ('괭이질', 1, 1, 1, 1, NULL, NULL);
