@@ -14,16 +14,12 @@ import { createGameEndPacket } from './notification/game.notification.js';
 export const gameEnd = async (gameSessionId, winnerTeam, loserTeam, winTeamColor, startTime) => {
   try {
     const users = winnerTeam.concat(loserTeam).map((user) => {
-      return { playerId: user.name, kill: user.kill, death: user.death };
-    });
-
-    const dbUsers = winnerTeam.concat(loserTeam).map((user) => {
-      return { ...user, damage: user.damage };
+      return { playerId: user.playerId, name: user.name, kill: user.kill, death: user.death, damage: user.damage };
     });
 
     for (let i = 1; i < 4; i++) {
       try {
-        await dbSaveTransaction(winnerTeam, loserTeam, dbUsers, gameSessionId, winTeamColor, startTime);
+        await dbSaveTransaction(winnerTeam, loserTeam, users, gameSessionId, winTeamColor, startTime);
         break;
       } catch (err) {
         console.error(`db저장 실패 ${i}번째 시도 중..,${err.message}`);
@@ -36,11 +32,11 @@ export const gameEnd = async (gameSessionId, winnerTeam, loserTeam, winTeamColor
 
     const winPayload = {
       result: 'Win',
-      users: dbUsers,
+      users: users,
     };
     const losePayload = {
       result: 'Lose',
-      users: dbUsers,
+      users: users,
     };
 
     const winPacket = createGameEndPacket(winPayload);
