@@ -4,7 +4,7 @@ import { getGameAssets } from '../../init/assets.js';
 import { createPingPacket } from '../../utils/notification/game.notification.js';
 
 class User {
-  constructor(playerId, characterId, name, socket, sessionId) {
+  constructor(playerId, name, socket, sessionId) {
     this.playerId = playerId;
     this.name = name;
     this.sessionId = sessionId;
@@ -42,6 +42,7 @@ class User {
 
   changeCharacter(characterId) {
     this.character = characterAsset[characterId];
+    return this.character;
   }
 
   changeTeam(teamColor) {
