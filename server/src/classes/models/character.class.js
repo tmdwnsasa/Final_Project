@@ -1,5 +1,3 @@
-export const characterAsset = [];
-
 class Character {
   constructor(characterId, characterName, hp, speed, power, defense, critical, price) {
     this.characterId = characterId;

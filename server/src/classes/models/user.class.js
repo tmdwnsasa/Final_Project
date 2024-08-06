@@ -1,7 +1,7 @@
+import { characterAsset } from '../../assets/character.asset.js';
 import { config } from '../../config/config.js';
 import { getGameAssets } from '../../init/assets.js';
 import { createPingPacket } from '../../utils/notification/game.notification.js';
-import Character, { characterAsset } from './character.class.js';
 
 class User {
   constructor(playerId, characterId, name, socket, sessionId) {
