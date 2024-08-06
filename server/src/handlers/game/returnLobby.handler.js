@@ -1,8 +1,6 @@
-import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
-import { getGameSession, getGameSessionByPlayerId, removeGameSession } from '../../sessions/game.session.js';
+import { getGameSessionByPlayerId, removeGameSession } from '../../sessions/game.session.js';
 import { getLobbySession } from '../../sessions/lobby.session.js';
 import { getUserById } from '../../sessions/user.session.js';
-import { createResponse } from '../../utils/response/createResponse.js';
 
 export const returnLobbyHandler = ({ socket, userId, payload }) => {
   const user = getUserById(userId);
@@ -16,6 +14,11 @@ export const returnLobbyHandler = ({ socket, userId, payload }) => {
   if (!gameSession.getAllUsers().length) {
     removeGameSession(gameSession.id);
   }
+
+  user.changeCharacter(user.characterId - 1);
+  user.kill = 0;
+  user.death = 0;
+  user.damage = 0;
 
   lobbySession.addUser(user);
   user.updatePosition(0, 0);
