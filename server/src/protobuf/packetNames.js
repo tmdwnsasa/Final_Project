@@ -16,7 +16,8 @@ export const packetNames = {
     JoinLobbyPayload: 'game.JoinLobbyPayload',
     LocationUpdatePayload: 'game.LocationUpdatePayload',
     ReturnLobbyPayload: 'game.ReturnLobbyPayload',
-    MatchingPayload: 'game.MatchingPayload'
+    MatchingPayload: 'game.MatchingPayload',
+    ExitGamePayload: 'game.ExitGamePayload',
   },
   ui: {
     ChattingPayload: 'ui.ChattingPayload',
@@ -27,7 +28,7 @@ export const packetNames = {
   gameNotification: {
     LocationUpdate: 'gameNotification.LocationUpdate',
     BattleStart: 'gameNotification.BattleStart',
-    MatchMakingComplete : 'gameNotification.MatchMakingComplete',
+    MatchMakingComplete: 'gameNotification.MatchMakingComplete',
     MatchResultPayload: 'gameNotification.MatchResultPayload',
   },
   uiNotification: {

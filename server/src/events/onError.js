@@ -24,5 +24,4 @@ export const onError = (socket) => (err) => {
   removeUser(socket);
 
   removeUserFromQueue(socket);
-
 };
