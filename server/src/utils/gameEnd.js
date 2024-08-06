@@ -31,8 +31,7 @@ export const gameEndHandler = async ({ socket, userId, data }) => {
 
     const findUser = await getUserBySocket(socket); //유저세션에서 해당 유저 찾기
     if (!findUser) {
-      console.log(`유저세션에 유저가 존재하지 않습니다`);
-      return;
+      throw new CustomError(ErrorCodes.USER_NOT_FOUND, `유저를 찾을 수 없습니다`);
     }
 
     // const gameSession = {
@@ -57,9 +56,8 @@ export const gameEndHandler = async ({ socket, userId, data }) => {
     // const winTeam = myTeam ? redTeam : blueTeam;
     // const loseTeam = !myTeam ? redTeam : blueTeam;
 
-    const me = gameSession.getUser(playerId);
-    const winTeamColor = me.team;
-    const loseTeamColor = me.team === 'red' ? 'blue' : 'red';
+    const winTeamColor = user.team;
+    const loseTeamColor = user.team === 'red' ? 'blue' : 'red';
     const winTeam = users.filter((user) => user.team === winTeamColor);
     const loseTeam = users.filter((user) => user.team === loseTeamColor);
 
@@ -161,8 +159,7 @@ async function winSaveRating(connection, winTeam) {
         await createUserRating(connection, user.playerId, user.characterId, 1, 0);
         console.log(`${user.playerId}님의 Rating이 생성`);
       } else {
-        const ratingTable = await getUserRating(connection, user.playerId);
-        await updateUserRating(connection, user.playerId, user.characterId, ++ratingTable.win, ratingTable.lose);
+        await updateUserRating(connection, user.playerId, user.characterId, ++findUserRating.win, findUserRating.lose);
         console.log(`${user.playerId}님의 Rating이 갱신`);
       }
     } catch (err) {

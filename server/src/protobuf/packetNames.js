@@ -5,6 +5,7 @@ export const packetNames = {
   },
   character: {
     GiveCharacterPayload: 'character.GiveCharacterPayload',
+    BuyCharacterPayload: 'character,BuyCharacterPayload',
   },
   user: {
     RegisterPayload: 'user.RegisterPayload',
@@ -16,7 +17,7 @@ export const packetNames = {
     JoinLobbyPayload: 'game.JoinLobbyPayload',
     LocationUpdatePayload: 'game.LocationUpdatePayload',
     ReturnLobbyPayload: 'game.ReturnLobbyPayload',
-    MatchingPayload: 'game.MatchingPayload'
+    MatchingPayload: 'game.MatchingPayload',
   },
   ui: {
     ChattingPayload: 'ui.ChattingPayload',
@@ -27,7 +28,7 @@ export const packetNames = {
   gameNotification: {
     LocationUpdate: 'gameNotification.LocationUpdate',
     BattleStart: 'gameNotification.BattleStart',
-    MatchMakingComplete : 'gameNotification.MatchMakingComplete',
+    MatchMakingComplete: 'gameNotification.MatchMakingComplete',
     MatchResultPayload: 'gameNotification.MatchResultPayload',
   },
   uiNotification: {

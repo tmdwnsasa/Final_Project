@@ -12,6 +12,7 @@ import updateChattingHandler from './game/updateChatting.handler.js';
 import updateLocationHandler from './game/updateLocation.handler.js';
 import loginHandler from './user/login.handler.js';
 import registerHandler from './user/register.handler.js';
+import { buyCharacter } from './game/buyCharacter.handler.js';
 
 const handlers = {
   [HANDLER_IDS.REGISTER]: {
@@ -50,11 +51,14 @@ const handlers = {
     handler: returnLobbyHandler,
     protoType: packetNames.game.ReturnLobbyPayload,
   },
-
   [HANDLER_IDS.MATCHMAKING]: {
     handler: matchMakingHandler,
     protoType: packetNames.game.MatchingPayload,
   },
+  [HANDLER_IDS.BUY_CHARACTER]: {
+    handler: buyCharacter,
+    protoType: packetNames.character.BuyCharacterPayload,
+  }
 };
 
 export const getHandlerById = (handlerId) => {
