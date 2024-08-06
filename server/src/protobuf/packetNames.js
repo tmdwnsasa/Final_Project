@@ -5,7 +5,7 @@ export const packetNames = {
   },
   character: {
     GiveCharacterPayload: 'character.GiveCharacterPayload',
-    BuyCharacterPayload: 'character,BuyCharacterPayload',
+    BuyCharacterPayload: 'character.BuyCharacterPayload',
   },
   user: {
     RegisterPayload: 'user.RegisterPayload',
