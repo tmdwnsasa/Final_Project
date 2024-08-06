@@ -1,5 +1,4 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
-import { getGameSession } from '../../sessions/game.session.js';
 import { getLobbySession } from '../../sessions/lobby.session.js';
 import { getUserById } from '../../sessions/user.session.js';
 import CustomError from '../../utils/error/customError.js';
@@ -26,12 +25,7 @@ const joinLobbyHandler = ({ socket, userId, payload }) => {
       lobbySession.addUser(user);
     }
 
-    const joinLobbyResponse = createResponse(
-      HANDLER_IDS.JOIN_LOBBY,
-      RESPONSE_SUCCESS_CODE,
-      { ...character },
-      user.id,
-    );
+    const joinLobbyResponse = createResponse(HANDLER_IDS.JOIN_LOBBY, RESPONSE_SUCCESS_CODE, { ...character }, user.id);
 
     socket.write(joinLobbyResponse);
   } catch (err) {

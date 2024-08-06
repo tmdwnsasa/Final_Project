@@ -4,7 +4,7 @@ import { handlerError } from '../../utils/error/errorHandler.js';
 import { createPossession } from '../../db/game/game.db.js';
 import CustomError from '../../utils/error/customError.js';
 
-const giveCharacterHandler = async ({ socket, userId, payload }) => {
+const giveCharacterHandler = ({ socket, userId, payload }) => {
   try {
     const { characterId } = payload;
 

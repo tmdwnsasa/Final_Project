@@ -1,6 +1,9 @@
 import { config } from '../../config/config.js';
+import { gameEnd } from '../../utils/gameEnd.js';
 import {
+  createAttackedSuccessPacket,
   createChattingPacket,
+  createGameSkillPacket,
   createLocationPacket,
   gameStartNotification,
 } from '../../utils/notification/game.notification.js';
@@ -45,6 +48,54 @@ class Game {
     this.intervalManager.removeInterval(playerId, 'ping');
   }
 
+  sendAttackedOpposingTeam(attackUser, startX, startY, endX, endY) {
+    let team;
+    if (attackUser.team.includes('red')) {
+      team = 'red';
+    } else {
+      team = 'blue';
+    }
+
+    const attackedData = [];
+    let deathCount = 0;
+
+    // 우리 팀 유저 배열
+    const ourTeam = this.users.filter((user) => user.team.includes(team));
+    // 상대 팀 유저 배열
+    const opposingTeam = this.users.filter((user) => !user.team.includes(team));
+    opposingTeam.forEach((user) => {
+      if (user.x > startX && user.y < startY && user.x < endX && user.y > endY && user.character.hp > 0) {
+        // 상대방 히트
+        user.character.hp -= attackUser.character.power;
+        attackUser.character.damage += attackUser.character.power;
+        attackedData.push({ playerId: user.name, hp: user.character.hp });
+
+        if (user.character.hp <= 0) {
+          attackUser.kill += 1;
+          user.death += 1;
+        }
+      }
+
+      // 상대팀이 모두 죽었는지 체크
+      if (user.character.hp <= 0) {
+        deathCount += 1;
+      }
+    });
+
+    if (attackedData.length) {
+      const packet = createAttackedSuccessPacket(attackedData);
+
+      this.users.forEach((user) => {
+        user.socket.write(packet);
+      });
+    }
+
+    // deathCount === opposingTeam.length
+    if (deathCount === 1) {
+      gameEnd(this.id, ourTeam, opposingTeam, team, this.startTime);
+    }
+  }
+
   getMaxLatency() {
     let maxLatency = 0;
     this.users.forEach((user) => {
@@ -54,6 +105,7 @@ class Game {
   }
 
   startGame() {
+    this.startTime = Date.now();
     const battleStartData = [
       { playerId: this.users[0]?.playerId, team: 'red1', x: 73, y: 2 },
       { playerId: this.users[1]?.playerId, team: 'blue1', x: 87, y: 2 },
@@ -75,7 +127,7 @@ class Game {
 
     const locationData = this.users.map((user) => {
       const { x, y } = user.calculatePosition(maxLatency);
-      return { playerId: user.name, characterId: user.characterId, x, y };
+      return { playerId: user.name, characterId: user.character.characterId - 1, x, y };
     });
 
     const packet = createLocationPacket(locationData);
@@ -94,6 +146,13 @@ class Game {
 
   removeGameInterval() {
     this.intervalManager.removeInterval(this.id, 'location');
+  }
+
+  updateAttack(userId, x, y, rangeX, rangeY) {
+    const packet = createGameSkillPacket(userId, x, y, rangeX, rangeY);
+    this.users.forEach((user) => {
+      user.socket.write(packet);
+    });
   }
 }
 
