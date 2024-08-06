@@ -66,8 +66,8 @@ CREATE TABLE IF NOT EXISTS character_skills (
 INSERT INTO `character` (character_name, hp, speed, power, defense, critical, price) VALUES 
 ("근씨 아저씨", 150, 5.0, 10.0, 0.1, 0.05, 5000),
 ("원씨 아줌마", 100, 4.0, 12.0, 0.08, 0.1, 5000),
-("힐씨 아줌마", 80, 5.0, 7.0, 0.09, 0, 5000),
 ("탱씨 아저씨", 200, 4.0, 8.0, 0.15, 0.05, 5000);
+("힐씨 아줌마", 80, 5.0, 7.0, 0.09, 0, 5000),
 
 -- 근씨 아저씨 스킬 데이터 삽입
 INSERT INTO character_skills (skill_name, skill_type, character_id, damage_factor, cool_time, `range`, `scale`) VALUES
@@ -81,14 +81,14 @@ INSERT INTO character_skills (skill_name, skill_type, character_id, damage_facto
 ('불장판', 5, 2, 2, 15, 15, 10),
 ('궁극기', 6, 2, 0.2, 30, 20, NULL);
 
--- 힐씨 아줌마 스킬 데이터 삽입
-INSERT INTO character_skills (skill_name, skill_type, character_id, damage_factor, cool_time, `range`, `scale`) VALUES
-('물 뿌리기', 2, 3, 1, 1, NULL, NULL),
-('새참', 5, 3, 1, 5, 10, NULL),
-('부활', 6, 3, NULL, 50, 1, NULL);
-
 -- 탱씨 아저씨 스킬 데이터 삽입
 INSERT INTO character_skills (skill_name, skill_type, character_id, damage_factor, cool_time, `range`, `scale`) VALUES
-('삽질', 1, 4, 1, 1, 1, NULL),
-('방패막기', 7, 4, NULL, 5, NULL, NULL),
-('궁극기', 5, 4, 0.2, 30, 1, 30);
+('삽질', 1, 3, 1, 1, 1, NULL),
+('방패막기', 7, 3, NULL, 5, NULL, NULL),
+('궁극기', 5, 3, 0.2, 30, 1, 30);
+
+-- 힐씨 아줌마 스킬 데이터 삽입
+INSERT INTO character_skills (skill_name, skill_type, character_id, damage_factor, cool_time, `range`, `scale`) VALUES
+('물 뿌리기', 2, 4, 1, 1, NULL, NULL),
+('새참', 5, 4, 1, 5, 10, NULL),
+('부활', 6, 4, NULL, 50, 1, NULL);
