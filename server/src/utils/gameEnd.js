@@ -16,7 +16,6 @@ export const gameEnd = async (gameSessionId, winnerTeam, loserTeam, winTeamColor
     const users = winnerTeam.concat(loserTeam).map((user) => {
       return { playerId: user.playerId, name: user.name, kill: user.kill, death: user.death, damage: user.damage };
     });
-    console.log('111', users);
 
     for (let i = 1; i < 4; i++) {
       try {
