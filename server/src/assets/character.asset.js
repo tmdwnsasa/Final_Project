@@ -1,1 +1,1 @@
-export const characterAsset = [];
+export const characterAssets = [];

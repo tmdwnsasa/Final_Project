@@ -5,6 +5,7 @@ import { loadProtos } from './loadProtos.js';
 import { createLobbySession } from '../sessions/lobby.session.js';
 import { findCharacterData } from '../db/game/game.db.js';
 import Character from '../classes/models/character.class.js';
+import { characterAssets } from '../assets/character.asset.js';
 
 const initServer = async () => {
   try {
@@ -18,6 +19,7 @@ const initServer = async () => {
       const characterValues = Object.values(character);
       const characterAsset = new Character(...characterValues);
 
+      characterAssets.push(characterAsset);
       console.log("Character Assets loaded:", characterAsset);
     });
 

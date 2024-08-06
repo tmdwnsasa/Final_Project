@@ -1,10 +1,10 @@
-import { characterAsset } from '../../assets/character.asset.js';
+import { characterAssets } from '../../assets/character.asset.js';
 import { config } from '../../config/config.js';
 import { getGameAssets } from '../../init/assets.js';
 import { createPingPacket } from '../../utils/notification/game.notification.js';
 
 class User {
-  constructor(playerId, characterId, name, socket, sessionId) {
+  constructor(playerId, name, socket, sessionId) {
     this.playerId = playerId;
     this.name = name;
     this.sessionId = sessionId;
@@ -41,7 +41,8 @@ class User {
   }
 
   changeCharacter(characterId) {
-    this.character = characterAsset[characterId];
+    this.character = characterAssets[characterId];
+    return this.character;
   }
 
   changeTeam(teamColor) {
@@ -63,7 +64,7 @@ class User {
 
   calculatePosition(latency) {
     const timeDiff = latency / 1000; // 레이턴시를 초 단위로 계산
-    const distance = this.speed * config.server.frame + this.speed * config.server.frame * timeDiff;
+    const distance = this.character.speed * config.server.frame + this.character.speed * config.server.frame * timeDiff;
 
     this.x = this.x + distance * this.directionX;
     this.y = this.y + distance * this.directionY;

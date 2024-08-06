@@ -19,7 +19,7 @@ const joinLobbyHandler = ({ socket, userId, payload }) => {
     if (!user) {
       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
     }
-    user.characterId = characterId;
+    const character = user.changeCharacter(characterId);
 
     const existUser = lobbySession.getUser(user.id);
     if (!existUser) {
@@ -29,7 +29,7 @@ const joinLobbyHandler = ({ socket, userId, payload }) => {
     const joinLobbyResponse = createResponse(
       HANDLER_IDS.JOIN_LOBBY,
       RESPONSE_SUCCESS_CODE,
-      { message: '대기실에 참가했습니다' },
+      { ...character },
       user.id,
     );
 
