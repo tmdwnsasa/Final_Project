@@ -1,3 +1,4 @@
+import { characterAsset } from '../../assets/character.asset.js';
 import { config } from '../../config/config.js';
 import { getGameAssets } from '../../init/assets.js';
 import { createPingPacket } from '../../utils/notification/game.notification.js';
@@ -21,13 +22,7 @@ class User {
     this.animationStatus = 'stand'; // 'stand', 'walk' 등등
     this.team = 'none';
 
-    this.characterId = characterId;
-    this.hp = 150;
-    this.speed = 5;
-    this.power = 10;
-    this.defense = 0.1;
-    this.critical = 0.05;
-    this.gold = 0;
+    this.character = null;
   }
 
   updatePosition(x, y) {
@@ -46,14 +41,7 @@ class User {
   }
 
   changeCharacter(characterId) {
-    this.characterId = characterId;
-    const { characters } = getGameAssets();
-    const targetCharacter = characters.find((char) => char.id === characterId);
-    this.hp = targetCharacter.hp;
-    this.speed = targetCharacter.speed;
-    this.power = targetCharacter.power;
-    this.defense = targetCharacter.defense;
-    this.critical = targetCharacter.critical;
+    this.character = characterAsset[characterId];
   }
 
   changeTeam(teamColor) {

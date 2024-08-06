@@ -12,7 +12,7 @@ const joinLobbyHandler = ({ socket, userId, payload }) => {
     const { characterId } = payload;
     const lobbySession = getLobbySession();
     if (!lobbySession) {
-      // 커스텀 에러 로비를 찾을 수 없습니다.
+      throw new CustomError(ErrorCodes.LOBBY_NOT_FOUND, '로비를 찾을 수 없습니다');
     }
 
     const user = getUserById(userId);

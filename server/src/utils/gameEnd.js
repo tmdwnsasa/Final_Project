@@ -3,7 +3,6 @@ import {
   createUserRating,
   createUserScore,
   dbSaveTransaction,
-  findUserRatingTable,
   findUserScoreTable,
   getUserRating,
   getUserScore,
@@ -156,7 +155,7 @@ async function loseSaveScore(connection, loseTeam) {
 async function winSaveRating(connection, winTeam) {
   for (const user of winTeam) {
     try {
-      const findUserRating = await findUserRatingTable(connection, user.playerId);
+      const findUserRating = await getUserRating(connection, user.playerId);
       if (!findUserRating) {
         await createUserRating(connection, user.playerId, user.characterId, 1, 0);
         console.log(`${user.playerId}님의 Rating이 생성`);
@@ -174,7 +173,7 @@ async function winSaveRating(connection, winTeam) {
 async function loseSaveRating(connection, loseTeam) {
   for (const user of loseTeam) {
     try {
-      const findUserRating = await findUserRatingTable(connection, user.playerId);
+      const findUserRating = await getUserRating(connection, user.playerId);
       if (!findUserRating) {
         await createUserRating(connection, user.playerId, user.characterId, 0, 1);
         console.log(`${user.playerId}님의 Rating이 생성`);

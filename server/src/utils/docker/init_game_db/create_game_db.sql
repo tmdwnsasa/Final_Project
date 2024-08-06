@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS GAME_DB;
+CREATE DATABASE IF NOT EXISTS GAME_DB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE GAME_DB;
 
 CREATE TABLE IF NOT EXISTS score (
@@ -20,8 +20,7 @@ CREATE TABLE IF NOT EXISTS possession (
     character_id INT
 );
 
-CREATE TABLE IF NOT EXISTS match_log
-(
+CREATE TABLE IF NOT EXISTS match_log (
     game_session_id VARCHAR(255) PRIMARY KEY,
     red_player1_id VARCHAR(36),
     red_player2_id VARCHAR(36),
@@ -32,8 +31,7 @@ CREATE TABLE IF NOT EXISTS match_log
     end_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS match_history
-(
+CREATE TABLE IF NOT EXISTS match_history (
     game_session_id VARCHAR(255),
     player_id VARCHAR(36),
     `kill` INT,
@@ -51,10 +49,9 @@ CREATE TABLE IF NOT EXISTS `character` (
     defense FLOAT NOT NULL,
     critical FLOAT NOT NULL,
     price INT NOT NULL
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;;
 
-CREATE TABLE IF NOT EXISTS character_skills
-(
+CREATE TABLE IF NOT EXISTS character_skills (
     skill_id INT AUTO_INCREMENT PRIMARY KEY,
     skill_name VARCHAR(255),
     skill_type INT,
