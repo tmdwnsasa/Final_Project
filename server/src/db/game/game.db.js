@@ -103,6 +103,11 @@ export const createPossession = async (player_id, character_id) => {
   return { player_id, character_id };
 };
 
+export const findCharacterData = async () => {
+  const rows = await pools.GAME_DB.query(GAME_SQL_QUERIES.FIND_CHARACTERS_DATA);
+  return toCamelCase(rows[0]);
+};
+
 export async function dbSaveTransaction(winTeam, loseTeam, users, gameSession, winnerTeam, startTime) {
   const connection = await pools.GAME_DB.getConnection();
   try {
