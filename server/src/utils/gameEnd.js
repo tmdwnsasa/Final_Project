@@ -102,7 +102,7 @@ async function winSaveRating(connection, winTeam) {
     try {
       const findUserRating = await getUserRating(connection, user.playerId);
       if (!findUserRating) {
-        await createUserRating(connection, user.playerId, user.character.characterId - 1, 1, 0);
+        await createUserRating(connection, user.playerId, user.characterId - 1, 1, 0);
         console.log(`${user.playerId}님의 Rating이 생성`);
       } else {
         const ratingTable = await getUserRating(connection, user.playerId);
@@ -120,7 +120,7 @@ async function loseSaveRating(connection, loseTeam) {
     try {
       const findUserRating = await getUserRating(connection, user.playerId);
       if (!findUserRating) {
-        await createUserRating(connection, user.playerId, user.character.characterId - 1, 0, 1);
+        await createUserRating(connection, user.playerId, user.characterId - 1, 0, 1);
         console.log(`${user.playerId}님의 Rating이 생성`);
       } else {
         const ratingTable = await getUserRating(connection, user.playerId);

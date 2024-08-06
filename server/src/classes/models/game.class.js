@@ -64,20 +64,20 @@ class Game {
     // 상대 팀 유저 배열
     const opposingTeam = this.users.filter((user) => !user.team.includes(team));
     opposingTeam.forEach((user) => {
-      if (user.x > startX && user.y < startY && user.x < endX && user.y > endY && user.character.hp > 0) {
+      if (user.x > startX && user.y < startY && user.x < endX && user.y > endY && user.hp > 0) {
         // 상대방 히트
-        user.character.hp -= attackUser.character.power;
-        attackUser.character.damage += attackUser.character.power;
-        attackedData.push({ playerId: user.name, hp: user.character.hp });
+        user.hp -= attackUser.power;
+        attackUser.damage += attackUser.power;
+        attackedData.push({ playerId: user.name, hp: user.hp });
 
-        if (user.character.hp <= 0) {
+        if (user.hp <= 0) {
           attackUser.kill += 1;
           user.death += 1;
         }
       }
 
       // 상대팀이 모두 죽었는지 체크
-      if (user.character.hp <= 0) {
+      if (user.hp <= 0) {
         deathCount += 1;
       }
     });
@@ -108,8 +108,8 @@ class Game {
     this.startTime = Date.now();
     const battleStartData = [
       { playerId: this.users[0]?.playerId, team: 'red1', x: 73, y: 2 },
-      { playerId: this.users[1]?.playerId, team: 'blue1', x: 87, y: 2 },
-      { playerId: this.users[2]?.playerId, team: 'red2', x: 73, y: -2 },
+      { playerId: this.users[1]?.playerId, team: 'red2', x: 73, y: -2 },
+      { playerId: this.users[2]?.playerId, team: 'blue1', x: 87, y: 2 },
       { playerId: this.users[3]?.playerId, team: 'blue2', x: 87, y: -2 },
     ];
     this.users.forEach((user, index) => {
@@ -127,7 +127,7 @@ class Game {
 
     const locationData = this.users.map((user) => {
       const { x, y } = user.calculatePosition(maxLatency);
-      return { playerId: user.name, characterId: user.character.characterId - 1, x, y };
+      return { playerId: user.name, characterId: user.characterId - 1, x, y };
     });
 
     const packet = createLocationPacket(locationData);
