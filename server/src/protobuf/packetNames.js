@@ -17,6 +17,7 @@ export const packetNames = {
     LocationUpdatePayload: 'game.LocationUpdatePayload',
     ReturnLobbyPayload: 'game.ReturnLobbyPayload',
     MatchingPayload: 'game.MatchingPayload',
+    ExitGamePayload: 'game.ExitGamePayload',
   },
   ui: {
     ChattingPayload: 'ui.ChattingPayload',

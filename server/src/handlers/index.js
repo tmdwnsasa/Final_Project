@@ -13,6 +13,7 @@ import updateChattingHandler from './game/updateChatting.handler.js';
 import updateLocationHandler from './game/updateLocation.handler.js';
 import loginHandler from './user/login.handler.js';
 import registerHandler from './user/register.handler.js';
+import { exitGameHandler } from './game/exitGame.handler.js';
 
 const handlers = {
   [HANDLER_IDS.REGISTER]: {
@@ -56,10 +57,13 @@ const handlers = {
     handler: matchMakingHandler,
     protoType: packetNames.game.MatchingPayload,
   },
-
   [HANDLER_IDS.SKILL]: {
     handler: updateSkillHandler,
     protoType: packetNames.skill.nearAttackPayload,
+  },
+  [HANDLER_IDS.EXIT]: {
+    handler: exitGameHandler,
+    protoType: packetNames.game.ExitGamePayload,
   },
 };
 
