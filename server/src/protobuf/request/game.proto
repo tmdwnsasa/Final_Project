@@ -28,3 +28,7 @@ message MatchingPayload {
 message ReturnLobbyPayload {
   string message = 1;
 }
+
+message ExitGamePayload {
+  string message = 1;
+}

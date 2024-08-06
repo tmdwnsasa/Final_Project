@@ -15,7 +15,7 @@ const giveCharacterHandler = async ({ socket, userId, payload }) => {
     }
 
     if (characterId <= 0 && characterId >= 3) {
-      //커스텀 에러 : 해당하는 ID의 케릭터가 없습니다.
+      throw new CustomError(ErrorCodes.PLAYERID_NOT_FOUND, '해당하는 직업을 찾을 수 없습니다');
     }
 
     createPossession(userId, characterId);

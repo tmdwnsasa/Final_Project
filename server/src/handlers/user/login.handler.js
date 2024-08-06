@@ -40,7 +40,7 @@ const loginHandler = async ({ socket, userId, payload }) => {
 
     const sessionId = uuidv4();
     //레디스로 sessionId를 넣는다.
-    addUser(playerId, null, user.name, socket, sessionId);
+    addUser(playerId, user.name, socket, sessionId);
 
     if (gameSession !== -1 && gameSession !== undefined) {
       // 게임 세션에 사람 추가 / 게임 입장 통지

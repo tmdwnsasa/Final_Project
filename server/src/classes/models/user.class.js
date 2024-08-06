@@ -1,9 +1,10 @@
+import { characterAssets } from '../../assets/character.asset.js';
 import { config } from '../../config/config.js';
 import { getGameAssets } from '../../init/assets.js';
 import { createPingPacket } from '../../utils/notification/game.notification.js';
 
 class User {
-  constructor(playerId, characterId, name, socket, sessionId) {
+  constructor(playerId, name, socket, sessionId) {
     this.playerId = playerId;
     this.name = name;
     this.sessionId = sessionId;
@@ -21,13 +22,7 @@ class User {
     this.animationStatus = 'stand'; // 'stand', 'walk' 등등
     this.team = 'none';
 
-    this.characterId = characterId;
-    this.hp = 150;
-    this.speed = 5;
-    this.power = 10;
-    this.defense = 0.1;
-    this.critical = 0.05;
-    this.gold = 0;
+    this.character = null;
   }
 
   updatePosition(x, y) {
@@ -46,14 +41,8 @@ class User {
   }
 
   changeCharacter(characterId) {
-    this.characterId = characterId;
-    const { characters } = getGameAssets();
-    const targetCharacter = characters.find((char) => char.id === characterId);
-    this.hp = targetCharacter.hp;
-    this.speed = targetCharacter.speed;
-    this.power = targetCharacter.power;
-    this.defense = targetCharacter.defense;
-    this.critical = targetCharacter.critical;
+    this.character = characterAssets[characterId];
+    return this.character;
   }
 
   changeTeam(teamColor) {
@@ -75,7 +64,7 @@ class User {
 
   calculatePosition(latency) {
     const timeDiff = latency / 1000; // 레이턴시를 초 단위로 계산
-    const distance = this.speed * config.server.frame + this.speed * config.server.frame * timeDiff;
+    const distance = this.character.speed * config.server.frame + this.character.speed * config.server.frame * timeDiff;
 
     this.x = this.x + distance * this.directionX;
     this.y = this.y + distance * this.directionY;
