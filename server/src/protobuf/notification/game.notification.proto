@@ -36,9 +36,10 @@ message MatchResultPayload {
   repeated UserState users = 2;
 
   message UserState {
-    string playerId = 1;
+    string name = 1;
     uint32 kill = 2;
     uint32 death = 3;
+    uint32 damage = 4;
   }
 }
 

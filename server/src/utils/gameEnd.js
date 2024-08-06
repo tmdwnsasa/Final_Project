@@ -14,7 +14,7 @@ import { createGameEndPacket } from './notification/game.notification.js';
 export const gameEnd = async (gameSessionId, winnerTeam, loserTeam, winTeamColor, startTime) => {
   try {
     const users = winnerTeam.concat(loserTeam).map((user) => {
-      return { playerId: user.playerId, kill: user.kill, death: user.death };
+      return { playerId: user.name, kill: user.kill, death: user.death };
     });
 
     const dbUsers = winnerTeam.concat(loserTeam).map((user) => {
@@ -36,11 +36,11 @@ export const gameEnd = async (gameSessionId, winnerTeam, loserTeam, winTeamColor
 
     const winPayload = {
       result: 'Win',
-      users: users,
+      users: dbUsers,
     };
     const losePayload = {
       result: 'Lose',
-      users: users,
+      users: dbUsers,
     };
 
     const winPacket = createGameEndPacket(winPayload);
