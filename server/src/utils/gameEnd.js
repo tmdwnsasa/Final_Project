@@ -21,7 +21,7 @@ export const gameEnd = async (gameSessionId, winnerTeam, loserTeam, winTeamColor
 
     // for (let i = 1; i < 4; i++) {
     //   try {
-    //     await dbSaveTransaction(winnerTeam, loserTeam, users, gameSessionId, winTeamColor, startTime);
+        await dbSaveTransaction(winnerTeam, loserTeam, users, gameSessionId, winTeamColor, startTime);
     //     break;
     //   } catch (err) {
     //     console.error(`db저장 실패 ${i}번째 시도 중..,${err.message}`);

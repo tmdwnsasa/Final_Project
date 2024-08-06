@@ -91,7 +91,8 @@ class Game {
     }
 
     // deathCount === opposingTeam.length
-    if (deathCount === 1) {
+    if (deathCount === opposingTeam.length) {
+      console.log('111', opposingTeam.length);
       gameEnd(this.id, ourTeam, opposingTeam, team, this.startTime);
     }
   }
@@ -108,8 +109,8 @@ class Game {
     this.startTime = Date.now();
     const battleStartData = [
       { playerId: this.users[0]?.playerId, team: 'red1', x: 73, y: 2 },
-      { playerId: this.users[1]?.playerId, team: 'blue1', x: 87, y: 2 },
-      { playerId: this.users[2]?.playerId, team: 'red2', x: 73, y: -2 },
+      { playerId: this.users[1]?.playerId, team: 'red2', x: 73, y: -2 },
+      { playerId: this.users[2]?.playerId, team: 'blue1', x: 87, y: 2 },
       { playerId: this.users[3]?.playerId, team: 'blue2', x: 87, y: -2 },
     ];
     this.users.forEach((user, index) => {
