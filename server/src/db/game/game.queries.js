@@ -19,6 +19,6 @@ export const GAME_SQL_QUERIES = {
     'INSERT INTO `character` (character_name, hp, speed, power, defense, critical, price) VALUES (?, ?, ?, ?, ?, ?, ?)',
   CREATE_CHARACTER_SKILLS:
     'INSERT INTO character_skills (skill_name, skill_type, character_id, damage_factor, cool_time, `range`, `scale`) VALUES (?, ?, ?, ?, ?, ?, ?)',
-    FIND_CHARACTERS_DATA: 'SELECT character_id, character_name, hp, speed, power, defense, critical, price FROM character',
+    FIND_CHARACTERS_DATA: 'SELECT * FROM `character`',
 
   };

@@ -4,8 +4,7 @@
 import { loadProtos } from './loadProtos.js';
 import { createLobbySession } from '../sessions/lobby.session.js';
 import { findCharacterData } from '../db/game/game.db.js';
-import {Character} from '../classes/character.class.js';
-
+import Character from '../classes/models/character.class.js';
 
 const initServer = async () => {
   try {
@@ -16,9 +15,10 @@ const initServer = async () => {
 
     const characters = await findCharacterData();
     characters.forEach(character=>{
-      const characterAsset = new Character();
+      const characterValues = Object.values(character);
+      const characterAsset = new Character(...characterValues);
 
-      console.log("Character Assets loaded:", characterAsset.getCharacterName());
+      console.log("Character Assets loaded:", characterAsset);
     });
 
     
