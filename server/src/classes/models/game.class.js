@@ -1,4 +1,5 @@
 import { config } from '../../config/config.js';
+import { gameEnd } from '../../utils/gameEnd.js';
 import {
   createAttackedSuccessPacket,
   createChattingPacket,
@@ -47,7 +48,7 @@ class Game {
     this.intervalManager.removeInterval(playerId, 'ping');
   }
 
-  getAttackedOpposingTeam(attackUser, startX, startY, endX, endY) {
+  sendAttackedOpposingTeam(attackUser, startX, startY, endX, endY) {
     let team;
     if (attackUser.team.includes('red')) {
       team = 'red';
@@ -56,16 +57,28 @@ class Game {
     }
 
     const attackedData = [];
+    let deathCount = 0;
 
+    // 우리 팀 유저 배열
+    const ourTeam = this.users.filter((user) => !user.team.includes(team));
     // 상대 팀 유저 배열
     const opposingTeam = this.users.filter((user) => !user.team.includes(team));
     opposingTeam.forEach((user) => {
-      console.log(`userX , Y : ${user.x}, ${user.y} StartX, Y : ${startX}, ${startY}, EndX, Y : ${endX} , ${endY}`);
-      if (user.x > startX && user.y < startY && user.x < endX && user.y > endY) {
+      if (user.x > startX && user.y < startY && user.x < endX && user.y > endY && user.hp > 0) {
         // 상대방 히트
-        console.log('Hit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
         user.hp -= attackUser.power;
+        attackUser.damage += attackUser.power;
         attackedData.push({ playerId: user.name, hp: user.hp });
+
+        if (user.hp <= 0) {
+          attackUser.kill += 1;
+          user.death += 1;
+        }
+      }
+
+      // 상대팀이 모두 죽었는지 체크
+      if (user.hp <= 0) {
+        deathCount += 1;
       }
     });
 
@@ -75,6 +88,11 @@ class Game {
       this.users.forEach((user) => {
         user.socket.write(packet);
       });
+    }
+
+    // deathCount === opposingTeam.length
+    if (deathCount === 1) {
+      gameEnd(this.id, ourTeam, opposingTeam, team, this.startTime);
     }
   }
 
@@ -87,6 +105,7 @@ class Game {
   }
 
   startGame() {
+    this.startTime = Date.now();
     const battleStartData = [
       { playerId: this.users[0]?.playerId, team: 'red1', x: 73, y: 2 },
       { playerId: this.users[1]?.playerId, team: 'blue1', x: 87, y: 2 },

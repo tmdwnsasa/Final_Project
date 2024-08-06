@@ -2,7 +2,6 @@ import { handlerError } from '../../utils/error/errorHandler.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { getGameSessionByPlayerId } from '../../sessions/game.session.js';
-import { getUserById } from '../../sessions/user.session.js';
 
 const updateSkillHandler = async ({ socket, userId, payload }) => {
   try {
@@ -25,7 +24,7 @@ const updateSkillHandler = async ({ socket, userId, payload }) => {
     const endX = startX + rangeX;
     const endY = startY - rangeY;
 
-    gameSession.getAttackedOpposingTeam(user, startX, startY, endX, endY);
+    gameSession.sendAttackedOpposingTeam(user, startX, startY, endX, endY);
   } catch (error) {
     handlerError(socket, error);
   }

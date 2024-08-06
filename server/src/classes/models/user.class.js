@@ -23,6 +23,10 @@ class User {
     this.team = 'none';
 
     this.character = null;
+
+    this.kill = 0;
+    this.death = 0;
+    this.damage = 0;
   }
 
   updatePosition(x, y) {
