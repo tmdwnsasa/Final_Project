@@ -17,7 +17,6 @@ export const gameEnd = async (gameSessionId, winnerTeam, loserTeam, winTeamColor
       return { playerId: user.playerId, kill: user.kill, death: user.death };
     });
 
-    console.log(users);
 
     // for (let i = 1; i < 4; i++) {
     //   try {
