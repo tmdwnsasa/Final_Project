@@ -92,7 +92,6 @@ class Game {
 
     // deathCount === opposingTeam.length
     if (deathCount === opposingTeam.length) {
-      console.log('111', opposingTeam.length);
       gameEnd(this.id, ourTeam, opposingTeam, team, this.startTime);
     }
   }
