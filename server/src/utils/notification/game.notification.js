@@ -83,7 +83,7 @@ export const createAttackedSuccessPacket = (users) => {
   return makeNotification(attackPacket, PACKET_TYPE.ATTACK);
 };
 
-export const createGameEndPacket = (data) => {
+export const createGameEndPacket = (payload) => {
   const protoMessages = getProtoMessages();
   const gameEnd = protoMessages.gameNotification.MatchResultPayload;
 

@@ -3,7 +3,7 @@ import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { getGameSessionByPlayerId } from '../../sessions/game.session.js';
 
-const updateSkillHandler = async ({ socket, userId, payload }) => {
+const updateSkillHandler = ({ socket, userId, payload }) => {
   try {
     const { x, y, rangeX, rangeY } = payload;
     //임시로 사용함

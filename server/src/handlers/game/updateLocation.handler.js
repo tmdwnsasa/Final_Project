@@ -4,7 +4,7 @@ import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { getGameSessionByPlayerId } from '../../sessions/game.session.js';
 import { getLobbySession } from '../../sessions/lobby.session.js';
 
-const updateLocationHandler = async ({ socket, userId, payload }) => {
+const updateLocationHandler = ({ socket, userId, payload }) => {
   try {
     const { x, y, isLobby } = payload;
     if (isLobby) {
