@@ -15,5 +15,5 @@ export const exitGameHandler = ({ socket, userId, data }) => {
     userId,
   );
 
-  socket.write(exitResponse);
+  setTimeout(() => socket.write(exitResponse), 500);
 };
