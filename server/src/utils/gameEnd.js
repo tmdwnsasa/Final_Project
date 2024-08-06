@@ -14,31 +14,33 @@ import { createGameEndPacket } from './notification/game.notification.js';
 export const gameEnd = async (gameSessionId, winnerTeam, loserTeam, winTeamColor, startTime) => {
   try {
     const users = winnerTeam.concat(loserTeam).map((user) => {
-      return { playerId: user.playerId, kill: user.kill, death: user.death };
+      return { playerId: user.name, kill: user.kill, death: user.death };
     });
 
-    console.log(users);
+    const dbUsers = winnerTeam.concat(loserTeam).map((user) => {
+      return { ...user, damage: user.damage };
+    });
 
-    // for (let i = 1; i < 4; i++) {
-    //   try {
-    //     await dbSaveTransaction(winnerTeam, loserTeam, users, gameSessionId, winTeamColor, startTime);
-    //     break;
-    //   } catch (err) {
-    //     console.error(`db저장 실패 ${i}번째 시도 중..,${err.message}`);
-    //     if (i === 3) {
-    //       console.log('3번 모두 저장 실패!');
-    //       //db저장 수작업해야하니 추후에 추가
-    //     }
-    //   }
-    // }
+    for (let i = 1; i < 4; i++) {
+      try {
+        await dbSaveTransaction(winnerTeam, loserTeam, dbUsers, gameSessionId, winTeamColor, startTime);
+        break;
+      } catch (err) {
+        console.error(`db저장 실패 ${i}번째 시도 중..,${err.message}`);
+        if (i === 3) {
+          console.log('3번 모두 저장 실패!');
+          //db저장 수작업해야하니 추후에 추가
+        }
+      }
+    }
 
     const winPayload = {
       result: 'Win',
-      users: users,
+      users: dbUsers,
     };
     const losePayload = {
       result: 'Lose',
-      users: users,
+      users: dbUsers,
     };
 
     const winPacket = createGameEndPacket(winPayload);
@@ -102,7 +104,7 @@ async function winSaveRating(connection, winTeam) {
     try {
       const findUserRating = await getUserRating(connection, user.playerId);
       if (!findUserRating) {
-        await createUserRating(connection, user.playerId, user.characterId - 1, 1, 0);
+        await createUserRating(connection, user.playerId, user.characterId, 1, 0);
         console.log(`${user.playerId}님의 Rating이 생성`);
       } else {
         const ratingTable = await getUserRating(connection, user.playerId);
@@ -120,7 +122,7 @@ async function loseSaveRating(connection, loseTeam) {
     try {
       const findUserRating = await getUserRating(connection, user.playerId);
       if (!findUserRating) {
-        await createUserRating(connection, user.playerId, user.characterId - 1, 0, 1);
+        await createUserRating(connection, user.playerId, user.characterId, 0, 1);
         console.log(`${user.playerId}님의 Rating이 생성`);
       } else {
         const ratingTable = await getUserRating(connection, user.playerId);

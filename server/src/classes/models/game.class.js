@@ -86,7 +86,7 @@ class Game {
     }
 
     // deathCount === opposingTeam.length
-    if (deathCount === 1) {
+    if (deathCount === opposingTeam.length) {
       gameEnd(this.id, ourTeam, opposingTeam, team, this.startTime);
     }
   }
