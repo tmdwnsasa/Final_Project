@@ -15,10 +15,5 @@ export const GAME_SQL_QUERIES = {
   UPDATE_USER_RATING: 'UPDATE rating SET win = ?, lose = ? WHERE player_id = ? AND character_id = ?',
   FIND_USER_SCORE_BY_PLAYER_ID: 'SELECT * FROM score WHERE player_id = ?',
   FIND_USER_RATING_BY_PLAYER_ID: 'SELECT * FROM rating WHERE player_id = ?',
-  CREATE_CHARACTER:
-    'INSERT INTO `character` (character_name, hp, speed, power, defense, critical, price) VALUES (?, ?, ?, ?, ?, ?, ?)',
-  CREATE_CHARACTER_SKILLS:
-    'INSERT INTO character_skills (skill_name, skill_type, character_id, damage_factor, cool_time, `range`, `scale`) VALUES (?, ?, ?, ?, ?, ?, ?)',
-    FIND_CHARACTERS_DATA: 'SELECT * FROM `character`',
-
-  };
+  FIND_CHARACTERS_DATA: 'SELECT * FROM `character`',
+};

@@ -2,7 +2,7 @@ import { getGameSessionByPlayerId, removeGameSession } from '../../sessions/game
 import { getLobbySession } from '../../sessions/lobby.session.js';
 import { getUserById } from '../../sessions/user.session.js';
 
-export const returnLobbyHandler = ({ socket, userId, payload }) => {
+const returnLobbyHandler = ({ socket, userId, payload }) => {
   const user = getUserById(userId);
   if (!user) {
     throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
@@ -23,3 +23,5 @@ export const returnLobbyHandler = ({ socket, userId, payload }) => {
   lobbySession.addUser(user);
   user.updatePosition(0, 0);
 };
+
+export default returnLobbyHandler;

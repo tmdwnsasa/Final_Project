@@ -6,7 +6,6 @@ import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
-import { getLobbySession } from '../../sessions/lobby.session.js';
 import { findPossessionByPlayerID } from '../../db/game/game.db.js';
 import CustomError from '../../utils/error/customError.js';
 import { getGameSessionByPlayerId } from '../../sessions/game.session.js';
@@ -71,14 +70,6 @@ const loginHandler = async ({ socket, userId, payload }) => {
         );
       }
     }
-
-    // // 대기실 세션에 사람 추가 / 대기실 입장 통지
-    // const lobbySession = getLobbySession();
-    // lobbySession.addUser(user);
-    // response = createResponse(HANDLER_IDS.JOIN_LOBBY, RESPONSE_SUCCESS_CODE, { sessionId: sessionId }, userId);
-
-    // //클라이언트
-    // response = createResponse(HANDLER_IDS.LOGIN, RESPONSE_SUCCESS_CODE, { sessionId: sessionId }, userId);
 
     socket.write(response);
   } catch (err) {
