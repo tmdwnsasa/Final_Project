@@ -104,10 +104,10 @@ class Game {
     this.startTime = Date.now();
 
     const battleStartData = [
-      { playerId: this.users[0]?.playerId, hp:this.users[0]?.hp, team: 'red1', x: 73, y: 2 },
-      { playerId: this.users[1]?.playerId, hp:this.users[1]?.hp, team: 'red2', x: 73, y: -2 },
-      { playerId: this.users[2]?.playerId, hp:this.users[2]?.hp, team: 'blue1', x: 87, y: 2 },
-      { playerId: this.users[3]?.playerId, hp:this.users[3]?.hp, team: 'blue2', x: 87, y: -2 },
+      { playerId: this.users[0]?.name, hp: this.users[0]?.hp, team: 'red1', x: 73, y: 2 },
+      { playerId: this.users[1]?.name, hp: this.users[1]?.hp, team: 'red2', x: 73, y: -2 },
+      { playerId: this.users[2]?.name, hp: this.users[2]?.hp, team: 'blue1', x: 87, y: 2 },
+      { playerId: this.users[3]?.name, hp: this.users[3]?.hp, team: 'blue2', x: 87, y: -2 },
     ];
     this.users.forEach((user, index) => {
       user.updatePosition(battleStartData[index].x, battleStartData[index].y);
