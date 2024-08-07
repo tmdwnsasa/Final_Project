@@ -1,4 +1,4 @@
-import { findUserByPlayerId, updateUserLogin } from '../../db/user/user.db.js';
+import { findUserByPlayerId } from '../../db/user/user.db.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createPossession } from '../../db/game/game.db.js';

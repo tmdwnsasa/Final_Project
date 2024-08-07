@@ -3,5 +3,5 @@ syntax = 'proto3';
 package character;
 
 message GiveCharacterPayload {
-    uint32 characterId = 1;
+  uint32 characterId = 1;
 }
