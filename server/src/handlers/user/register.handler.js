@@ -32,6 +32,17 @@ const registerHandler = async ({ socket, userId, payload }) => {
     }
 
     const hashpassword = await bcrypt.hash(password, 10);
+
+    let idCheck = await findUserByPlayerId(palyerId);
+    if (idCheck) {
+      throw new CustomError(ErrorCodes.ALREADY_EXIST_ID, '이미 있는 아이디입니다.');
+    }
+
+    let nameCheck = await findUserByName(name);
+    if (nameCheck) {
+      throw new CustomError(ErrorCodes.ALREADY_EXIST_NAME, '이미 있는 이름입니다.');
+    }
+
     createUser(playerId, hashpassword, name);
 
     const Response = createResponse(HANDLER_IDS.REGISTER, RESPONSE_SUCCESS_CODE, { message: '회원가입 완료' }, userId);

@@ -7,6 +7,8 @@ import { handlerError } from '../utils/error/errorHandler.js';
 import { packetParser } from '../utils/parser/packetParser.js';
 import CustomError from '../utils/error/customError.js';
 import { getProtoMessages } from '../init/loadProtos.js';
+import { lobbySession } from '../sessions/session.js';
+import { removeUserFromQueue } from '../sessions/matchQueue.session.js';
 
 export const onData = (socket) => async (data) => {
   socket.buffer = Buffer.concat([socket.buffer, data]);
@@ -39,9 +41,14 @@ export const onData = (socket) => async (data) => {
             const { handlerId, userId, payload, sequence } = packetParser(packet);
 
             const user = getUserById(userId);
+
             if (user && user.sequence !== sequence) {
-              throw new CustomError(ErrorCodes.INVALID_SEQUENCE, '잘못된 호출값입니다');
+              lobbySession.removeUser(userId);
+              removeUserFromQueue(socket);
+
+              throw new CustomError(ErrorCodes.INVALID_SEQUENCE, 'sequence 에러');
             }
+
             const handler = getHandlerById(handlerId);
             await handler({
               socket,
