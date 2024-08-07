@@ -66,8 +66,8 @@ CREATE TABLE IF NOT EXISTS character_skills (
 INSERT INTO `character` (character_name, hp, speed, power, defense, critical, price) VALUES 
 ("근씨 아저씨", 150, 5.0, 10.0, 0.1, 0.05, 5000),
 ("원씨 아줌마", 100, 4.0, 12.0, 0.08, 0.1, 5000),
-("탱씨 아저씨", 200, 4.0, 8.0, 0.15, 0.05, 5000);
-("힐씨 아줌마", 80, 5.0, 7.0, 0.09, 0, 5000),
+("탱씨 아저씨", 200, 4.0, 8.0, 0.15, 0.05, 5000),
+("힐씨 아줌마", 80, 5.0, 7.0, 0.09, 0, 5000);
 
 -- 근씨 아저씨 스킬 데이터 삽입
 INSERT INTO character_skills (skill_name, skill_type, character_id, damage_factor, cool_time, `range`, `scale`) VALUES

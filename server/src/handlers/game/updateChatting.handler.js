@@ -4,7 +4,7 @@ import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { getLobbySession } from '../../sessions/lobby.session.js';
 import { getGameSessionByPlayerId } from '../../sessions/game.session.js';
 
-const updateChattingHandler = async ({ socket, userId, payload }) => {
+const updateChattingHandler = ({ socket, userId, payload }) => {
   try {
     const { message, type, isLobby } = payload;
     if (isLobby) {

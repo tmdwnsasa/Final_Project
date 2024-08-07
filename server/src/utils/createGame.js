@@ -46,12 +46,9 @@ const createGame = ({ redTeam, blueTeam }) => {
     //게임맵으로 이동후 해당 플레이어들 로비세션에서 삭제
     const lobbySession = getLobbySession();
 
-    console.log('In lobby session:', lobbySession.users);
-
     [...redTeam, ...blueTeam].forEach(({ id }) => {
       lobbySession.removeUser(id);
     });
-    console.log('Removed from lobby session:', lobbySession.users);
   } catch (err) {
     [...redTeam, ...blueTeam].forEach(({ socket }) => {
       handlerError(socket, err);

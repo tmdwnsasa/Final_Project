@@ -22,7 +22,16 @@ class User {
     this.animationStatus = 'stand'; // 'stand', 'walk' 등등
     this.team = 'none';
 
-    this.character = null;
+    this.characterId = 0;
+    this.hp = 0;
+    this.speed = 0;
+    this.power = 0;
+    this.defense = 0;
+    this.critical = 0;
+
+    this.kill = 0;
+    this.death = 0;
+    this.damage = 0;
   }
 
   updatePosition(x, y) {
@@ -41,8 +50,13 @@ class User {
   }
 
   changeCharacter(characterId) {
-    this.character = characterAssets[characterId];
-    return this.character;
+    this.characterId = characterAssets[characterId].characterId;
+    this.hp = characterAssets[characterId].hp;
+    this.speed = characterAssets[characterId].speed;
+    this.power = characterAssets[characterId].power;
+    this.defense = characterAssets[characterId].defense;
+    this.critical = characterAssets[characterId].critical;
+    return characterAssets[characterId];
   }
 
   changeTeam(teamColor) {
@@ -64,7 +78,7 @@ class User {
 
   calculatePosition(latency) {
     const timeDiff = latency / 1000; // 레이턴시를 초 단위로 계산
-    const distance = this.character.speed * config.server.frame + this.character.speed * config.server.frame * timeDiff;
+    const distance = this.speed * config.server.frame + this.speed * config.server.frame * timeDiff;
 
     this.x = this.x + distance * this.directionX;
     this.y = this.y + distance * this.directionY;
