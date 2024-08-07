@@ -62,8 +62,16 @@ class Game {
     opposingTeam.forEach((user) => {
       if (user.x > startX && user.y < startY && user.x < endX && user.y > endY && user.hp > 0) {
         // 상대방 히트
-        user.hp -= attackUser.power;
-        attackUser.damage += attackUser.power;
+        if (attackUser.power > user.hp) {
+          attackUser.damage += user.hp;
+          user.hp = 0;
+        }
+
+        if (attackUser.power <= user.hp) {
+          user.hp -= attackUser.power;
+          attackUser.damage += attackUser.power;
+        }
+
         attackedData.push({ playerId: user.name, hp: user.hp });
 
         if (user.hp <= 0) {
@@ -104,10 +112,10 @@ class Game {
     this.startTime = Date.now();
 
     const battleStartData = [
-      { playerId: this.users[0]?.playerId, hp:this.users[0]?.hp, team: 'red1', x: 73, y: 2 },
-      { playerId: this.users[1]?.playerId, hp:this.users[1]?.hp, team: 'red2', x: 73, y: -2 },
-      { playerId: this.users[2]?.playerId, hp:this.users[2]?.hp, team: 'blue1', x: 87, y: 2 },
-      { playerId: this.users[3]?.playerId, hp:this.users[3]?.hp, team: 'blue2', x: 87, y: -2 },
+      { playerId: this.users[0]?.playerId, hp: this.users[0]?.hp, team: 'red1', x: 73, y: 2 },
+      { playerId: this.users[1]?.playerId, hp: this.users[1]?.hp, team: 'red2', x: 73, y: -2 },
+      { playerId: this.users[2]?.playerId, hp: this.users[2]?.hp, team: 'blue1', x: 87, y: 2 },
+      { playerId: this.users[3]?.playerId, hp: this.users[3]?.hp, team: 'blue2', x: 87, y: -2 },
     ];
     this.users.forEach((user, index) => {
       user.updatePosition(battleStartData[index].x, battleStartData[index].y);
