@@ -62,8 +62,16 @@ class Game {
     opposingTeam.forEach((user) => {
       if (user.x > startX && user.y < startY && user.x < endX && user.y > endY && user.hp > 0) {
         // 상대방 히트
-        user.hp -= attackUser.power;
-        attackUser.damage += attackUser.power;
+        if (attackUser.power > user.hp) {
+          attackUser.damage += user.hp;
+          user.hp = 0;
+        }
+
+        if (attackUser.power <= user.hp) {
+          user.hp -= attackUser.power;
+          attackUser.damage += attackUser.power;
+        }
+
         attackedData.push({ playerId: user.name, hp: user.hp });
 
         if (user.hp <= 0) {
