@@ -36,10 +36,10 @@ export const createMatchingCompleteNotification = (message) => {
   const protoMessages = getProtoMessages();
   const matchingComplete = protoMessages.gameNotification.MatchMakingComplete;
 
-  const payload = {message};
+  const payload = { message };
   const packetMessage = matchingComplete.create(payload);
   const matchingCompletePacket = matchingComplete.encode(packetMessage).finish();
-  
+
   return makeNotification(matchingCompletePacket, PACKET_TYPE.MATCHMAKING);
 };
 
@@ -47,7 +47,7 @@ export const gameStartNotification = (users) => {
   const protoMessages = getProtoMessages();
   const BattleStart = protoMessages.gameNotification.BattleStart;
 
-  const payload = {users};
+  const payload = { users };
   const packetMessage = BattleStart.create(payload);
   const startPacket = BattleStart.encode(packetMessage).finish();
   return makeNotification(startPacket, PACKET_TYPE.GAME_START);
@@ -61,6 +61,26 @@ export const createPingPacket = (timestamp) => {
   const message = ping.create(payload);
   const pingPacket = ping.encode(message).finish();
   return makeNotification(pingPacket, PACKET_TYPE.PING);
+};
+
+export const createGameSkillPacket = (playerId, x, y, rangeX, rangeY) => {
+  const protoMessages = getProtoMessages();
+  const skill = protoMessages.skillNotification.SkillUpdate;
+
+  const payload = { playerId, x, y, rangeX, rangeY };
+  const message = skill.create(payload);
+  const skillPacket = skill.encode(message).finish();
+  return makeNotification(skillPacket, PACKET_TYPE.SKILL);
+};
+
+export const createAttackedSuccessPacket = (users) => {
+  const protoMessages = getProtoMessages();
+  const attack = protoMessages.gameNotification.AttackedSuccess;
+
+  const payload = { users };
+  const message = attack.create(payload);
+  const attackPacket = attack.encode(message).finish();
+  return makeNotification(attackPacket, PACKET_TYPE.ATTACK);
 };
 
 export const createGameEndPacket = (payload) => {

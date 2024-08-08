@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package skillNotification;
+
+// 위치 정보 메시지 구조
+message SkillUpdate {
+  string playerId = 1;
+  float x = 2;
+  float y = 3;
+  float rangeX = 4;
+  float rangeY = 5;
+}

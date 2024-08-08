@@ -3,11 +3,11 @@ syntax = 'proto3';
 package common;
 
 message Packet {
-    int32 handlerId = 1;
-    string userId = 2;
-    string version = 3;
-    bytes payload = 4;
-    int32 sequence = 5;
+  int32 handlerId = 1;
+  string userId = 2;
+  string version = 3;
+  bytes payload = 4;
+  int32 sequence = 5;
 }
 
 message Ping {

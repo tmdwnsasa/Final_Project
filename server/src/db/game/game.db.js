@@ -113,23 +113,16 @@ export const findCharacterData = async () => {
   return toCamelCase(rows[0]);
 };
 
-export async function dbSaveTransaction(
-  winTeam,
-  loseTeam,
-  users,
-  gameSession,
-  winnerTeam,
-  startTime,
-) {
+export async function dbSaveTransaction(winTeam, loseTeam, users, gameSessionId, winnerTeam, startTime) {
   const connection = await pools.GAME_DB.getConnection();
   try {
     await connection.beginTransaction();
 
     await asyncSaveScoreRating(connection, winTeam, loseTeam);
-    await saveMatchHistory(connection, users, gameSession.sessionId);
+    await saveMatchHistory(connection, users, gameSessionId);
     await createMatchLog(
       connection,
-      gameSession.sessionId,
+      gameSessionId,
       winTeam[0].playerId,
       winTeam[1].playerId,
       loseTeam[0].playerId,
