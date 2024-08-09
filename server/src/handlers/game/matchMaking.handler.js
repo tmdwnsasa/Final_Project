@@ -8,6 +8,8 @@ import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import createGame from '../../utils/createGame.js';
 import { getUsersForGame } from '../../sessions/matchQueue.session.js';
+import { lobbySession } from '../../sessions/session.js';
+
 
 const matchMakingHandler = ({ socket, payload }) => {
   try {
@@ -31,6 +33,12 @@ const matchMakingHandler = ({ socket, payload }) => {
       user.playerId,
     );
     socket.write(response);
+
+    const userId = `<color=red>알림</color>`;  
+    const message = `<color=red>${user.playerId} 매칭 중...</color>`;
+    const type = '1'; 
+
+    lobbySession.sendAllChatting(userId, message, type);
 
     const existingUserInQueue = matchQueueSession.some((userInQueue) => userInQueue.playerId === user.playerId);
 
