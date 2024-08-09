@@ -20,6 +20,7 @@ class Game {
     this.intervalManager = new IntervalManager();
 
     this.intervalManager.addInterval(this.id, this.sendAllLocation.bind(this), config.server.frame * 1000, 'location');
+    this.dbSaveRequest = false;
   }
 
   addUser(user) {
@@ -95,8 +96,9 @@ class Game {
     }
 
     // deathCount === opposingTeam.length
-    if (deathCount === opposingTeam.length) {
+    if (deathCount === opposingTeam.length && this.dbSaveRequest === false) {
       gameEnd(this.id, ourTeam, opposingTeam, team, this.startTime);
+      this.dbSaveRequest = true;
     }
   }
 
