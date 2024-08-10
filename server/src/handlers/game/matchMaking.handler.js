@@ -10,7 +10,6 @@ import createGame from '../../utils/createGame.js';
 import { getUsersForGame } from '../../sessions/matchQueue.session.js';
 import { lobbySession } from '../../sessions/session.js';
 
-
 const matchMakingHandler = ({ socket, payload }) => {
   try {
     const { sessionID } = payload;
@@ -34,9 +33,9 @@ const matchMakingHandler = ({ socket, payload }) => {
     );
     socket.write(response);
 
-    const userId = `<color=red>알림</color>`;  
+    const userId = `<color=red>알림</color>`;
     const message = `<color=red>${user.playerId} 매칭 중...</color>`;
-    const type = '1'; 
+    const type = '1';
 
     lobbySession.sendAllChatting(userId, message, type);
 

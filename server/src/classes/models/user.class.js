@@ -11,6 +11,7 @@ class User {
     this.socket = socket;
     this.x = 0;
     this.y = 0;
+    this.corrPos = 0;
     this.directionX = 0;
     this.directionY = 0;
     this.lastUpdateTime = Date.now();
@@ -39,7 +40,16 @@ class User {
     this.lastUpdateTime = Date.now();
   }
 
-  updateDirection(x, y) {
+  updateDirection(x, y, latency) {
+    const timeDiff = latency / 1000 / config.server.frame;
+    this.corrPos = this.speed * config.server.frame * timeDiff;
+
+    this.x = this.x - this.corrPos * this.directionX;
+    this.y = this.y - this.corrPos * this.directionY;
+
+    this.x = this.x + this.corrPos * x;
+    this.y = this.y + this.corrPos * y;
+
     this.directionX = x;
     this.directionY = y;
   }
@@ -76,17 +86,30 @@ class User {
   }
 
   calculatePosition(latency) {
-    const timeDiff = latency / 1000; // 레이턴시를 초 단위로 계산
-    const distance = this.speed * config.server.frame + this.speed * config.server.frame * timeDiff;
+    const timeDiff = latency / 1000 / config.server.frame;
+    const distance = this.speed * config.server.frame;
 
-    this.x = this.x + distance * this.directionX;
-    this.y = this.y + distance * this.directionY;
+    this.corrPos = this.speed * config.server.frame * timeDiff;
 
-    // x, y 축에서 이동한 거리 계산
-    return {
-      x: this.x,
-      y: this.y,
-    };
+    if (this.directionX !== 0 && this.directionY !== 0) {
+      this.x = this.x + distance * this.directionX * 0.71;
+      this.y = this.y + distance * this.directionY * 0.71;
+    } else {
+      this.x = this.x + distance * this.directionX;
+      this.y = this.y + distance * this.directionY;
+    }
+
+    if (this.directionX !== 0 && this.directionY !== 0) {
+      return {
+        x: this.x + this.corrPos * this.directionX * 0.71,
+        y: this.y + this.corrPos * this.directionY * 0.71,
+      };
+    } else {
+      return {
+        x: this.x + this.corrPos * this.directionX,
+        y: this.y + this.corrPos * this.directionY,
+      };
+    }
   }
 }
 
