@@ -68,8 +68,8 @@ const handlers = {
   },
 
   [HANDLER_IDS.INVENTORY]: {
-    handler:inventoryHandler,
-    protoType:packetNames.user.InventoryHandler,
+    handler: inventoryHandler,
+    protoType:packetNames.user.InventoryPayload,
   }
 
 

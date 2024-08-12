@@ -9,7 +9,7 @@ export const packetNames = {
   user: {
     RegisterPayload: 'user.RegisterPayload',
     LoginPayload: 'user.LoginPayload',
-    Inventory: 'user.Inventory',
+    InventoryPayload: 'user.InventoryPayload',
   },
   game: {
     CreateGamePayload: 'game.CreateGamePayload',
