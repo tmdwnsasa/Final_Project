@@ -36,6 +36,13 @@ export const config = {
       host: env.ERROR_DB_HOST,
       port: env.ERROR_DB_PORT,
     },
+    MAP_DB: {
+      name: env.MAP_DB_NAME,
+      user: env.MAP_DB_USER,
+      password: env.MAP_DB_PASSWORD,
+      host: env.MAP_DB_HOST,
+      port: env.MAP_DB_PORT,
+    },
     REDIS: {
       host: env.REDIS_HOST,
       port: env.REDIS_PORT,
