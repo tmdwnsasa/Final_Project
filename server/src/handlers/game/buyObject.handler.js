@@ -1,3 +1,4 @@
+import { characterAssets } from '../../assets/character.asset';
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds';
 import { findMoneyByPlayerId } from '../../db/user/user.db';
 import { getUserById } from '../../sessions/user.session';
@@ -5,9 +6,8 @@ import CustomError from '../../utils/error/customError';
 import { ErrorCodes } from '../../utils/error/errorCodes';
 import { createResponse } from '../../utils/response/createResponse';
 
-export const buyCharacter = async ({ socket, userId, data }) => {
-  //data에 유저의 골드와, 구매하려는 해당 캐릭터의 간단한 정보?
-  const { userMoney, characterId } = data;
+export const PurchaseCharacter = async ({ socket, userId, payload }) => {
+  const { characterId } = payload;
 
   const user = getUserById(userId);
   if (!user) {
@@ -15,14 +15,10 @@ export const buyCharacter = async ({ socket, userId, data }) => {
   }
 
   // 클라 유저골드와 db유저골드와 비교검증
-  const serverUserMoney = await findMoneyByPlayerId(userId);
-
-  if (userMoney !== serverUserMoney) {
-    throw new CustomError(ErrorCodes, '당신의 골드 보유량이 이상해요~');
-  }
+  const userMoney = await findMoneyByPlayerId(userId);
 
   //characterId와 일치하는 해당 캐릭터를 db에서 가져옴
-  //const characterInfo = await getCharacterInfo(characterId)
+  const characterInfo = characterAssets[characterId]
   if (!characterInfo) {
     throw new CustomError(ErrorCodes, '해당 캐릭터 정보를 찾을 수 없어요!');
   }
@@ -58,3 +54,5 @@ export const buyCharacter = async ({ socket, userId, data }) => {
   const packet = createResponse(HANDLER_IDS.BUY_CHARACTER, RESPONSE_SUCCESS_CODE, payload, user.Id);
   socket.write(packet);
 };
+
+export const PurchaseEquipment = () => {};

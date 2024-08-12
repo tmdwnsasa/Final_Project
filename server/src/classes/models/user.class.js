@@ -15,6 +15,7 @@ class User {
     this.directionY = 0;
     this.lastUpdateTime = Date.now();
 
+    this.money = 0;
     this.sequence = 0;
     this.status = 'waiting'; // 'waiting','matching', 'playing'
     this.inParty = false; // 파티 중인지

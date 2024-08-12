@@ -15,6 +15,7 @@ export const HANDLER_IDS = {
   GAME_END: 15,
   RETURN_LOBBY: 16,
   EXIT: 20,
+  STORE:29,
   BUY_CHARACTER: 30,
   SKILL: 50,
 };
