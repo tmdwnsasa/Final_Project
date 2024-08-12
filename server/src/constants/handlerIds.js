@@ -14,6 +14,7 @@ export const HANDLER_IDS = {
   MATCHMAKING: 11,
   GAME_END: 15,
   RETURN_LOBBY: 16,
+  INVENTORY:17,
   EXIT: 20,
   SKILL: 50,
 };

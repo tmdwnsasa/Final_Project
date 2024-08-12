@@ -14,6 +14,7 @@ import updateLocationHandler from './game/updateLocation.handler.js';
 import loginHandler from './user/login.handler.js';
 import registerHandler from './user/register.handler.js';
 import exitGameHandler from './game/exitGame.handler.js';
+import inventoryHandler from './user/inventory.handler.js';
 
 const handlers = {
   [HANDLER_IDS.REGISTER]: {
@@ -65,6 +66,13 @@ const handlers = {
     handler: exitGameHandler,
     protoType: packetNames.game.ExitGamePayload,
   },
+
+  [HANDLER_IDS.INVENTORY]: {
+    handler:inventoryHandler,
+    protoType:packetNames.user.InventoryHandler,
+  }
+
+
 };
 
 export const getHandlerById = (handlerId) => {

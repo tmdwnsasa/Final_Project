@@ -1,6 +1,7 @@
 import { characterAssets } from '../../assets/character.asset.js';
 import { config } from '../../config/config.js';
 import { createPingPacket } from '../../utils/notification/game.notification.js';
+import Inventory from './inventory.class.js';
 
 class User {
   constructor(playerId, name, socket, sessionId) {
@@ -9,6 +10,7 @@ class User {
     this.sessionId = sessionId;
     this.latency = 0;
     this.socket = socket;
+    this.inventory = new Inventory(playerId);
     this.x = 0;
     this.y = 0;
     this.corrPos = 0;
