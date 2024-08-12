@@ -41,8 +41,8 @@ class User {
   }
 
   updateDirection(x, y, latency) {
-    const timeDiff = latency / 1000 / config.server.frame;
-    this.corrPos = this.speed * config.server.frame * timeDiff;
+    const timeDiff = latency / 1000;
+    this.corrPos = this.speed * timeDiff;
 
     this.x = this.x - this.corrPos * this.directionX;
     this.y = this.y - this.corrPos * this.directionY;
@@ -86,10 +86,11 @@ class User {
   }
 
   calculatePosition(latency) {
-    const timeDiff = latency / 1000 / config.server.frame;
+    const timeDiff = latency / 1000;
+
     const distance = this.speed * config.server.frame;
 
-    this.corrPos = this.speed * config.server.frame * timeDiff;
+    this.corrPos = this.speed * timeDiff;
 
     if (this.directionX !== 0 && this.directionY !== 0) {
       this.x = this.x + distance * this.directionX * 0.71;
