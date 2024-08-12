@@ -27,14 +27,14 @@ const matchMakingHandler = ({ socket, payload }) => {
       HANDLER_IDS.MATCHMAKING,
       RESPONSE_SUCCESS_CODE,
       {
-        message: `${user.playerId} 매칭 중입니다,`,
+        message: `${user.name} 매칭 중입니다,`,
       },
       user.playerId,
     );
     socket.write(response);
 
     const userId = `<color=red>알림</color>`;
-    const message = `<color=red>${user.playerId} 매칭 중...</color>`;
+    const message = `<color=red>${user.name} 매칭 중...</color>`;
     const type = '1';
 
     lobbySession.sendAllChatting(userId, message, type);
