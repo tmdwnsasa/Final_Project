@@ -32,9 +32,10 @@ export const createChattingPacket = (playerId, message, type) => {
   return makeNotification(chattingPacket, PACKET_TYPE.CHATTING);
 };
 
-export const createMatchingCompleteNotification = (payload) => {
+export const createMatchingCompleteNotification = (message) => {
   const protoMessages = getProtoMessages();
   const matchingComplete = protoMessages.gameNotification.MatchMakingComplete;
+  const payload = { message };
 
   const packetMessage = matchingComplete.create(payload);
   const matchingCompletePacket = matchingComplete.encode(packetMessage).finish();
@@ -42,11 +43,11 @@ export const createMatchingCompleteNotification = (payload) => {
   return makeNotification(matchingCompletePacket, PACKET_TYPE.MATCHMAKING);
 };
 
-export const gameStartNotification = (users) => {
+export const gameStartNotification = (users, mapName) => {
   const protoMessages = getProtoMessages();
   const BattleStart = protoMessages.gameNotification.BattleStart;
 
-  const payload = { users };
+  const payload = { users, mapName };
   const packetMessage = BattleStart.create(payload);
   const startPacket = BattleStart.encode(packetMessage).finish();
   return makeNotification(startPacket, PACKET_TYPE.GAME_START);

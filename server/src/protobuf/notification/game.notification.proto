@@ -16,12 +16,11 @@ message LocationUpdate {
 
 message MatchMakingComplete {
   string message = 1;
-  string mapName = 2;
 }
 
 message BattleStart {
   repeated UserTeam users = 1;
-  string message =2;
+  string mapName = 2;
 
   message UserTeam {
     string playerId = 1;

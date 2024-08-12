@@ -6,7 +6,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { ErrorCodes } from './error/errorCodes.js';
 import { createMatchingCompleteNotification } from './notification/game.notification.js';
 import { getLobbySession } from '../sessions/lobby.session.js';
-import { mapAssets } from '../assets/map.asset.js';
 
 const createGame = ({ redTeam, blueTeam }) => {
   try {
@@ -33,24 +32,9 @@ const createGame = ({ redTeam, blueTeam }) => {
       gameSession.addUser(user);
     });
 
-    // 전투할 지역 뽑기
-    mapAssets[1][1].isDisputedArea = 1;
-    const disputedArea = [];
-    mapAssets.filter((rows) =>
-      rows.filter((map) => {
-        if (map.isDisputedArea === 1) {
-          disputedArea.push(map);
-        }
-      }),
-    );
-    const randomMapIndex = Math.floor(Math.random() * disputedArea.length);
-    const randomMap = disputedArea[randomMapIndex];
-    gameSession.map = randomMap;
-    console.log(`지역 이름: ${randomMap.mapName}`);
-
     //매치메이킹 완료 통지
-    const payload = { message: '매칭 완료! 대결 시작!', mapName: randomMap.mapName };
-    const packet = createMatchingCompleteNotification(payload);
+    const message = '매칭 완료! 대결 시작!' ;
+    const packet = createMatchingCompleteNotification(message);
     [...redTeam, ...blueTeam].forEach((player) => {
       if (player.socket) {
         player.socket.write(packet);
