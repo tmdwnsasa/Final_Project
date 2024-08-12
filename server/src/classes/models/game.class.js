@@ -17,6 +17,7 @@ class Game {
     this.id = id;
     this.users = [];
     this.startTime = Date.now();
+    this.map = null;
     this.intervalManager = new IntervalManager();
 
     this.intervalManager.addInterval(this.id, this.sendAllLocation.bind(this), config.server.frame * 1000, 'location');

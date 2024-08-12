@@ -50,11 +50,11 @@ const matchMakingHandler = ({ socket, payload }) => {
     addUserToQueue(user);
     console.log(`${user.playerId} added to matching queue. Queue length: ${matchQueueSession.length}`);
 
-    if (matchQueueSession.length >= 4) {
+    if (matchQueueSession.length >= 1) {
       const players = getUsersForGame();
 
-      const redTeam = players.slice(0, 2);
-      const blueTeam = players.slice(2, 4);
+      const redTeam = players.slice(0, 1);
+      const blueTeam = players.slice(1, 1);
 
       console.log(
         `팀 매칭 완료: Red Team - ${redTeam.map((player) => player.playerId).join(', ')}, Blue Team - ${blueTeam.map((player) => player.playerId).join(', ')}`,

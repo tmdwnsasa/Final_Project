@@ -4,6 +4,8 @@ class Map {
     this.mapName = mapName;
     this.isDisputedArea = isDisputedArea;
     this.ownedBy = ownedBy;
+    this.countRedWin = 0;
+    this.countBlueWin = 0;
   }
 }
 

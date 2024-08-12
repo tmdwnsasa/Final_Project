@@ -32,11 +32,10 @@ export const createChattingPacket = (playerId, message, type) => {
   return makeNotification(chattingPacket, PACKET_TYPE.CHATTING);
 };
 
-export const createMatchingCompleteNotification = (message) => {
+export const createMatchingCompleteNotification = (payload) => {
   const protoMessages = getProtoMessages();
   const matchingComplete = protoMessages.gameNotification.MatchMakingComplete;
 
-  const payload = { message };
   const packetMessage = matchingComplete.create(payload);
   const matchingCompletePacket = matchingComplete.encode(packetMessage).finish();
 
