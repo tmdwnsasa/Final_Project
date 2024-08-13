@@ -22,18 +22,18 @@ const inventoryHandler = async ({socket, payload}) => {
 
     const userInventory = user.inventory;
 
-    const userMoney = userInventory.getPlayersMoney();
+    const userMoney = await userInventory.getPlayersMoney();
     console.log('User money:', userMoney);
 
-    const equippedItems = await userInventory.loadEquippedItems();
-    const allItems = await userInventory.getAllItems();
-    const combinedStats = await userInventory.getCombinedStats();
+    // const equippedItems = await userInventory.getEquippedItems();
+    // const allItems = await userInventory.getAllItems();
+    // const combinedStats = await userInventory.getCombinedStats();
 
     const inventoryData = {
       userMoney,
-      equippedItems,
-      allItems,
-      combinedStats
+      // equippedItems,
+      // allItems,
+      // combinedStats
     };
 
     const response = createResponse(
