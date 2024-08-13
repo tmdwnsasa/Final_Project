@@ -35,6 +35,7 @@ const initServer = async () => {
         column = 0;
       }
     });
+    console.log('Map Data loaded success');
   } catch (err) {
     console.error(err);
     process.exit(1);

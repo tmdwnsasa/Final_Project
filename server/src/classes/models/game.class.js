@@ -1,6 +1,7 @@
 import { characterAssets } from '../../assets/character.asset.js';
 import { mapAssets } from '../../assets/map.asset.js';
 import { config } from '../../config/config.js';
+import { changingOwnerOfMap } from '../../utils/changingOwnerOfMap.js';
 import { gameEnd } from '../../utils/gameEnd.js';
 import {
   createAttackedSuccessPacket,
@@ -100,6 +101,12 @@ class Game {
     // deathCount === opposingTeam.length
     if (deathCount === opposingTeam.length && this.dbSaveRequest === false) {
       gameEnd(this.id, ourTeam, opposingTeam, team, this.startTime);
+      if (team === 'red') {
+        this.map.countRedWin++;
+      } else {
+        this.map.countBlueWin++;
+      }
+      changingOwnerOfMap(this.map);
       this.dbSaveRequest = true;
     }
   }
