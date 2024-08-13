@@ -11,7 +11,7 @@ import {
 } from '../db/game/game.db.js';
 import { createGameEndPacket } from './notification/game.notification.js';
 
-export const gameEnd = async (gameSessionId, winnerTeam, loserTeam, winTeamColor, startTime) => {
+export const gameEnd = async (gameSessionId, winnerTeam, loserTeam, winTeamColor, startTime, mapName) => {
   try {
     const users = winnerTeam.concat(loserTeam).map((user) => {
       return { playerId: user.playerId, name: user.name, kill: user.kill, death: user.death, damage: user.damage };
@@ -19,7 +19,7 @@ export const gameEnd = async (gameSessionId, winnerTeam, loserTeam, winTeamColor
 
     for (let i = 1; i < 4; i++) {
       try {
-        await dbSaveTransaction(winnerTeam, loserTeam, users, gameSessionId, winTeamColor, startTime);
+        await dbSaveTransaction(winnerTeam, loserTeam, users, gameSessionId, winTeamColor, startTime, mapName);
         break;
       } catch (err) {
         console.error(`db저장 실패 ${i}번째 시도 중..,${err.message}`);

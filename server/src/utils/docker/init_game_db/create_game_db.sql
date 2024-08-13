@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS match_log (
     blue_player1_id VARCHAR(36),
     blue_player2_id VARCHAR(36),
     winner_team VARCHAR(36),
+    map_name VARCHAR(36),
     start_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     end_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

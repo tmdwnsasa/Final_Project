@@ -100,7 +100,7 @@ class Game {
 
     // deathCount === opposingTeam.length
     if (deathCount === opposingTeam.length && this.dbSaveRequest === false) {
-      gameEnd(this.id, ourTeam, opposingTeam, team, this.startTime);
+      gameEnd(this.id, ourTeam, opposingTeam, team, this.startTime, this.map.mapName);
       if (team === 'red') {
         this.map.countRedWin++;
       } else {
