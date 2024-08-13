@@ -14,6 +14,8 @@ import updateLocationHandler from './game/updateLocation.handler.js';
 import loginHandler from './user/login.handler.js';
 import registerHandler from './user/register.handler.js';
 import exitGameHandler from './game/exitGame.handler.js';
+import { storeHandler } from './game/store.handler.js';
+import { purchaseCharacter } from './game/buyObject.handler.js';
 
 const handlers = {
   [HANDLER_IDS.REGISTER]: {
@@ -52,7 +54,6 @@ const handlers = {
     handler: returnLobbyHandler,
     protoType: packetNames.game.ReturnLobbyPayload,
   },
-
   [HANDLER_IDS.MATCHMAKING]: {
     handler: matchMakingHandler,
     protoType: packetNames.game.MatchingPayload,
@@ -64,6 +65,14 @@ const handlers = {
   [HANDLER_IDS.EXIT]: {
     handler: exitGameHandler,
     protoType: packetNames.game.ExitGamePayload,
+  },
+  [HANDLER_IDS.STORE]: {
+    handler: storeHandler,
+    protoType: packetNames.ui.StorePayload,
+  },
+  [HANDLER_IDS.PURCHASE_CHARACTER]: {
+    handler: purchaseCharacter,
+    protoType: packetNames.character.PurchaseCharacterPayload,
   },
 };
 
