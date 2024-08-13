@@ -9,6 +9,7 @@ import {
   updateUserRating,
   updateUserScore,
 } from '../db/game/game.db.js';
+import { updateUserMoney } from '../db/user/user.db.js';
 import { createGameEndPacket } from './notification/game.notification.js';
 
 export const gameEnd = async (gameSessionId, winnerTeam, loserTeam, winTeamColor, startTime) => {
@@ -27,6 +28,15 @@ export const gameEnd = async (gameSessionId, winnerTeam, loserTeam, winTeamColor
           console.log('3번 모두 저장 실패!');
           //db저장 수작업해야하니 추후에 추가
         }
+      }
+    }
+    //게임 종료 시 골드 지급
+    for (const user of users) {
+      try {
+        await updateUserMoney(user.playerId, 5000);
+        console.log(`${user.name}한테 골드 지급`);
+      } catch (err) {
+        console.error(`골드 저장 중 에러 발생:`, err);
       }
     }
 
@@ -103,8 +113,7 @@ async function winSaveRating(connection, winTeam) {
         await createUserRating(connection, user.playerId, user.characterId, 1, 0);
         console.log(`${user.playerId}님의 Rating이 생성`);
       } else {
-        const ratingTable = await getUserRating(connection, user.playerId);
-        await updateUserRating(connection, user.playerId, user.characterId, ++ratingTable.win, ratingTable.lose);
+        await updateUserRating(connection, user.playerId, user.characterId, ++findUserRating.win, findUserRating.lose);
         console.log(`${user.playerId}님의 Rating이 갱신`);
       }
     } catch (err) {
