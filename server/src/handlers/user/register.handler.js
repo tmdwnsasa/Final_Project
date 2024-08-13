@@ -10,21 +10,20 @@ const registerHandler = async ({ socket, userId, payload }) => {
   try {
     const { playerId, password, name } = payload;
 
+    const idPasswordRegex = /^[a-zA-Z0-9]{4,10}$/;
+    const nameRegex = /^[가-힣a-zA-Z0-9]{2,6}$/;
+
     let errorMessages = [];
-    if (playerId.length <= 4) {
-      errorMessages.push('아이디가 너무 짧습니다.');
-    } else if (playerId.length >= 15) {
-      errorMessages.push('아이디가 너무 깁니다.');
+    if (!idPasswordRegex.test(playerId)) {
+      errorMessages.push('아이디가 조건을 만족하지 않습니다.');
     }
 
-    if (password.length <= 4) {
-      errorMessages.push('패스워드가 너무 짧습니다.');
-    } else if (password.length >= 15) {
-      errorMessages.push('패스워드가 너무 깁니다.');
+    if (!idPasswordRegex.test(password)) {
+      errorMessages.push('비밀번호가 조건을 만족하지 않습니다.');
     }
 
-    if (name.length > 5) {
-      errorMessages.push('이름이 너무 깁니다.');
+    if (!nameRegex.test(name)) {
+      errorMessages.push('이름이 조건을 만족하지 않습니다.');
     }
 
     if (errorMessages.length > 0) {

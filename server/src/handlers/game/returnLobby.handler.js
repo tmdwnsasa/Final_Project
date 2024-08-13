@@ -1,6 +1,8 @@
+import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
 import { getGameSessionByPlayerId, removeGameSession } from '../../sessions/game.session.js';
 import { getLobbySession } from '../../sessions/lobby.session.js';
 import { getUserById } from '../../sessions/user.session.js';
+import { createResponse } from '../../utils/response/createResponse.js';
 
 const returnLobbyHandler = ({ socket, userId, payload }) => {
   const user = getUserById(userId);
@@ -22,6 +24,16 @@ const returnLobbyHandler = ({ socket, userId, payload }) => {
 
   lobbySession.addUser(user);
   user.updatePosition(0, 0);
+
+  const response = createResponse(
+    HANDLER_IDS.RETURN_LOBBY,
+    RESPONSE_SUCCESS_CODE,
+    {
+      message: '로비 복귀 완료',
+    },
+    user.playerId,
+  );
+  socket.write(response);
 };
 
 export default returnLobbyHandler;
