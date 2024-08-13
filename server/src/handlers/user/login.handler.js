@@ -38,7 +38,6 @@ const loginHandler = async ({ socket, userId, payload }) => {
     const gameSession = getGameSessionByPlayerId(playerId);
 
     const sessionId = uuidv4();
-    //레디스로 sessionId를 넣는다.
     addUser(playerId, user.name, socket, sessionId);
 
     if (gameSession !== -1 && gameSession !== undefined) {
@@ -55,7 +54,7 @@ const loginHandler = async ({ socket, userId, payload }) => {
         response = createResponse(
           HANDLER_IDS.CHOICE_CHARACTER,
           RESPONSE_SUCCESS_CODE,
-          { playerId: playerId, name: user.name, sessionId: sessionId },
+          { playerId: playerId, name: user.name, guild: user.guild, sessionId: sessionId },
           userId,
         );
       }
@@ -65,7 +64,7 @@ const loginHandler = async ({ socket, userId, payload }) => {
         response = createResponse(
           HANDLER_IDS.SELECT_CHARACTER,
           RESPONSE_SUCCESS_CODE,
-          { playerId: playerId, name: user.name, sessionId: sessionId, possession: possession },
+          { playerId: playerId, name: user.name, guild: user.guild, sessionId: sessionId, possession: possession },
           userId,
         );
       }

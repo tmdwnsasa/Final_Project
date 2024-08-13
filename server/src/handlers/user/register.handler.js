@@ -8,7 +8,7 @@ import bcrypt from 'bcrypt';
 
 const registerHandler = async ({ socket, userId, payload }) => {
   try {
-    const { playerId, password, name } = payload;
+    const { playerId, password, name, guild } = payload;
 
     let errorMessages = [];
     if (playerId.length <= 4) {
@@ -27,6 +27,10 @@ const registerHandler = async ({ socket, userId, payload }) => {
       errorMessages.push('이름이 너무 깁니다.');
     }
 
+    if (guild === 0 || guild > 2) {
+      errorMessages.push('진영이 잘못 선택되었습니다.');
+    }
+
     if (errorMessages.length > 0) {
       throw new CustomError(ErrorCodes.VALIDATE_ERROR, errorMessages.join(' '));
     }
@@ -43,7 +47,7 @@ const registerHandler = async ({ socket, userId, payload }) => {
       throw new CustomError(ErrorCodes.ALREADY_EXIST_NAME, '이미 있는 이름입니다.');
     }
 
-    createUser(playerId, hashpassword, name);
+    createUser(playerId, hashpassword, name, guild);
 
     const Response = createResponse(HANDLER_IDS.REGISTER, RESPONSE_SUCCESS_CODE, { message: '회원가입 완료' }, userId);
     socket.write(Response);
