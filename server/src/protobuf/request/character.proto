@@ -6,7 +6,7 @@ message GiveCharacterPayload {
     uint32 characterId = 1;
 }
 
-message BuyCharacterPayload {
-    uint32 money = 1;
-    uint32 characterId = 2;
+message PurchaseCharacterPayload {
+    string name = 1;
+    string price = 2;
 }

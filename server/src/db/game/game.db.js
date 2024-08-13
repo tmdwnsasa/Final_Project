@@ -3,6 +3,7 @@ import { toCamelCase } from '../../utils/transformCase.js';
 import { GAME_SQL_QUERIES } from './game.queries.js';
 import { formatDate } from '../../utils/dateFormatter.js';
 import { asyncSaveScoreRating, saveMatchHistory } from '../../utils/gameEnd.js';
+import { updateUserMoney } from '../user/user.db.js';
 
 export const createMatchHistory = async (connection, sessionId, playerId, kill, death, damage) => {
   await connection.query(GAME_SQL_QUERIES.CREATE_MATCH_HISTORY, [sessionId, playerId, kill, death, damage]);
@@ -145,4 +146,33 @@ export async function dbSaveTransaction(winTeam, loseTeam, users, gameSessionId,
 export const findCharacterInfo = async (characterId) => {
   const [rows] = await pools.GAME_DB.query(GAME_SQL_QUERIES, [characterId]);
   return toCamelCase(rows[0]);
+};
+
+export const updatePossession = async (gameConnection, playerId, characterId) => {
+  await gameConnection.query(GAME_SQL_QUERIES.CREATE_POSSESSION, [playerId, characterId]);
+  return { playerId, characterId };
+};
+
+export const purchaseCharacterTransaction = async (playerId, newUserMoney, characterId) => {
+  const userConnection = await pools.USER_DB.getConnection();
+  const gameConnection = await pools.GAME_DB.getConnection();
+  try {
+    await userConnection.beginTransaction();
+    await gameConnection.beginTransaction();
+
+    await updateUserMoney(userConnection, playerId, newUserMoney);
+    await updatePossession(gameConnection, playerId, characterId);
+
+    await userConnection.commit();
+    await gameConnection.commit();
+    console.log('트랜잭션과정 DB저장 성공');
+  } catch (err) {
+    await userConnection.rollback();
+    await gameConnection.rollback();
+    console.error('트랜잭션과정 DB저장 실패:', err);
+    throw err;
+  } finally {
+    userConnection.release();
+    gameConnection.release();
+  }
 };

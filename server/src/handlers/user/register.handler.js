@@ -1,5 +1,5 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
-import { createUser, findUserByName, findUserByPlayerId, updateUserLogin } from '../../db/user/user.db.js';
+import { createUser, createUserMoney, findUserByName, findUserByPlayerId, updateUserLogin } from '../../db/user/user.db.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
@@ -43,7 +43,8 @@ const registerHandler = async ({ socket, userId, payload }) => {
       throw new CustomError(ErrorCodes.ALREADY_EXIST_NAME, '이미 있는 이름입니다.');
     }
 
-    createUser(playerId, hashpassword, name);
+    await createUser(playerId, hashpassword, name);
+    await createUserMoney(playerId, 5000);
 
     const Response = createResponse(HANDLER_IDS.REGISTER, RESPONSE_SUCCESS_CODE, { message: '회원가입 완료' }, userId);
     socket.write(Response);
