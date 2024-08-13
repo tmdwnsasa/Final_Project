@@ -10,15 +10,27 @@ const registerHandler = async ({ socket, userId, payload }) => {
   try {
     const { playerId, password, name } = payload;
 
-    if (
-      playerId.length <= 4 ||
-      password.length <= 4 ||
-      playerId.length >= 15 ||
-      password.length >= 15 ||
-      name.length > 5
-    ) {
-      throw new CustomError(ErrorCodes.VALIDATE_ERROR, '아이디, 패스워드, 이름이 너무 짧거나 깁니다.');
+    const idPasswordRegex = /^[a-zA-Z0-9]{4,10}$/;
+    const nameRegex = /^[가-힣a-zA-Z0-9]{2,6}$/;
+
+    let errorMessages = [];
+    if (!idPasswordRegex.test(playerId)) {
+      errorMessages.push('아이디가 조건을 만족하지 않습니다.');
     }
+
+    if (!idPasswordRegex.test(password)) {
+      errorMessages.push('비밀번호가 조건을 만족하지 않습니다.');
+    }
+
+    if (!nameRegex.test(name)) {
+      errorMessages.push('이름이 조건을 만족하지 않습니다.');
+    }
+
+    if (errorMessages.length > 0) {
+      throw new CustomError(ErrorCodes.VALIDATE_ERROR, errorMessages.join(' '));
+    }
+
+    const hashpassword = await bcrypt.hash(password, 10);
 
     let idCheck = await findUserByPlayerId(playerId);
     if (idCheck) {
@@ -30,7 +42,6 @@ const registerHandler = async ({ socket, userId, payload }) => {
       throw new CustomError(ErrorCodes.ALREADY_EXIST_NAME, '이미 있는 이름입니다.');
     }
 
-    const hashpassword = await bcrypt.hash(password, 10);
     createUser(playerId, hashpassword, name);
 
     const Response = createResponse(HANDLER_IDS.REGISTER, RESPONSE_SUCCESS_CODE, { message: '회원가입 완료' }, userId);

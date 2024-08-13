@@ -1,10 +1,9 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
 import { removeUserFromQueue } from '../../sessions/matchQueue.session.js';
 import { lobbySession } from '../../sessions/session.js';
-import { getUserById, removeUser } from '../../sessions/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
-export const exitGameHandler = ({ socket, userId, data }) => {
+const exitGameHandler = ({ socket, userId, data }) => {
   lobbySession.removeUser(userId);
   removeUserFromQueue(socket);
 
@@ -17,3 +16,5 @@ export const exitGameHandler = ({ socket, userId, data }) => {
 
   setTimeout(() => socket.write(exitResponse), 500);
 };
+
+export default exitGameHandler;

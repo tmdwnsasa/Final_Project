@@ -1,3 +1,4 @@
+import { characterAssets } from '../../assets/character.asset.js';
 import { config } from '../../config/config.js';
 import { gameEnd } from '../../utils/gameEnd.js';
 import {
@@ -19,6 +20,7 @@ class Game {
     this.intervalManager = new IntervalManager();
 
     this.intervalManager.addInterval(this.id, this.sendAllLocation.bind(this), config.server.frame * 1000, 'location');
+    this.dbSaveRequest = false;
   }
 
   addUser(user) {
@@ -61,8 +63,16 @@ class Game {
     opposingTeam.forEach((user) => {
       if (user.x > startX && user.y < startY && user.x < endX && user.y > endY && user.hp > 0) {
         // 상대방 히트
-        user.hp -= attackUser.power;
-        attackUser.damage += attackUser.power;
+        if (attackUser.power > user.hp) {
+          attackUser.damage += user.hp;
+          user.hp = 0;
+        }
+
+        if (attackUser.power <= user.hp) {
+          user.hp -= attackUser.power;
+          attackUser.damage += attackUser.power;
+        }
+
         attackedData.push({ playerId: user.name, hp: user.hp });
 
         if (user.hp <= 0) {
@@ -86,8 +96,9 @@ class Game {
     }
 
     // deathCount === opposingTeam.length
-    if (deathCount === opposingTeam.length) {
+    if (deathCount === opposingTeam.length && this.dbSaveRequest === false) {
       gameEnd(this.id, ourTeam, opposingTeam, team, this.startTime);
+      this.dbSaveRequest = true;
     }
   }
 
@@ -101,11 +112,12 @@ class Game {
 
   startGame() {
     this.startTime = Date.now();
+
     const battleStartData = [
-      { playerId: this.users[0]?.playerId, team: 'red1', x: 73, y: 2 },
-      { playerId: this.users[1]?.playerId, team: 'red2', x: 73, y: -2 },
-      { playerId: this.users[2]?.playerId, team: 'blue1', x: 87, y: 2 },
-      { playerId: this.users[3]?.playerId, team: 'blue2', x: 87, y: -2 },
+      { playerId: this.users[0]?.name, hp: this.users[0]?.hp, team: 'red1', x: 73, y: 2 },
+      { playerId: this.users[1]?.name, hp: this.users[1]?.hp, team: 'red2', x: 73, y: -2 },
+      { playerId: this.users[2]?.name, hp: this.users[2]?.hp, team: 'blue1', x: 87, y: 2 },
+      { playerId: this.users[3]?.name, hp: this.users[3]?.hp, team: 'blue2', x: 87, y: -2 },
     ];
     this.users.forEach((user, index) => {
       user.updatePosition(battleStartData[index].x, battleStartData[index].y);
@@ -122,7 +134,7 @@ class Game {
 
     const locationData = this.users.map((user) => {
       const { x, y } = user.calculatePosition(maxLatency);
-      return { playerId: user.name, characterId: user.characterId - 1, x, y };
+      return { playerId: user.name, characterId: user.characterId - 1, x, y, direction: user.directionX };
     });
 
     const packet = createLocationPacket(locationData);
