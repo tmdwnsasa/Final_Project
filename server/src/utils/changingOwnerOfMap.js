@@ -19,13 +19,11 @@ const checkAroundMap = (mapId, team) => {
 
 const changeDisputedArea = (row, column, team) => {
   const map = mapAssets[row][column];
-  console.log('parameter check', row, column, team);
   if (map.isDisputedArea === 0 && map.ownedBy !== team) {
     map.isDisputedArea = 1;
     map.ownedBy = null;
     map.countBlueWin = 0;
     map.countRedWin = 0;
-    console.log(map);
   }
 };
 
