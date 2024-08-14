@@ -18,15 +18,13 @@ export const purchaseCharacter = async ({ socket, userId, payload }) => {
       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
     }
 
-    // 클라 유저골드와 db유저골드와 비교검증
     const userMoney = await findMoneyByPlayerId(userId);
     const money = userMoney.money;
 
     //characterId와 일치하는 해당 캐릭터를 db에서 가져옴
     const characterInfo = characterAssets.find((character) => character.characterName === name);
-    console.log('1111:', characterInfo);
     if (!characterInfo) {
-      throw new CustomError(ErrorCodes, '해당 캐릭터 정보를 찾을 수 없어요!');
+      throw new CustomError(ErrorCodes.CHARACTERID_NOT_FOUND, '해당 캐릭터 정보를 찾을 수 없어요!');
     }
 
     //유저의 possession에 이미 보유한 캐릭터일 경우 (상점에는 4캐릭터 전부 띄워놓을 예정)
@@ -35,7 +33,7 @@ export const purchaseCharacter = async ({ socket, userId, payload }) => {
     if (possession) {
       const message = `이미 보유중`;
       console.log(message);
-      const packet = createResponse(HANDLER_IDS.PURCHASE_CHARACTER, RESPONSE_SUCCESS_CODE, { message }, user.Id);
+      const packet = createResponse(HANDLER_IDS.PURCHASE_CHARACTER, RESPONSE_SUCCESS_CODE, { message }, user.playerId);
       socket.write(packet);
       return;
     }
@@ -43,7 +41,7 @@ export const purchaseCharacter = async ({ socket, userId, payload }) => {
     if (money < intPrice) {
       const message = '잔액이 부족합니다';
       console.log(message);
-      const packet = createResponse(HANDLER_IDS.PURCHASE_CHARACTER, RESPONSE_SUCCESS_CODE, { message }, user.id);
+      const packet = createResponse(HANDLER_IDS.PURCHASE_CHARACTER, RESPONSE_SUCCESS_CODE, { message }, user.playerId);
       socket.write(packet);
       return;
     }
@@ -55,14 +53,14 @@ export const purchaseCharacter = async ({ socket, userId, payload }) => {
     const message = `${name}가 정상적으로 구매 되었다!`;
     console.log(message);
 
-    const packet = createResponse(HANDLER_IDS.PURCHASE_CHARACTER, RESPONSE_SUCCESS_CODE, { message }, user.Id);
+    const packet = createResponse(HANDLER_IDS.PURCHASE_CHARACTER, RESPONSE_SUCCESS_CODE, { message }, user.playerId);
     socket.write(packet);
   } catch (err) {
     console.error(err.message);
     const user = getUserById(userId);
     const message = '캐릭터 구매과정에서 오류가 발생했습니다. 다시 시도해주세요';
     console.log(message);
-    const packet = createResponse(HANDLER_IDS.PURCHASE_CHARACTER, RESPONSE_SUCCESS_CODE, { message }, user.Id);
+    const packet = createResponse(HANDLER_IDS.PURCHASE_CHARACTER, RESPONSE_SUCCESS_CODE, { message }, user.playerId);
     socket.write(packet);
   }
 };
