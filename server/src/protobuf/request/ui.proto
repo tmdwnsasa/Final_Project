@@ -7,3 +7,7 @@ message ChattingPayload {
   int32 type = 2;
   bool isLobby = 3;
 }
+
+message StorePayload {
+  string message = 1;
+}
