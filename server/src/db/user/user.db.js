@@ -31,6 +31,11 @@ export const updateUserMoney = async (userConnection, playerId, userMoney) => {
   return { playerId, userMoney };
 };
 
+export const gameEndUpdateUserMoney = async (playerId, userMoney) => {
+  await pools.USER_DB.query(SQL_QUERIES.UPDATE_MONEY, [userMoney, playerId]);
+  return { playerId, userMoney };
+};
+
 export const createUserMoney = async (playerId, money) => {
   await pools.USER_DB.query(SQL_QUERIES.CREATE_USER_MONEY, [playerId, money]);
   return { playerId, money };
