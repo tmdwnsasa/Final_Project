@@ -12,7 +12,6 @@ export const storeHandler = async ({ socket, userId, payload }) => {
   if (!userMoney) {
     userMoney = { money: 0 };
   }
-  console.log(userMoney);
-  const packet = createResponse(HANDLER_IDS.STORE, RESPONSE_SUCCESS_CODE, userMoney, user.id);
+  const packet = createResponse(HANDLER_IDS.STORE, RESPONSE_SUCCESS_CODE, userMoney, user.playerId);
   socket.write(packet);
 };
