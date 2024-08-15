@@ -9,6 +9,7 @@ export const config = {
   },
   client: {
     version: env.CLIENT_VERSION,
+    frame: 1 / 120,
   },
   packet: {
     totalLength: header.TOTAL_LENGTH,
@@ -61,7 +62,7 @@ export const config = {
         password: env.SHARD_3_PASSWORD,
         host: env.SHARD_3_HOST,
         port: env.SHARD_3_PORT,
-      }
-    }
+      },
+    },
   },
 };

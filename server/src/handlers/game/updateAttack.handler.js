@@ -33,7 +33,7 @@ const updateSkillHandler = ({ socket, userId, payload }) => {
     let rangeX;
     let rangeY;
     switch (skillType) {
-      case 1:
+      case 1: {
         if (isDirectionX) {
           rangeX = skill.range_x;
           rangeY = skill.range_y;
@@ -41,7 +41,7 @@ const updateSkillHandler = ({ socket, userId, payload }) => {
           rangeX = skill.range_y;
           rangeY = skill.range_x;
         }
-        gameSession.updateAttack(user.name, x, y, rangeX, rangeY);
+        gameSession.updateAttack(user.name, x, y, rangeX, rangeY, skillType);
 
         const startX = user.x + x - rangeX / 2;
         const startY = user.y + y + rangeY / 2;
@@ -54,9 +54,19 @@ const updateSkillHandler = ({ socket, userId, payload }) => {
           gameSession.sendAttackedOpposingTeam(user, startX, startY, endX, endY);
         }, maxLatency);
         break;
-      case 2:
-        break;
+      }
+      case 2: {
+        rangeX = skill.range_x;
+        rangeY = skill.range_y;
+        gameSession.updateAttack(user.name, x, y, rangeX, rangeY, skillType);
 
+        //Latency를 이용한 스킬 판정에 핑 차이 적용
+        const maxLatency = gameSession.getMaxLatency();
+        setTimeout(() => {
+          gameSession.setBullet(user, x, y, rangeX, rangeY);
+        }, maxLatency);
+        break;
+      }
       default:
         break;
     }
