@@ -10,3 +10,7 @@ message SkillUpdate {
   float rangeX = 4;
   float rangeY = 5;
 }
+
+message CoolTimeUpdate {
+  string skillName = 1;
+}

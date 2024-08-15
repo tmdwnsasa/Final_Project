@@ -5,6 +5,7 @@ package skill;
 message nearAttackPayload {
   float x = 1;
   float y = 2;
-  float rangeX = 3;
-  float rangeY = 4;
+  bool isDirectionX =3;
+  uint32 skill_Id = 4;
+  int64 timestamp = 5;
 }

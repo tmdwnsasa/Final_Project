@@ -42,5 +42,6 @@ export const packetNames = {
   },
   skillNotification: {
     SkillUpdate: 'skillNotification.SkillUpdate',
+    CoolTimeUpdate: 'skillNotification.CoolTimeUpdate',
   },
 };

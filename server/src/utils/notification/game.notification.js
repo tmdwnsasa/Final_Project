@@ -83,6 +83,16 @@ export const createAttackedSuccessPacket = (users) => {
   return makeNotification(attackPacket, PACKET_TYPE.ATTACK);
 };
 
+export const createCoolTimeSuccessPacket = (SkillName) => {
+  const protoMessages = getProtoMessages();
+  const coolTime = protoMessages.skillNotification.SkillCooltime;
+
+  const payload = { SkillName };
+  const message = coolTime.create(payload);
+  const coolTimePacket = coolTime.encode(message).finish();
+  return makeNotification(coolTimePacket, PACKET_TYPE.SKILLCOOLTIME);
+};
+
 export const createGameEndPacket = (payload) => {
   const protoMessages = getProtoMessages();
   const gameEnd = protoMessages.gameNotification.MatchResultPayload;

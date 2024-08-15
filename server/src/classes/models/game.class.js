@@ -4,6 +4,7 @@ import { gameEnd } from '../../utils/gameEnd.js';
 import {
   createAttackedSuccessPacket,
   createChattingPacket,
+  createCoolTimeSuccessPacket,
   createGameSkillPacket,
   createLocationPacket,
   gameStartNotification,
@@ -159,6 +160,15 @@ class Game {
     const packet = createGameSkillPacket(userId, x, y, rangeX, rangeY);
     this.users.forEach((user) => {
       user.socket.write(packet);
+    });
+  }
+
+  updateCoolTime(playerName, skillName) {
+    const packet = createCoolTimeSuccessPacket(skillName);
+    this.users.forEach((user) => {
+      if (user.name == playerName) {
+        user.socket.write(packet);
+      }
     });
   }
 }

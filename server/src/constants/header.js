@@ -11,4 +11,5 @@ export const PACKET_TYPE = {
   MATCHMAKING: 6,
   ATTACK: 40,
   SKILL: 50,
+  SKILLCOOLTIME: 51,
 };
