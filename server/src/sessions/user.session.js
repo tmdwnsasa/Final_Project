@@ -88,7 +88,6 @@ export const createUserInLobby = (user) => {
 export const deleteUserInGame = (playerId) => {
   const gameSesssion = getGameSessionByPlayerId(playerId);
   const users = gameSesssion.getAllUsers();
-  console.log(users.map((user) => user.name));
   const removedUser = getUserById(playerId);
 
   users.forEach((data) => {
@@ -99,5 +98,18 @@ export const deleteUserInGame = (playerId) => {
       });
       data.socket.write(packet);
     }
+  });
+};
+
+export const deleteOtherUserInGame = (playerId, gameSession) => {
+  const users = gameSession.getAllUsers();
+  const player = getUserById(playerId);
+
+  users.forEach((data) => {
+    const packet = createRemoveUserPacket({
+      name: data.name,
+      characterId: data.characterId - 1,
+    });
+    player.socket.write(packet);
   });
 };
