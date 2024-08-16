@@ -16,7 +16,7 @@ const teamMate = {
 function getTeamMateName(gitUsername) {
   return teamMate[gitUsername] || '외부인'; // 매칭되는 이름이 없을 경우
 }
-
+//문장은 자유롭게 수정하세요
 export const sendGitPushAlert = async (commitMessage, pusher,url) => {
   const message = {
     content: `게임서버에 git push를 하셨더라구요~ 
