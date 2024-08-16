@@ -32,4 +32,3 @@ export const sendGitPushAlert = async (commitMessage, pusher,url) => {
     console.log('Discord로 에러 메세지를 보내는데 실패했습니다', error);
   }
 };
-sendGitPushAlert('update 의존성 추가', '4cozm');
