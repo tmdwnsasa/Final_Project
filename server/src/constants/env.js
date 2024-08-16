@@ -8,6 +8,9 @@ export const PORT = process.env.PORT;
 export const HOST = process.env.HOST;
 export const CLIENT_VERSION = process.env.CLIENT_VERSION;
 
+export const DISCORD_WEB_HOOK = process.env.DISCORD_WEB_HOOK;
+export const GITHUB_WEB_HOOK = process.env.GITHUB_WEB_HOOK;
+
 export const USER_DB_NAME = process.env.USER_DB_NAME;
 export const USER_DB_USER = process.env.USER_DB_USER;
 export const USER_DB_PASSWORD = process.env.USER_DB_PASSWORD;
