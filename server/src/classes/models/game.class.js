@@ -27,6 +27,7 @@ class Game {
   }
 
   addUser(user) {
+    console.log(this.users);
     if (this.users.length >= MAX_PLAYERS) {
       throw new Error('Game session is full');
     }

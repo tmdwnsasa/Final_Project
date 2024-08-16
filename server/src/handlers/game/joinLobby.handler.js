@@ -1,6 +1,6 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
 import { getLobbySession } from '../../sessions/lobby.session.js';
-import { createUserInClient, getUserById } from '../../sessions/user.session.js';
+import { createUserInLobby, getUserById } from '../../sessions/user.session.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
@@ -23,7 +23,7 @@ const joinLobbyHandler = ({ socket, userId, payload }) => {
     const existUser = lobbySession.getUser(user.id);
     if (!existUser) {
       lobbySession.addUser(user);
-      createUserInClient(user);
+      createUserInLobby(user);
     }
 
     const userDatas = lobbySession

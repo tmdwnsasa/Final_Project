@@ -1,7 +1,7 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
 import { getGameSessionByPlayerId, removeGameSession } from '../../sessions/game.session.js';
 import { getLobbySession } from '../../sessions/lobby.session.js';
-import { getUserById } from '../../sessions/user.session.js';
+import { createUserInLobby, deleteUserInGame, getUserById } from '../../sessions/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
 const returnLobbyHandler = ({ socket, userId, payload }) => {
@@ -12,6 +12,7 @@ const returnLobbyHandler = ({ socket, userId, payload }) => {
 
   const gameSession = getGameSessionByPlayerId(userId);
   const lobbySession = getLobbySession();
+  deleteUserInGame(userId);
   gameSession.removeUser(userId);
   if (!gameSession.getAllUsers().length) {
     removeGameSession(gameSession.id);
@@ -23,6 +24,7 @@ const returnLobbyHandler = ({ socket, userId, payload }) => {
   user.damage = 0;
 
   lobbySession.addUser(user);
+  createUserInLobby(user);
   user.updatePosition(0, 0);
 
   const response = createResponse(

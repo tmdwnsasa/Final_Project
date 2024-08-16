@@ -1,5 +1,6 @@
 import User from '../classes/models/user.class.js';
 import { createCreateUserPacket, createRemoveUserPacket } from '../utils/notification/game.notification.js';
+import { getGameSessionByPlayerId } from './game.session.js';
 import { getLobbySession } from './lobby.session.js';
 import { userSessions } from './session.js';
 
@@ -36,7 +37,39 @@ export const getAllUsers = () => {
   return userSessions;
 };
 
-export const createUserInClient = (user) => {
+export const createUserInGame = (user) => {
+  const gameSesssion = getGameSessionByPlayerId(user.playerId);
+  const users = gameSesssion.getAllUsers();
+
+  users.forEach((data) => {
+    if (user.playerId !== data.playerId) {
+      const packet = createCreateUserPacket({
+        name: user.name,
+        characterId: user.characterId - 1,
+        guild: user.guild,
+      });
+      data.socket.write(packet);
+    }
+  });
+};
+
+export const deleteUserInLobby = (playerId) => {
+  const lobbySesssion = getLobbySession();
+  const users = lobbySesssion.getAllUsers();
+  const removedUser = getUserById(playerId);
+
+  users.forEach((data) => {
+    if (removedUser.playerId !== data.playerId) {
+      const packet = createRemoveUserPacket({
+        name: removedUser.name,
+        characterId: removedUser.characterId - 1,
+      });
+      data.socket.write(packet);
+    }
+  });
+};
+
+export const createUserInLobby = (user) => {
   const lobbySesssion = getLobbySession();
   const users = lobbySesssion.getAllUsers();
 
@@ -52,9 +85,10 @@ export const createUserInClient = (user) => {
   });
 };
 
-export const deleteUserInClient = (playerId) => {
-  const lobbySesssion = getLobbySession();
-  const users = lobbySesssion.getAllUsers();
+export const deleteUserInGame = (playerId) => {
+  const gameSesssion = getGameSessionByPlayerId(playerId);
+  const users = gameSesssion.getAllUsers();
+  console.log(users.map((user) => user.name));
   const removedUser = getUserById(playerId);
 
   users.forEach((data) => {
