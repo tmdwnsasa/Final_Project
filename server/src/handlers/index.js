@@ -16,6 +16,7 @@ import registerHandler from './user/register.handler.js';
 import exitGameHandler from './game/exitGame.handler.js';
 import { storeHandler } from './game/store.handler.js';
 import { purchaseCharacter } from './game/buyObject.handler.js';
+import openMapHandler from './game/openMap.handler.js';
 
 const handlers = {
   [HANDLER_IDS.REGISTER]: {
@@ -73,6 +74,10 @@ const handlers = {
   [HANDLER_IDS.PURCHASE_CHARACTER]: {
     handler: purchaseCharacter,
     protoType: packetNames.character.PurchaseCharacterPayload,
+  },
+  [HANDLER_IDS.OPEN_MAP]: {
+    handler: openMapHandler,
+    protoType: packetNames.ui.MapPayload,
   },
 };
 
