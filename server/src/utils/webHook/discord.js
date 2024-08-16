@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { config } from '../../config/config.js';
 
-const webHookUrl = config.webHook.DISCORD_WEB_HOOK;
+const webHookUrl = config.webHook.DISCORD;
 
 const teamMate = {
   '4cozm': '홍걸',
@@ -20,8 +20,9 @@ function getTeamMateName(gitUsername) {
 export const sendGitPushAlert = async (commitMessage, pusher) => {
   const message = {
     content: `게임서버에 git push를 하셨더라구요~ 
-    커밋 메세지는 ${commitMessage} 이고 ${getTeamMateName(pusher)} 님께서 올려주셨는데 그러면 서버 바로 다시 시작할께요?
-    감사합니다~ 감사합니다~!`,
+  커밋 메세지는 ${commitMessage} 이고 
+  ${getTeamMateName(pusher)} 님께서 올려주셨는데 그러면 서버 바로 다시 시작할께요?
+  감사합니다~ 감사합니다~!`,
   };
 
   try {
@@ -30,4 +31,4 @@ export const sendGitPushAlert = async (commitMessage, pusher) => {
     console.log('Discord로 에러 메세지를 보내는데 실패했습니다', error);
   }
 };
-sendGitPushAlert('테스트', '4cozm');
+sendGitPushAlert('update 의존성 추가', '4cozm');
