@@ -7,6 +7,10 @@ export const config = {
     host: env.HOST,
     frame: 1 / 60,
   },
+  dbServer: {
+    host: env.DB_HOST,
+    port: env.DB_PORT,
+  },
   client: {
     version: env.CLIENT_VERSION,
   },
