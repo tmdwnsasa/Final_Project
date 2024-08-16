@@ -16,7 +16,7 @@ import registerHandler from './user/register.handler.js';
 import exitGameHandler from './game/exitGame.handler.js';
 import { storeHandler } from './game/store.handler.js';
 import { purchaseCharacter } from './game/buyObject.handler.js';
-import updateCoolTimeHandler from './game/updateCoolTime.handler copy.js';
+import removeSkillHandler from './game/removeSkill.handler.js';
 
 const handlers = {
   [HANDLER_IDS.REGISTER]: {
@@ -61,11 +61,11 @@ const handlers = {
   },
   [HANDLER_IDS.SKILL]: {
     handler: updateSkillHandler,
-    protoType: packetNames.skill.nearAttackPayload,
+    protoType: packetNames.skill.SkillPayload,
   },
-  [HANDLER_IDS.SKILLCOOLTIME]: {
-    handler: updateCoolTimeHandler,
-    protoType: packetNames.skill.SkillCooltime,
+  [HANDLER_IDS.SKILLREMOVE]: {
+    handler: removeSkillHandler,
+    protoType: packetNames.skill.RemoveSkillPayload,
   },
   [HANDLER_IDS.EXIT]: {
     handler: exitGameHandler,

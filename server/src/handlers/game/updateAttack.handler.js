@@ -3,6 +3,7 @@ import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { getGameSessionByPlayerId } from '../../sessions/game.session.js';
 import { characterSkillAssets } from '../../assets/characterskill.asset.js';
+import { v4 as uuidv4 } from 'uuid';
 
 const updateSkillHandler = ({ socket, userId, payload }) => {
   try {
@@ -56,14 +57,15 @@ const updateSkillHandler = ({ socket, userId, payload }) => {
         break;
       }
       case 2: {
+        const bulletNumber = uuidv4();
         rangeX = skill.range_x;
         rangeY = skill.range_y;
-        gameSession.updateAttack(user.name, x, y, rangeX, rangeY, skillType);
+        gameSession.updateAttack(user.name, x, y, rangeX, rangeY, skillType, bulletNumber);
 
         //Latency를 이용한 스킬 판정에 핑 차이 적용
         const maxLatency = gameSession.getMaxLatency();
         setTimeout(() => {
-          gameSession.setBullet(user, x, y, rangeX, rangeY);
+          gameSession.setBullet(user, x, y, rangeX, rangeY, bulletNumber);
         }, maxLatency);
         break;
       }

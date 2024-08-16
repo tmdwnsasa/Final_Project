@@ -3,13 +3,11 @@ import { gameEnd } from '../../utils/gameEnd.js';
 import {
   createAttackedSuccessPacket,
   createChattingPacket,
-  createCoolTimeSuccessPacket,
   createGameSkillPacket,
   createLocationPacket,
   gameStartNotification,
 } from '../../utils/notification/game.notification.js';
 import IntervalManager from '../manager/interval.manager.js';
-import { v4 as uuidv4 } from 'uuid';
 import Bullet from './bullet.class.js';
 import { createBullQueue } from '../../utils/bullQueue.js';
 
@@ -51,7 +49,7 @@ class Game {
     this.intervalManager.removeInterval(playerId, 'ping');
   }
 
-  sendAttackedOpposingTeam(attackUser, startX, startY, endX, endY) {
+  sendAttackedOpposingTeam(attackUser, startX, startY, endX, endY, bullet = null) {
     let team;
     if (attackUser.team.includes('red')) {
       team = 'red';
@@ -71,6 +69,10 @@ class Game {
           attackedUserId: user.playerId,
           team,
         });
+
+        if (bullet) {
+          this.intervalManager.removeInterval(bullet.bulletNumber, 'bullet');
+        }
       }
     });
   }
@@ -128,18 +130,17 @@ class Game {
     this.intervalManager.removeInterval(this.id, 'location');
   }
 
-  updateAttack(userId, x, y, rangeX, rangeY, skillType) {
-    const packet = createGameSkillPacket(userId, x, y, rangeX, rangeY, skillType);
+  updateAttack(userId, x, y, rangeX, rangeY, skillType, prefabNum = null) {
+    const packet = createGameSkillPacket(userId, x, y, rangeX, rangeY, skillType, prefabNum);
     this.users.forEach((user) => {
       user.socket.write(packet);
     });
   }
 
-  setBullet(attackUser, x, y, rangeX, rangeY) {
+  setBullet(attackUser, x, y, rangeX, rangeY, bulletNumber) {
     const startPosX = attackUser.x + x;
     const startPosY = attackUser.y + y;
 
-    const bulletNumber = uuidv4();
     let direction; // 오른쪽 = 1 , 왼쪽 = 2, 아래 = 3, 위 = 4
     if (x > 0) {
       direction = 1;
@@ -184,17 +185,9 @@ class Game {
     const endX = startX + rangeX;
     const endY = startY - rangeY;
 
-    this.sendAttackedOpposingTeam(attackUser, startX, startY, endX, endY);
+    this.sendAttackedOpposingTeam(attackUser, startX, startY, endX, endY, bullet);
   }
 
-  updateCoolTime(playerName, skillName) {
-    const packet = createCoolTimeSuccessPacket(skillName);
-    this.users.forEach((user) => {
-      if (user.name == playerName) {
-        user.socket.write(packet);
-      }
-    });
-  }
   sendAllAttackedSuccess(playerId, hp, team) {
     const packet = createAttackedSuccessPacket(playerId, hp);
 

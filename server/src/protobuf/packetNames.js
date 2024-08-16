@@ -25,7 +25,8 @@ export const packetNames = {
     StorePayload: 'ui.StorePayload',
   },
   skill: {
-    nearAttackPayload: 'skill.nearAttackPayload',
+    SkillPayload: 'skill.SkillPayload',
+    RemoveSkillPayload: 'skill.RemoveSkillPayload',
   },
   response: {
     Response: 'response.Response',
@@ -42,6 +43,5 @@ export const packetNames = {
   },
   skillNotification: {
     SkillUpdate: 'skillNotification.SkillUpdate',
-    CoolTimeUpdate: 'skillNotification.CoolTimeUpdate',
   },
 };

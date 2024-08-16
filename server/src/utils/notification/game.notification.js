@@ -63,11 +63,11 @@ export const createPingPacket = (timestamp) => {
   return makeNotification(pingPacket, PACKET_TYPE.PING);
 };
 
-export const createGameSkillPacket = (playerId, x, y, rangeX, rangeY, skillType) => {
+export const createGameSkillPacket = (playerId, x, y, rangeX, rangeY, skillType, prefabNum = null) => {
   const protoMessages = getProtoMessages();
   const skill = protoMessages.skillNotification.SkillUpdate;
 
-  const payload = { playerId, x, y, rangeX, rangeY, skillType };
+  const payload = { playerId, x, y, rangeX, rangeY, skillType, prefabNum };
   const message = skill.create(payload);
   const skillPacket = skill.encode(message).finish();
   return makeNotification(skillPacket, PACKET_TYPE.SKILL);
@@ -81,16 +81,6 @@ export const createAttackedSuccessPacket = (playerId, hp) => {
   const message = attack.create(payload);
   const attackPacket = attack.encode(message).finish();
   return makeNotification(attackPacket, PACKET_TYPE.ATTACK);
-};
-
-export const createCoolTimeSuccessPacket = (SkillName) => {
-  const protoMessages = getProtoMessages();
-  const coolTime = protoMessages.skillNotification.SkillCooltime;
-
-  const payload = { SkillName };
-  const message = coolTime.create(payload);
-  const coolTimePacket = coolTime.encode(message).finish();
-  return makeNotification(coolTimePacket, PACKET_TYPE.SKILLCOOLTIME);
 };
 
 export const createGameEndPacket = (payload) => {
