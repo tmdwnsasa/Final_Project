@@ -7,7 +7,8 @@
     "start": "node server/src/server.js",
     "dev": "nodemon server/src/server.js",
     "dbServer": "node db_server/db-server.js",
-    "insertGameContent": "node server/src/db/game/game.db.content.js"
+    "insertGameContent": "node server/src/db/game/game.db.content.js",
+    "pm2": "pm2 start ecosystem.config.cjs --env production"
   },
   "keywords": [],
   "author": "",
@@ -17,12 +18,15 @@
     "axios": "^1.7.4",
     "bcrypt": "^5.1.1",
     "bull": "^4.16.0",
+    "crypto": "^1.0.1",
     "dotenv": "^16.4.5",
+    "express": "^4.19.2",
     "lodash": "^4.17.21",
     "long": "^5.2.3",
     "mysql2": "^3.11.0",
     "protobufjs": "^7.3.0",
     "redis": "^4.7.0",
+    "simple-git": "^3.25.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

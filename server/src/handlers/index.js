@@ -40,7 +40,7 @@ const handlers = {
   },
   [HANDLER_IDS.UPDATE_LOCATION]: {
     handler: updateLocationHandler,
-    protoType: packetNames.game.LocationUpdatePayload,
+    protoType: packetNames.game.UpdateLocationPayload,
   },
   [HANDLER_IDS.EARN_CHARACTER]: {
     handler: giveCharacterHandler,

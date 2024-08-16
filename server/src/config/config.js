@@ -14,6 +14,10 @@ export const config = {
     totalLength: header.TOTAL_LENGTH,
     typeLength: header.PACKET_TYPE_LENGTH,
   },
+  webHook: {
+    DISCORD: env.DISCORD_WEB_HOOK,
+    GITHUB: env.GITHUB_WEB_HOOK,
+  },
   database: {
     REDIS: {
       host: env.REDIS_HOST,
