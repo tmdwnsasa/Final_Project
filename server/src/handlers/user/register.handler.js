@@ -5,10 +5,12 @@ import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import bcrypt from 'bcrypt';
+import apiRequest from '../../db/apiRequest.js';
+import ENDPOINTS from '../../db/endPoint.js';
 
 const registerHandler = async ({ socket, userId, payload }) => {
   try {
-    const { playerId, password, name, guild } = payload;
+    const { player_id, password, name, guild } = payload;
 
     const idPasswordRegex = /^[a-zA-Z0-9]{4,10}$/;
     const nameRegex = /^[가-힣a-zA-Z0-9]{2,6}$/;
@@ -34,9 +36,9 @@ const registerHandler = async ({ socket, userId, payload }) => {
       throw new CustomError(ErrorCodes.VALIDATE_ERROR, errorMessages.join(' '));
     }
 
-    const hashpassword = await bcrypt.hash(password, 10);
+    const hash_password = await bcrypt.hash(password, 10);
 
-    let idCheck = await findUserByPlayerId(playerId);
+    let idCheck = await findUserByPlayerId(player_id);
     if (idCheck) {
       throw new CustomError(ErrorCodes.ALREADY_EXIST_ID, '이미 있는 아이디입니다.');
     }
@@ -45,9 +47,10 @@ const registerHandler = async ({ socket, userId, payload }) => {
     if (nameCheck) {
       throw new CustomError(ErrorCodes.ALREADY_EXIST_NAME, '이미 있는 이름입니다.');
     }
+    await apiRequest(ENDPOINTS.user.createUser, { player_id, pw: hash_password, name, guild });
+    // await createUser(player_id, hash_password, name, guild);
 
-    await createUser(playerId, hashpassword, name, guild);
-    await createUserMoney(playerId, 5000);
+    await createUserMoney(player_id, 5000);
 
     const Response = createResponse(HANDLER_IDS.REGISTER, RESPONSE_SUCCESS_CODE, { message: '회원가입 완료' }, userId);
     socket.write(Response);
