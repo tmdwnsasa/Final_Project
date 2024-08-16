@@ -1,7 +1,11 @@
 import net from 'net';
+import express from 'express';
 import initServer from './init/index.js';
 import { config } from './config/config.js';
 import { onConnection } from './events/onConnection.js';
+import { verifySignature } from './utils/webHook/verifySignature.js';
+import bodyParser from 'body-parser';
+import webHookRouter from './handlers/webHook/webHookRouter.js';
 
 const server = net.createServer(onConnection);
 
@@ -16,3 +20,13 @@ initServer()
     console.error(err);
     process.exit(1);
   });
+
+const app = express();
+const HTTP_PORT = 4000;
+
+app.use(bodyParser.json({ verify: verifySignature }));
+app.use('/api/webhook', bodyParser.json({ verify: verifySignature }), webHookRouter);
+
+app.listen(HTTP_PORT, () => {
+  console.log(`CI/CD용 HTTP 서버 ${HTTP_PORT}에서 실행 중입니다`);
+});
