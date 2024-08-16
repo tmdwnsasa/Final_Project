@@ -27,11 +27,25 @@ const returnLobbyHandler = ({ socket, userId, payload }) => {
   createUserInLobby(user);
   user.updatePosition(0, 0);
 
+  const userDatas = lobbySession
+    .getAllUsers()
+    .filter((user) => {
+      if (user.playerId !== userId) return true;
+    })
+    .map((user) => {
+      const data = {
+        playerId: user.name,
+        characterId: user.characterId - 1,
+        guild: user.guild,
+      };
+      if (data.playerId !== userId) return data;
+    });
+
   const response = createResponse(
     HANDLER_IDS.RETURN_LOBBY,
     RESPONSE_SUCCESS_CODE,
     {
-      message: '로비 복귀 완료',
+      userDatas,
     },
     user.playerId,
   );
