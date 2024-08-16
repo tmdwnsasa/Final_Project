@@ -7,7 +7,8 @@
     "start": "node server/src/server.js",
     "dev": "nodemon server/src/server.js",
     "dbServer": "node db_server/db-server.js",
-    "insertGameContent": "node server/src/db/game/game.db.content.js"
+    "insertGameContent": "node server/src/db/game/game.db.content.js",
+    "pm2": "pm2 start ecosystem.config.cjs --env production"
   },
   "keywords": [],
   "author": "",
