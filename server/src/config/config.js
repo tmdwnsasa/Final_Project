@@ -14,6 +14,10 @@ export const config = {
     totalLength: header.TOTAL_LENGTH,
     typeLength: header.PACKET_TYPE_LENGTH,
   },
+  webHook: {
+    DISCORD: env.DISCORD_WEB_HOOK,
+    GITHUB: env.GITHUB_WEB_HOOK,
+  },
   database: {
     GAME_DB: {
       name: env.GAME_DB_NAME,
@@ -68,7 +72,7 @@ export const config = {
         password: env.SHARD_3_PASSWORD,
         host: env.SHARD_3_HOST,
         port: env.SHARD_3_PORT,
-      }
-    }
+      },
+    },
   },
 };

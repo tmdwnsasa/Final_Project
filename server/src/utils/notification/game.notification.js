@@ -73,11 +73,11 @@ export const createGameSkillPacket = (playerId, x, y, rangeX, rangeY) => {
   return makeNotification(skillPacket, PACKET_TYPE.SKILL);
 };
 
-export const createAttackedSuccessPacket = (users) => {
+export const createAttackedSuccessPacket = (playerId, hp) => {
   const protoMessages = getProtoMessages();
   const attack = protoMessages.gameNotification.AttackedSuccess;
 
-  const payload = { users };
+  const payload = { playerId, hp };
   const message = attack.create(payload);
   const attackPacket = attack.encode(message).finish();
   return makeNotification(attackPacket, PACKET_TYPE.ATTACK);
@@ -90,4 +90,22 @@ export const createGameEndPacket = (payload) => {
   const message = gameEnd.create(payload);
   const gameEndPacket = gameEnd.encode(message).finish();
   return makeNotification(gameEndPacket, PACKET_TYPE.GAME_END);
+};
+
+export const createCreateUserPacket = (payload) => {
+  const protoMessages = getProtoMessages();
+  const createUser = protoMessages.gameNotification.CreateUser;
+
+  const message = createUser.create(payload);
+  const createUserPacket = createUser.encode(message).finish();
+  return makeNotification(createUserPacket, PACKET_TYPE.CREATE_USER);
+};
+
+export const createRemoveUserPacket = (payload) => {
+  const protoMessages = getProtoMessages();
+  const removeUser = protoMessages.gameNotification.RemoveUser;
+
+  const message = removeUser.create(payload);
+  const removeUserPacket = removeUser.encode(message).finish();
+  return makeNotification(removeUserPacket, PACKET_TYPE.REMOVE_USER);
 };

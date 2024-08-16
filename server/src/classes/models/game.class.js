@@ -11,6 +11,7 @@ import {
   gameStartNotification,
 } from '../../utils/notification/game.notification.js';
 import IntervalManager from '../manager/interval.manager.js';
+import { createBullQueue } from '../../utils/bullQueue.js';
 
 const MAX_PLAYERS = 4;
 
@@ -24,9 +25,13 @@ class Game {
 
     this.intervalManager.addInterval(this.id, this.sendAllLocation.bind(this), config.server.frame * 1000, 'location');
     this.dbSaveRequest = false;
+
+    this.bullQueue = createBullQueue(this.id);
+    this.skillArr = [];
   }
 
   addUser(user) {
+    console.log(this.users);
     if (this.users.length >= MAX_PLAYERS) {
       throw new Error('Game session is full');
     }
@@ -56,59 +61,20 @@ class Game {
       team = 'blue';
     }
 
-    const attackedData = [];
-    let deathCount = 0;
-
-    // 우리 팀 유저 배열
-    const ourTeam = this.users.filter((user) => user.team.includes(team));
     // 상대 팀 유저 배열
     const opposingTeam = this.users.filter((user) => !user.team.includes(team));
     opposingTeam.forEach((user) => {
-      if (user.x > startX && user.y < startY && user.x < endX && user.y > endY && user.hp > 0) {
+      if (user.x > startX && user.y < startY && user.x < endX && user.y > endY) {
         // 상대방 히트
-        if (attackUser.power > user.hp) {
-          attackUser.damage += user.hp;
-          user.hp = 0;
-        }
-
-        if (attackUser.power <= user.hp) {
-          user.hp -= attackUser.power;
-          attackUser.damage += attackUser.power;
-        }
-
-        attackedData.push({ playerId: user.name, hp: user.hp });
-
-        if (user.hp <= 0) {
-          attackUser.kill += 1;
-          user.death += 1;
-        }
-      }
-
-      // 상대팀이 모두 죽었는지 체크
-      if (user.hp <= 0) {
-        deathCount += 1;
+        // 불큐 작업 추가
+        this.bullQueue.add({
+          gameSessionId: this.id,
+          attackUserId: attackUser.playerId,
+          attackedUserId: user.playerId,
+          team,
+        });
       }
     });
-
-    if (attackedData.length) {
-      const packet = createAttackedSuccessPacket(attackedData);
-
-      this.users.forEach((user) => {
-        user.socket.write(packet);
-      });
-    }
-
-    // deathCount === opposingTeam.length
-    if (deathCount === opposingTeam.length && this.dbSaveRequest === false) {
-      gameEnd(this.id, ourTeam, opposingTeam, team, this.startTime, this.map.mapName);
-      if (team === 'red') {
-        this.map.countRedWin++;
-      } else {
-        this.map.countBlueWin++;
-      }
-      changingOwnerOfMap(this.map);
-      this.dbSaveRequest = true;
-    }
   }
 
   getMaxLatency() {
@@ -183,6 +149,37 @@ class Game {
     this.users.forEach((user) => {
       user.socket.write(packet);
     });
+  }
+
+  sendAllAttackedSuccess(playerId, hp, team) {
+    const packet = createAttackedSuccessPacket(playerId, hp);
+
+    this.users.forEach((user) => {
+      user.socket.write(packet);
+    });
+
+    // 상대방 모두 죽었는지 체크
+    let deathCount = 0;
+    // 우리 팀 유저 배열
+    const ourTeam = this.users.filter((user) => user.team.includes(team));
+    // 상대 팀 유저 배열
+    const opposingTeam = this.users.filter((user) => !user.team.includes(team));
+    opposingTeam.forEach((user) => {
+      if (user.hp <= 0) {
+        deathCount += 1;
+      }
+    });
+
+    if (deathCount === opposingTeam.length && this.dbSaveRequest === false) {
+      gameEnd(this.id, ourTeam, opposingTeam, team, this.startTime, this.map.mapName);
+      if (team === 'red') {
+        this.map.countRedWin++;
+      } else {
+        this.map.countBlueWin++;
+      }
+      changingOwnerOfMap(this.map);
+      this.dbSaveRequest = true;
+    }
   }
 }
 
