@@ -21,6 +21,7 @@ initServer()
     process.exit(1);
   });
 
+//CI CD 용 express 서버 - git push 감지 & git pull & 서버 재시작 & discord 알림
 const app = express();
 const HTTP_PORT = 4000;
 
