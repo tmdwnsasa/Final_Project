@@ -9,6 +9,6 @@ export const verifySignature = (req, res, buf, encoding) => {
   hmac.update(buf, encoding);
   const digest = `sha256=${hmac.digest('hex')}`;
   if (signature !== digest) {
-    throw new Error('Invalid signature');
+    throw new Error('env의 암호가 github의 secret과 일치하지 않습니다');
   }
 };
