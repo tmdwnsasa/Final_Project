@@ -4,28 +4,82 @@ const API_BASE = `http://${config.dbServer.host}:${config.dbServer.port}/api`;
 
 const ENDPOINTS = {
   user: {
-    createUser: `${API_BASE}/user/createUser`,
-    updateUserLogin: `${API_BASE}/user/updateUserLogin`,
-    findUserByPlayerId: `${API_BASE}/user/findUserByPlayerId`,
-    findMoneyByPlayerId: `${API_BASE}/user/findMoneyByPlayerId`,
+    createUser: {
+      url: `${API_BASE}/user/createUser`,
+      method: 'POST',
+    },
+    updateUserLogin: {
+      url: `${API_BASE}/user/updateUserLogin`,
+      method: 'PATCH',
+    },
+    findUserByPlayerId: {
+      url: `${API_BASE}/user/findUserByPlayerId`,
+      method: 'GET',
+    },
+    findMoneyByPlayerId: {
+      url: `${API_BASE}/user/findMoneyByPlayerId`,
+      method: 'GET',
+    },
   },
   game: {
-    createMatchHistory: `${API_BASE}/game/createMatchHistory`,
-    createMatchLog: `${API_BASE}/game/createMatchLog`,
-    createUserScore: `${API_BASE}/game/createUserScore`,
-    createUserRating: `${API_BASE}/game/createUserRating`,
-    getUserScore: `${API_BASE}/game/getUserScore`,
-    updateUserRating: `${API_BASE}/game/updateUserRating`,
-    createCharacter: `${API_BASE}/game/createCharacter`,
-    getUserRating: `${API_BASE}/game/getUserRating`,
-    createPossession: `${API_BASE}/game/createPossession`,
-    findPossessionByPlayerID: `${API_BASE}/game/findPossessionByPlayerID`,
-    findCharacterData: `${API_BASE}/game/findCharacterData`,
-    findCharacterInfo: `${API_BASE}/game/findCharacterInfo`,
-    updatePossession: `${API_BASE}/game/updatePossession`,
+    createMatchHistory: {
+      url: `${API_BASE}/game/createMatchHistory`,
+      method: 'POST',
+    },
+    createMatchLog: {
+      url: `${API_BASE}/game/createMatchLog`,
+      method: 'POST',
+    },
+    createUserScore: {
+      url: `${API_BASE}/game/createUserScore`,
+      method: 'POST',
+    },
+    createUserRating: {
+      url: `${API_BASE}/game/createUserRating`,
+      method: 'POST',
+    },
+    getUserScore: {
+      url: `${API_BASE}/game/getUserScore`,
+      method: 'GET',
+    },
+    updateUserRating: {
+      url: `${API_BASE}/game/updateUserRating`,
+      method: 'PATCH',
+    },
+    createCharacter: {
+      url: `${API_BASE}/game/createCharacter`,
+      method: 'POST',
+    },
+    getUserRating: {
+      url: `${API_BASE}/game/getUserRating`,
+      method: 'GET',
+    },
+    createPossession: {
+      url: `${API_BASE}/game/createPossession`,
+      method: 'POST',
+    },
+    findPossessionByPlayerID: {
+      url: `${API_BASE}/game/findPossessionByPlayerID`,
+      method: 'GET',
+    },
+    findCharacterData: {
+      url: `${API_BASE}/game/findCharacterData`,
+      method: 'GET',
+    },
+    findCharacterInfo: {
+      url: `${API_BASE}/game/findCharacterInfo`,
+      method: 'GET',
+    },
+    updatePossession: {
+      url: `${API_BASE}/game/updatePossession`,
+      method: 'PATCH',
+    },
   },
   db: {
-    resetAllSchema: `${API_BASE}/db/resetAllSchema`,
+    resetAllSchema: {
+      url: `${API_BASE}/db/resetAllSchema`,
+      method: 'PUT',
+    },
   },
 };
 
