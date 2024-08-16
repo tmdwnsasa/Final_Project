@@ -1,7 +1,7 @@
 import CharacterSkill from '../../classes/models/characterskill.class.js';
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
 import { getLobbySession } from '../../sessions/lobby.session.js';
-import { getUserById } from '../../sessions/user.session.js';
+import { createUserInLobby, getUserById } from '../../sessions/user.session.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
@@ -25,12 +25,27 @@ const joinLobbyHandler = ({ socket, userId, payload }) => {
     const existUser = lobbySession.getUser(user.id);
     if (!existUser) {
       lobbySession.addUser(user);
+      createUserInLobby(user);
     }
+
+    const userDatas = lobbySession
+      .getAllUsers()
+      .filter((user) => {
+        if (user.playerId !== userId) return true;
+      })
+      .map((user) => {
+        const data = {
+          playerId: user.name,
+          characterId: user.characterId - 1,
+          guild: user.guild,
+        };
+        if (data.playerId !== userId) return data;
+      });
 
     const joinLobbyResponse = createResponse(
       HANDLER_IDS.JOIN_LOBBY,
       RESPONSE_SUCCESS_CODE,
-      { ...character, ...skill },
+      { ...character, userDatas, ...skill },
       user.id,
     );
 

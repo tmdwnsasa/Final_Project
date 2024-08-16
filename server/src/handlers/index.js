@@ -17,6 +17,7 @@ import exitGameHandler from './game/exitGame.handler.js';
 import { storeHandler } from './game/store.handler.js';
 import { purchaseCharacter } from './game/buyObject.handler.js';
 import removeSkillHandler from './game/removeSkill.handler.js';
+import openMapHandler from './game/openMap.handler.js';
 
 const handlers = {
   [HANDLER_IDS.REGISTER]: {
@@ -41,7 +42,7 @@ const handlers = {
   },
   [HANDLER_IDS.UPDATE_LOCATION]: {
     handler: updateLocationHandler,
-    protoType: packetNames.game.LocationUpdatePayload,
+    protoType: packetNames.game.UpdateLocationPayload,
   },
   [HANDLER_IDS.EARN_CHARACTER]: {
     handler: giveCharacterHandler,
@@ -78,6 +79,10 @@ const handlers = {
   [HANDLER_IDS.PURCHASE_CHARACTER]: {
     handler: purchaseCharacter,
     protoType: packetNames.character.PurchaseCharacterPayload,
+  },
+  [HANDLER_IDS.OPEN_MAP]: {
+    handler: openMapHandler,
+    protoType: packetNames.ui.MapPayload,
   },
 };
 

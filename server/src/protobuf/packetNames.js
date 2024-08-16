@@ -15,7 +15,7 @@ export const packetNames = {
     CreateGamePayload: 'game.CreateGamePayload',
     JoinGamePayload: 'game.JoinGamePayload',
     JoinLobbyPayload: 'game.JoinLobbyPayload',
-    LocationUpdatePayload: 'game.LocationUpdatePayload',
+    UpdateLocationPayload: 'game.UpdateLocationPayload',
     ReturnLobbyPayload: 'game.ReturnLobbyPayload',
     MatchingPayload: 'game.MatchingPayload',
     ExitGamePayload: 'game.ExitGamePayload',
@@ -23,6 +23,7 @@ export const packetNames = {
   ui: {
     ChattingPayload: 'ui.ChattingPayload',
     StorePayload: 'ui.StorePayload',
+    MapPayload: 'ui.MapPayload',
   },
   skill: {
     SkillPayload: 'skill.SkillPayload',
@@ -37,6 +38,8 @@ export const packetNames = {
     MatchMakingComplete: 'gameNotification.MatchMakingComplete',
     MatchResultPayload: 'gameNotification.MatchResultPayload',
     AttackedSuccess: 'gameNotification.AttackedSuccess',
+    CreateUser: 'gameNotification.CreateUser',
+    RemoveUser: 'gameNotification.RemoveUser',
   },
   uiNotification: {
     ChattingUpdate: 'uiNotification.ChattingUpdate',

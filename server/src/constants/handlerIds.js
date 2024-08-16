@@ -17,6 +17,7 @@ export const HANDLER_IDS = {
   EXIT: 20,
   STORE: 29,
   PURCHASE_CHARACTER: 30,
+  OPEN_MAP: 40,
   SKILL: 50,
   SKILLREMOVE: 51,
 };

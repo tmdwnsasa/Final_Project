@@ -15,6 +15,10 @@ export const config = {
     totalLength: header.TOTAL_LENGTH,
     typeLength: header.PACKET_TYPE_LENGTH,
   },
+  webHook: {
+    DISCORD: env.DISCORD_WEB_HOOK,
+    GITHUB: env.GITHUB_WEB_HOOK,
+  },
   database: {
     GAME_DB: {
       name: env.GAME_DB_NAME,
@@ -36,6 +40,13 @@ export const config = {
       password: env.ERROR_DB_PASSWORD,
       host: env.ERROR_DB_HOST,
       port: env.ERROR_DB_PORT,
+    },
+    MAP_DB: {
+      name: env.MAP_DB_NAME,
+      user: env.MAP_DB_USER,
+      password: env.MAP_DB_PASSWORD,
+      host: env.MAP_DB_HOST,
+      port: env.MAP_DB_PORT,
     },
     REDIS: {
       host: env.REDIS_HOST,
