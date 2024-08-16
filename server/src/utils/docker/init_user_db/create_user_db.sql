@@ -23,6 +23,16 @@ CREATE TABLE IF NOT EXISTS inventory (
     item_sprite_name VARCHAR(255),
     equipped_items BOOLEAN DEFAULT FALSE,
     equip_slot VARCHAR(255),
-    slot_id INT,  
     FOREIGN KEY(player_id) REFERENCES account(player_id)
 );
+
+PARTITION BY LIST (CHAR_LENGTH(player_id))(
+    PARTITION pID_1 VALUES IN (2,3),
+    PARTITION pID_2 VALUES IN (4,5,6)
+);
+
+CREATE INDEX idx_itemId ON inventory (item_id);
+
+
+
+
