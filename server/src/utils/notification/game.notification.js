@@ -91,3 +91,21 @@ export const createGameEndPacket = (payload) => {
   const gameEndPacket = gameEnd.encode(message).finish();
   return makeNotification(gameEndPacket, PACKET_TYPE.GAME_END);
 };
+
+export const createCreateUserPacket = (payload) => {
+  const protoMessages = getProtoMessages();
+  const createUser = protoMessages.gameNotification.CreateUser;
+
+  const message = createUser.create(payload);
+  const createUserPacket = createUser.encode(message).finish();
+  return makeNotification(createUserPacket, PACKET_TYPE.CREATE_USER);
+};
+
+export const createRemoveUserPacket = (payload) => {
+  const protoMessages = getProtoMessages();
+  const removeUser = protoMessages.gameNotification.RemoveUser;
+
+  const message = removeUser.create(payload);
+  const removeUserPacket = removeUser.encode(message).finish();
+  return makeNotification(removeUserPacket, PACKET_TYPE.REMOVE_USER);
+};
