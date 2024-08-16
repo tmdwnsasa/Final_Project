@@ -5,6 +5,7 @@ export const packetNames = {
   },
   character: {
     GiveCharacterPayload: 'character.GiveCharacterPayload',
+    PurchaseCharacterPayload: 'character.PurchaseCharacterPayload',
   },
   user: {
     RegisterPayload: 'user.RegisterPayload',
@@ -21,6 +22,7 @@ export const packetNames = {
   },
   ui: {
     ChattingPayload: 'ui.ChattingPayload',
+    StorePayload: 'ui.StorePayload',
   },
   skill: {
     nearAttackPayload: 'skill.nearAttackPayload',

@@ -42,7 +42,7 @@ class Lobby {
 
     const locationData = this.users.map((user) => {
       const { x, y } = user.calculatePosition(maxLatency);
-      return { playerId: user.name, characterId: user.characterId - 1, x, y };
+      return { playerId: user.name, characterId: user.characterId - 1, x, y, direction: user.directionX };
     });
 
     const packet = createLocationPacket(locationData);

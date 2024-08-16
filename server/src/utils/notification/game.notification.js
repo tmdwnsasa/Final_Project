@@ -73,11 +73,11 @@ export const createGameSkillPacket = (playerId, x, y, rangeX, rangeY) => {
   return makeNotification(skillPacket, PACKET_TYPE.SKILL);
 };
 
-export const createAttackedSuccessPacket = (users) => {
+export const createAttackedSuccessPacket = (playerId, hp) => {
   const protoMessages = getProtoMessages();
   const attack = protoMessages.gameNotification.AttackedSuccess;
 
-  const payload = { users };
+  const payload = { playerId, hp };
   const message = attack.create(payload);
   const attackPacket = attack.encode(message).finish();
   return makeNotification(attackPacket, PACKET_TYPE.ATTACK);

@@ -25,3 +25,18 @@ export const findMoneyByPlayerId = async (player_id) => {
   const [rows] = await pools.USER_DB.query(SQL_QUERIES.FIND_MONEY_BY_PLAYER_ID, [player_id]);
   return toCamelCase(rows[0]);
 };
+
+export const updateUserMoney = async (userConnection, playerId, userMoney) => {
+  await userConnection.query(SQL_QUERIES.UPDATE_MONEY, [userMoney, playerId]);
+  return { playerId, userMoney };
+};
+
+export const gameEndUpdateUserMoney = async (playerId, userMoney) => {
+  await pools.USER_DB.query(SQL_QUERIES.UPDATE_MONEY, [userMoney, playerId]);
+  return { playerId, userMoney };
+};
+
+export const createUserMoney = async (playerId, money) => {
+  await pools.USER_DB.query(SQL_QUERIES.CREATE_USER_MONEY, [playerId, money]);
+  return { playerId, money };
+};

@@ -11,6 +11,7 @@ message LocationUpdate {
     uint32 characterId = 2;
     float x = 3;
     float y = 4;
+    float direction = 5;
   }
 }
 
@@ -45,12 +46,8 @@ message MatchResultPayload {
 }
 
 message AttackedSuccess {
-  repeated UserAttackState users = 1;
-
-  message UserAttackState {
-    string playerId = 1;
-    float hp = 2;
-  }
+  string playerId = 1;
+  float hp = 2;
 }
 
 //케릭터 추가 메시지
