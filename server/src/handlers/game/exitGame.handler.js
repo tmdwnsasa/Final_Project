@@ -1,9 +1,11 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
 import { removeUserFromQueue } from '../../sessions/matchQueue.session.js';
 import { lobbySession } from '../../sessions/session.js';
+import { deleteUserInClient } from '../../sessions/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
 const exitGameHandler = ({ socket, userId, data }) => {
+  deleteUserInClient(userId);
   lobbySession.removeUser(userId);
   removeUserFromQueue(socket);
 

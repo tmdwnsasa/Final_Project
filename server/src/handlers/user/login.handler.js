@@ -38,7 +38,7 @@ const loginHandler = async ({ socket, userId, payload }) => {
     const gameSession = getGameSessionByPlayerId(playerId);
 
     const sessionId = uuidv4();
-    addUser(playerId, user.name, socket, sessionId);
+    addUser(playerId, user.name, user.guild, socket, sessionId);
 
     if (gameSession !== -1 && gameSession !== undefined) {
       // 게임 세션에 사람 추가 / 게임 입장 통지

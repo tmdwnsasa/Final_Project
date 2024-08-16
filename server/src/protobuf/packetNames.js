@@ -34,6 +34,8 @@ export const packetNames = {
     MatchMakingComplete: 'gameNotification.MatchMakingComplete',
     MatchResultPayload: 'gameNotification.MatchResultPayload',
     AttackedSuccess: 'gameNotification.AttackedSuccess',
+    CreateUser: 'gameNotification.CreateUser',
+    RemoveUser: 'gameNotification.RemoveUser',
   },
   uiNotification: {
     ChattingUpdate: 'uiNotification.ChattingUpdate',
