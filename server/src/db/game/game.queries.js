@@ -16,4 +16,7 @@ export const GAME_SQL_QUERIES = {
   FIND_USER_SCORE_BY_PLAYER_ID: 'SELECT * FROM score WHERE player_id = ?',
   FIND_USER_RATING_BY_PLAYER_ID: 'SELECT * FROM rating WHERE player_id = ?',
   FIND_CHARACTERS_DATA: 'SELECT * FROM `character`',
+  UPDATE_POSSESSION:'UPDATE possession SET character_id = ? WHERE player_id = ?',
+  FIND_ITEM_STATS: 'SELECT * FROM item',
+
 };

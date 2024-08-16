@@ -3,5 +3,10 @@ syntax = 'proto3';
 package character;
 
 message GiveCharacterPayload {
-  uint32 characterId = 1;
+    uint32 characterId = 1;
+}
+
+message PurchaseCharacterPayload {
+    string name = 1;
+    string price = 2;
 }

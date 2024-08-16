@@ -3,6 +3,7 @@ import { toCamelCase } from '../../utils/transformCase.js';
 import { GAME_SQL_QUERIES } from './game.queries.js';
 import { formatDate } from '../../utils/dateFormatter.js';
 import { asyncSaveScoreRating, saveMatchHistory } from '../../utils/gameEnd.js';
+import { updateUserMoney } from '../user/user.db.js';
 
 export const createMatchHistory = async (connection, sessionId, playerId, kill, death, damage) => {
   await connection.query(GAME_SQL_QUERIES.CREATE_MATCH_HISTORY, [sessionId, playerId, kill, death, damage]);
@@ -59,6 +60,11 @@ export const findUserScoreTable = async (connection, playerId) => {
   return toCamelCase(rows[0]);
 };
 
+export const findUserRatingTable = async (connection, playerId) => {
+  const [rows] = await connection.query(GAME_SQL_QUERIES.FIND_USER_RATING_BY_PLAYER_ID, [playerId]);
+  return toCamelCase(rows[0]);
+};
+
 export const getUserScore = async (connection, playerId) => {
   const [rows] = await connection.query(GAME_SQL_QUERIES.FIND_USER_SCORE_BY_PLAYER_ID, [playerId]);
   return toCamelCase(rows[0].score);
@@ -108,6 +114,11 @@ export const findCharacterData = async () => {
   return toCamelCase(rows[0]);
 };
 
+export const findItemStats = async()=>{
+  const [rows] = await pools.GAME_DB.query(GAME_SQL_QUERIES.FIND_ITEM_STATS);
+  return toCamelCase(rows);
+};
+
 export async function dbSaveTransaction(winTeam, loseTeam, users, gameSessionId, winnerTeam, startTime) {
   const connection = await pools.GAME_DB.getConnection();
   try {
@@ -136,3 +147,37 @@ export async function dbSaveTransaction(winTeam, loseTeam, users, gameSessionId,
     connection.release();
   }
 }
+
+export const findCharacterInfo = async (characterId) => {
+  const [rows] = await pools.GAME_DB.query(GAME_SQL_QUERIES, [characterId]);
+  return toCamelCase(rows[0]);
+};
+
+export const updatePossession = async (gameConnection, playerId, characterId) => {
+  await gameConnection.query(GAME_SQL_QUERIES.CREATE_POSSESSION, [playerId, characterId]);
+  return { playerId, characterId };
+};
+
+export const purchaseCharacterTransaction = async (playerId, newUserMoney, characterId) => {
+  const userConnection = await pools.USER_DB.getConnection();
+  const gameConnection = await pools.GAME_DB.getConnection();
+  try {
+    await userConnection.beginTransaction();
+    await gameConnection.beginTransaction();
+
+    await updateUserMoney(userConnection, playerId, newUserMoney);
+    await updatePossession(gameConnection, playerId, characterId);
+
+    await userConnection.commit();
+    await gameConnection.commit();
+    console.log('트랜잭션과정 DB저장 성공');
+  } catch (err) {
+    await userConnection.rollback();
+    await gameConnection.rollback();
+    console.error('트랜잭션과정 DB저장 실패:', err);
+    throw err;
+  } finally {
+    userConnection.release();
+    gameConnection.release();
+  }
+};

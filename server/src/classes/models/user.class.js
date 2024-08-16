@@ -10,7 +10,6 @@ class User {
     this.sessionId = sessionId;
     this.latency = 0;
     this.socket = socket;
-    this.inventory = new Inventory(playerId);
     this.x = 0;
     this.y = 0;
     this.corrPos = 0;
@@ -18,6 +17,7 @@ class User {
     this.directionY = 0;
     this.lastUpdateTime = Date.now();
 
+    this.money = 0;
     this.sequence = 0;
     this.status = 'waiting'; // 'waiting','matching', 'playing'
     this.inParty = false; // 파티 중인지
@@ -34,6 +34,8 @@ class User {
     this.kill = 0;
     this.death = 0;
     this.damage = 0;
+
+    this.inventory = new Inventory(this);
   }
 
   updatePosition(x, y) {

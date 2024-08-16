@@ -32,3 +32,11 @@ message ReturnLobbyPayload {
 message ExitGamePayload {
   string message = 1;
 }
+
+message EquipItemPayload {
+  int itemId = 1;
+}
+
+message UnequipItemPayload {
+  int itemId = 1;
+}

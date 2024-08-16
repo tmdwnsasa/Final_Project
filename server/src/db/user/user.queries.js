@@ -5,8 +5,9 @@ export const SQL_QUERIES = {
   UPDATE_USER_LOGIN: 'UPDATE account SET last_login = CURRENT_TIMESTAMP WHERE player_id = ?',
   FIND_MONEY_BY_PLAYER_ID: 'SELECT money FROM money WHERE player_id = ?',
   FIND_USER_INVENTORY_BY_PLAYER_ID: 'SELECT * FROM inventory WHERE player_id =?',
-  FIND_EQUIPPED_ITEMS_BY_PLAYER_ID: 'SELECT * FROM equipped_items WHERE player_id?',
-  EQUIP_ITEM: 'UPDATE inventory SET equipped_items = TRUE, slot = ? WHERE player_id = ? AND item_id = ?',
-  UNEQUIP_ITEM: 'UPDATE inventory SET equipped_items = FALSE, slot = NULL WHERE player_id = ? AND slot = ?'
-  
+  FIND_EQUIPPED_ITEMS_BY_PLAYER_ID: 'SELECT * FROM inventory WHERE player_id = ? AND equipped_items = 1',
+  EQUIP_ITEM: 'UPDATE inventory SET equipped_items = TRUE, equip_slot = ? WHERE player_id = ? AND item_id = ?',
+  UNEQUIP_ITEM: 'UPDATE inventory SET equipped_items = FALSE, equip_slot = NULL WHERE player_id = ? AND equip_slot = ?',
+  UPDATE_MONEY:'UPDATE money SET money = ? WHERE player_id = ?',
+  CREATE_USER_MONEY: 'INSERT INTO money (player_id, money) VALUES (?, ?)',
 };

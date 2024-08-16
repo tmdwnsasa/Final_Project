@@ -22,28 +22,29 @@ const inventoryHandler = async ({socket, payload}) => {
 
     const userInventory = user.inventory;
 
-    const userMoney = await userInventory.getPlayersMoney();
-    console.log('User money:', userMoney);
+    const userMoneyValue = await userInventory.getPlayersMoney();
+    const userMoney = {money : userMoneyValue}
 
-    // const equippedItems = await userInventory.getEquippedItems();
-    // const allItems = await userInventory.getAllItems();
-    // const combinedStats = await userInventory.getCombinedStats();
+    const equippedItems = await userInventory.getEquippedItems();
+    const allItems = await userInventory.getAllItems();
+    const combinedStats = await userInventory.getCombinedStats();
+
+    console.log('User combined stats:', combinedStats);
 
     const inventoryData = {
       userMoney,
-      // equippedItems,
-      // allItems,
-      // combinedStats
+      equippedItems,
+      allItems,
+      combinedStats
     };
 
     const response = createResponse(
       HANDLER_IDS.INVENTORY, 
       RESPONSE_SUCCESS_CODE, 
-      {message: `${user.name}의 인벤토리 데이터 전송 완료 ${JSON.stringify(inventoryData)}`},
+      inventoryData,
       user.playerId
     );
-    console.log('Response created:', response);
-
+    
     socket.write(response);
   } catch (err) {
     handlerError(socket, err);

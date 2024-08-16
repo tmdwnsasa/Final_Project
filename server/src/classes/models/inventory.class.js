@@ -1,104 +1,108 @@
-import { findMoneyByPlayerId, findEquippedItemsByPlayerId, equipItem, unequipItem } from '../../db/user/user.db.js';
-import { characterAssets } from '../../assets/character.asset.js'; 
-
-class Inventory {
+import {
+    findUserInventoryByPlayerId,
+    findMoneyByPlayerId,
+    findEquippedItemsByPlayerId,
+    equipItem,
+    unequipItem,
+  } from '../../db/user/user.db.js';
+  import { findItemStats } from '../../db/game/game.db.js';
+  
+  class Inventory {
     constructor(user) {
-        this.user = user;
-        this.playerId = user.playerId;
-        this.characterId = user.characterId;
-        this.money = 1000;
-        this.items = []; 
-        this.equippedItems = {};
+      this.user = user;
+      this.playerId = user.playerId;
+      this.characterId = user.characterId;
+      this.money = user.money;
+      this.items = [];  
+      this.equippedItems = [];  
     }
-
-    //인벤토리에 있는 아이템 DB에서 가져오기
-    async loadItems() {
-        this.items = await findItemsByPlayerId(this.playerId);
-        return this.items;
-    }
-
-    //장착한 아이템 DB에서 가져오기
-    async loadEquippedItems() {
-        const equippedItems = await findEquippedItemsByPlayerId(this.playerId);
-        if (equippedItems) {
-            equippedItems.forEach(item => {
-                this.equippedItems[item.slot] = item;
-            });
-        }
-        return this.equippedItems;
-    }
-
+  
     async getAllItems() {
-        if (this.items === null) {
-            await this.loadItems();
-        }
-        return this.items;
+      if (this.items.length === 0) {
+        this.items = await findUserInventoryByPlayerId(this.playerId);
+      }
+      console.log('Getting all items:', this.items);
+      return this.items;
     }
-
+  
     async getEquippedItems() {
-        if (Object.keys(this.equippedItems).length === 0) {
-            await this.loadEquippedItems();
-        }
-        return this.equippedItems;
+      try {
+        this.equippedItems = await findEquippedItemsByPlayerId(this.playerId);
+      } catch (error) {
+        console.error('Failed to get equipped items:', error);
+        this.equippedItems = []; 
+      }
+      console.log('Getting equipped items:', this.equippedItems);
+      return this.equippedItems;
+    }
+  
+    // Get character's base stats
+    getCharacterStats() {
+      const { hp, speed, power, defense, critical } = this.user;
+      return {
+        hp,
+        speed,
+        power,
+        defense,
+        critical,
+      };
     }
     
-    //현재 캐릭터의 스탯 가져오기
-    getCharacterStats() {
-        const character = characterAssets[this.characterId];
-        const characterStats = {
-            hp: character.hp,
-            speed: character.speed,
-            power: character.power,
-            defense: character.defense,
-            critical: character.critical,
-        };
-        return characterStats;
-    }
+    async getEquippedItemStats(){
+        const itemStats = await findItemStats();
+        const equippedItems = await this.getEquippedItems();
+        const equippedItemIds = equippedItems.map(item=> item.itemId);
+        const equippedItemStats = itemStats.filter(itemStat => equippedItemIds.includes(itemStat.itemId));
 
-    //캐릭터의 총 스탯 가져오기
+        console.log('Equipped Item Stats:', equippedItemStats);
+
+        return equippedItemStats;
+    }
+  
+
     async getCombinedStats() {
         const characterStats = this.getCharacterStats();
-        const equippedItems = await this.getEquippedItems();
+        const equippedItemStats = await this.getEquippedItemStats();
         const combinedStats = { ...characterStats };
-
-        //나중에 아이템 stats 명칭 확인해야함...일단 임시로!
-        Object.values(equippedItems).forEach(item => {
-            if (item.type === 'equipment') {
-                combinedStats.hp += item.hpBoost || 0; 
-                combinedStats.speed += item.speedBoost || 0;
-                combinedStats.power += item.powerBoost || 0;
-                combinedStats.defense += item.defenseBoost || 0;
-                combinedStats.critical += item.criticalBoost || 0; 
-            }
-        });
-
+      
+          equippedItemStats.forEach(itemStat=> {
+            combinedStats.hp += itemStat.itemHp || 0;
+            combinedStats.speed += itemStat.itemSpeed || 0;
+            combinedStats.power += itemStat.itemAttack || 0;
+          })
+  
         return combinedStats;
-    }
+      }
+  
+      async equipItem(itemId, slotId) {
+        const item = this.items.find((item) => item.itemId === itemId);
+        if (item) {
+            await equipItem(this.playerId, itemId, slotId);
+            this.equippedItems.push({ ...item, slotId }); // Store the item with its slotId
 
-    //아이템 장착
-    async equipItem(itemId) {
-        const item = this.items.find(item => item.item_id === itemId);
-        if (item && item.type === 'equipment') {
-            const slot = item.slot;
-            await equipItem(this.playerId, itemId, slot);
-            this.equippedItems[slot] = item;
+            const updatedStats = await this.getCombinedStats();
+            return updatedStats;
         }
     }
 
-    //아이템 탈착
-    async unequipItem(slot) {
-        if (this.equippedItems[slot]) {
-            await unequipItem(this.playerId, slot);
-            delete this.equippedItems[slot];
+    async unequipItem(itemId) {
+        const itemIndex = this.equippedItems.findIndex((item) => item.itemId === itemId);
+        if (itemIndex !== -1) {
+            const slotId = this.equippedItems[itemIndex].slotId;
+            await unequipItem(this.playerId, itemId, slotId);
+            this.equippedItems.splice(itemIndex, 1);
+
+            const updatedStats = await this.getCombinedStats();
+            return updatedStats;
         }
     }
-
-
+  
     async getPlayersMoney() {
-        // const moneyData = await findMoneyByPlayerId(this.playerId);
-        // this.money = moneyData ? moneyData.money : 0;
-        return this.money;
+      const moneyData = await findMoneyByPlayerId(this.playerId);
+      this.money = moneyData ? moneyData.money : 0;
+      return this.money;
     }
-}
-
-export default Inventory;
+  }
+  
+  export default Inventory;
+  
