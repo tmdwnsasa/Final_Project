@@ -23,6 +23,7 @@ export const packetNames = {
   ui: {
     ChattingPayload: 'ui.ChattingPayload',
     StorePayload: 'ui.StorePayload',
+    MapPayload: 'ui.MapPayload',
   },
   skill: {
     nearAttackPayload: 'skill.nearAttackPayload',

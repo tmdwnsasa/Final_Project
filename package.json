@@ -8,7 +8,9 @@
     "dev": "nodemon server/src/server.js",
     "dbServer": "node db_server/db-server.js",
     "insertGameContent": "node server/src/db/game/game.db.content.js",
-    "pm2": "pm2 start ecosystem.config.cjs --env production"
+    "pm2": "pm2 start ecosystem.config.cjs --env production",
+    "migrate": "node server/src/db/map/createSchemas.js",
+    "insertMap": "node server/src/utils/map_db.js"
   },
   "keywords": [],
   "author": "",
