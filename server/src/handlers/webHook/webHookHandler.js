@@ -18,7 +18,7 @@ export const webHook = (req, res) => {
       }
 
       if (update && update.summary.changes) {
-        await sendGitPushAlert(req.body.commits.message, req.body.pusher.name,req.body.commits.url);
+        await sendGitPushAlert(req.body.commits.message, req.body.pusher.name, req.body.commits[0].url);
         exec(`pm2 restart ${PM2_PROCESS_NAME}`, (err, stdout, stderr) => {
           if (err) {
             console.error('PM2 restart failed:', err);
@@ -35,4 +35,3 @@ export const webHook = (req, res) => {
     res.status(200).send('Not a push to the main branch, ignoring');
   }
 };
-
