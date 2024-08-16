@@ -1,4 +1,7 @@
+import { characterAssets } from '../../assets/character.asset.js';
+import { mapAssets } from '../../assets/map.asset.js';
 import { config } from '../../config/config.js';
+import { changingOwnerOfMap } from '../../utils/changingOwnerOfMap.js';
 import { gameEnd } from '../../utils/gameEnd.js';
 import {
   createAttackedSuccessPacket,
@@ -17,6 +20,7 @@ class Game {
     this.id = id;
     this.users = [];
     this.startTime = Date.now();
+    this.map = null;
     this.intervalManager = new IntervalManager();
 
     this.intervalManager.addInterval(this.id, this.sendAllLocation.bind(this), config.server.frame * 1000, 'location');
@@ -83,6 +87,20 @@ class Game {
 
   startGame() {
     this.startTime = Date.now();
+    
+    // 전투할 지역 뽑기
+    const disputedArea = [];
+    mapAssets.filter((rows) =>
+      rows.filter((map) => {
+        if (map.isDisputedArea === 1) {
+          disputedArea.push(map);
+        }
+      }),
+    );
+    const randomMapIndex = Math.floor(Math.random() * disputedArea.length);
+    const randomMap = disputedArea[randomMapIndex];
+    this.map = randomMap;
+    console.log(`지역 이름: ${randomMap.mapName}`);
 
     const battleStartData = [
       { playerId: this.users[0]?.name, hp: this.users[0]?.hp, team: 'red1', x: 73, y: 2 },
@@ -93,7 +111,7 @@ class Game {
     this.users.forEach((user, index) => {
       user.updatePosition(battleStartData[index].x, battleStartData[index].y);
     });
-    const battleStartPacket = gameStartNotification(battleStartData);
+    const battleStartPacket = gameStartNotification(battleStartData, this.map.mapName);
     console.log(battleStartData);
     this.users.forEach((user) => {
       user.socket.write(battleStartPacket);
@@ -153,7 +171,13 @@ class Game {
     });
 
     if (deathCount === opposingTeam.length && this.dbSaveRequest === false) {
-      gameEnd(this.id, ourTeam, opposingTeam, team, this.startTime);
+      gameEnd(this.id, ourTeam, opposingTeam, team, this.startTime, this.map.mapName);
+      if (team === 'red') {
+        this.map.countRedWin++;
+      } else {
+        this.map.countBlueWin++;
+      }
+      changingOwnerOfMap(this.map);
       this.dbSaveRequest = true;
     }
   }

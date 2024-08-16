@@ -54,7 +54,7 @@ const createGame = ({ redTeam, blueTeam }) => {
     });
 
     //매치메이킹 완료 통지
-    const message = '매칭 완료! 대결 시작!';
+    const message = '매칭 완료! 대결 시작!' ;
     const packet = createMatchingCompleteNotification(message);
     [...redTeam, ...blueTeam].forEach((player) => {
       if (player.socket) {

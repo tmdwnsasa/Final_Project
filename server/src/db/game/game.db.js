@@ -19,6 +19,7 @@ export const createMatchLog = async (
   bluePlayer2Id,
   winTeam,
   startTime,
+  mapName,
 ) => {
   const endTime = Date.now();
   await connection.query(GAME_SQL_QUERIES.CREATE_MATCH_LOG, [
@@ -28,6 +29,7 @@ export const createMatchLog = async (
     bluePlayer1Id,
     bluePlayer2Id,
     winTeam,
+    mapName,
     formatDate(new Date(startTime)),
     formatDate(new Date(endTime)),
   ]);
@@ -114,7 +116,7 @@ export const findCharacterData = async () => {
   return toCamelCase(rows[0]);
 };
 
-export async function dbSaveTransaction(winTeam, loseTeam, users, gameSessionId, winnerTeam, startTime) {
+export async function dbSaveTransaction(winTeam, loseTeam, users, gameSessionId, winnerTeam, startTime, map) {
   const connection = await pools.GAME_DB.getConnection();
   try {
     await connection.beginTransaction();
@@ -130,6 +132,7 @@ export async function dbSaveTransaction(winTeam, loseTeam, users, gameSessionId,
       loseTeam[1].playerId,
       winnerTeam,
       startTime,
+      map,
     );
 
     await connection.commit();
