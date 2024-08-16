@@ -21,7 +21,7 @@ message MatchMakingComplete {
 
 message BattleStart {
   repeated UserTeam users = 1;
-  string message =2;
+  string mapName = 2;
 
   message UserTeam {
     string playerId = 1;
@@ -46,10 +46,19 @@ message MatchResultPayload {
 }
 
 message AttackedSuccess {
-  repeated UserAttackState users = 1;
+  string playerId = 1;
+  float hp = 2;
+}
 
-  message UserAttackState {
-    string playerId = 1;
-    float hp = 2;
-  }
+//케릭터 추가 메시지
+message CreateUser {
+  string name = 1;
+  uint32 characterId = 2;
+  uint32 guild = 3;
+}
+
+//케릭터 삭제 메시지
+message RemoveUser {
+  string name = 1;
+  uint32 characterId = 2;
 }

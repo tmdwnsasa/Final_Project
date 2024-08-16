@@ -12,9 +12,9 @@ export const findUserByName = async (name) => {
   return toCamelCase(rows[0]);
 };
 
-export const createUser = async (player_id, pw, name) => {
-  await pools.USER_DB.query(SQL_QUERIES.CREATE_USER, [player_id, pw, name]);
-  return { player_id, pw, name };
+export const createUser = async (player_id, pw, name, guild) => {
+  await pools.USER_DB.query(SQL_QUERIES.CREATE_USER, [player_id, pw, name, guild]);
+  return { player_id, pw, name, guild };
 };
 
 export const updateUserLogin = async (player_id) => {
@@ -58,6 +58,11 @@ export const unequipItem = async (player_id, item_id,equipped_items) => {
 
 export const updateUserMoney = async (userConnection, playerId, userMoney) => {
   await userConnection.query(SQL_QUERIES.UPDATE_MONEY, [userMoney, playerId]);
+  return { playerId, userMoney };
+};
+
+export const gameEndUpdateUserMoney = async (playerId, userMoney) => {
+  await pools.USER_DB.query(SQL_QUERIES.UPDATE_MONEY, [userMoney, playerId]);
   return { playerId, userMoney };
 };
 

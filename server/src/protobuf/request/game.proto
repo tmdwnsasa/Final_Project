@@ -15,7 +15,7 @@ message JoinLobbyPayload {
   uint32 characterId = 1;
 }
 
-message LocationUpdatePayload {
+message UpdateLocationPayload {
   float x = 1;
   float y = 2;
   bool isLobby = 3;

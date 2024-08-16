@@ -9,10 +9,10 @@ import {
   updateUserRating,
   updateUserScore,
 } from '../db/game/game.db.js';
-import { updateUserMoney } from '../db/user/user.db.js';
+import { findMoneyByPlayerId, gameEndUpdateUserMoney, updateUserMoney } from '../db/user/user.db.js';
 import { createGameEndPacket } from './notification/game.notification.js';
 
-export const gameEnd = async (gameSessionId, winnerTeam, loserTeam, winTeamColor, startTime) => {
+export const gameEnd = async (gameSessionId, winnerTeam, loserTeam, winTeamColor, startTime, mapName) => {
   try {
     const users = winnerTeam.concat(loserTeam).map((user) => {
       return { playerId: user.playerId, name: user.name, kill: user.kill, death: user.death, damage: user.damage };
@@ -20,7 +20,7 @@ export const gameEnd = async (gameSessionId, winnerTeam, loserTeam, winTeamColor
 
     for (let i = 1; i < 4; i++) {
       try {
-        await dbSaveTransaction(winnerTeam, loserTeam, users, gameSessionId, winTeamColor, startTime);
+        await dbSaveTransaction(winnerTeam, loserTeam, users, gameSessionId, winTeamColor, startTime, mapName);
         break;
       } catch (err) {
         console.error(`db저장 실패 ${i}번째 시도 중..,${err.message}`);
@@ -33,7 +33,9 @@ export const gameEnd = async (gameSessionId, winnerTeam, loserTeam, winTeamColor
     //게임 종료 시 골드 지급
     for (const user of users) {
       try {
-        await updateUserMoney(user.playerId, 5000);
+        const userMoney = await findMoneyByPlayerId(user.playerId);
+        const money = userMoney.money;
+        await gameEndUpdateUserMoney(user.playerId, money + 5000);
         console.log(`${user.name}한테 골드 지급`);
       } catch (err) {
         console.error(`골드 저장 중 에러 발생:`, err);

@@ -4,7 +4,7 @@ import { createPingPacket } from '../../utils/notification/game.notification.js'
 import Inventory from './inventory.class.js';
 
 class User {
-  constructor(playerId, name, socket, sessionId) {
+  constructor(playerId, name, guild, socket, sessionId) {
     this.playerId = playerId;
     this.name = name;
     this.sessionId = sessionId;
@@ -30,6 +30,7 @@ class User {
     this.power = 0;
     this.defense = 0;
     this.critical = 0;
+    this.guild = guild;
 
     this.kill = 0;
     this.death = 0;

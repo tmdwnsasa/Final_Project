@@ -1,5 +1,5 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
-import { createUser, createUserMoney, findUserByName, findUserByPlayerId, updateUserLogin } from '../../db/user/user.db.js';
+import { createUser, createUserMoney, findUserByName, findUserByPlayerId } from '../../db/user/user.db.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
@@ -8,7 +8,7 @@ import bcrypt from 'bcrypt';
 
 const registerHandler = async ({ socket, userId, payload }) => {
   try {
-    const { playerId, password, name } = payload;
+    const { playerId, password, name, guild } = payload;
 
     const idPasswordRegex = /^[a-zA-Z0-9]{4,10}$/;
     const nameRegex = /^[가-힣a-zA-Z0-9]{2,6}$/;
@@ -24,6 +24,10 @@ const registerHandler = async ({ socket, userId, payload }) => {
 
     if (!nameRegex.test(name)) {
       errorMessages.push('이름이 조건을 만족하지 않습니다.');
+    }
+
+    if (guild === 0 || guild > 2) {
+      errorMessages.push('진영이 잘못 선택되었습니다.');
     }
 
     if (errorMessages.length > 0) {
@@ -42,7 +46,7 @@ const registerHandler = async ({ socket, userId, payload }) => {
       throw new CustomError(ErrorCodes.ALREADY_EXIST_NAME, '이미 있는 이름입니다.');
     }
 
-    await createUser(playerId, hashpassword, name);
+    await createUser(playerId, hashpassword, name, guild);
     await createUserMoney(playerId, 5000);
 
     const Response = createResponse(HANDLER_IDS.REGISTER, RESPONSE_SUCCESS_CODE, { message: '회원가입 완료' }, userId);
