@@ -9,6 +9,8 @@ import { toCamelCase } from '../utils/transformCase.js';
 
 const apiRequest = async (endpoint, data) => {
   try {
+    console.log(endpoint.url);
+    console.log(data);
     const response = await fetch(endpoint.url, {
       method: endpoint.method, // 또는 'GET' 메소드에 따라 변경
       headers: {

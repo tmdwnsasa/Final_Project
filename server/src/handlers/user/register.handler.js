@@ -10,13 +10,14 @@ import ENDPOINTS from '../../db/endPoint.js';
 
 const registerHandler = async ({ socket, userId, payload }) => {
   try {
-    const { player_id, password, name, guild } = payload;
+    const { playerId: player_id, password, name, guild } = payload;
 
+    console.log(payload);
     const idPasswordRegex = /^[a-zA-Z0-9]{4,10}$/;
     const nameRegex = /^[가-힣a-zA-Z0-9]{2,6}$/;
 
     let errorMessages = [];
-    if (!idPasswordRegex.test(playerId)) {
+    if (!idPasswordRegex.test(player_id)) {
       errorMessages.push('아이디가 조건을 만족하지 않습니다.');
     }
 
@@ -37,17 +38,13 @@ const registerHandler = async ({ socket, userId, payload }) => {
     }
 
     const hash_password = await bcrypt.hash(password, 10);
-
-    let idCheck = await findUserByPlayerId(player_id);
-    if (idCheck) {
-      throw new CustomError(ErrorCodes.ALREADY_EXIST_ID, '이미 있는 아이디입니다.');
-    }
-
-    let nameCheck = await findUserByName(name);
-    if (nameCheck) {
-      throw new CustomError(ErrorCodes.ALREADY_EXIST_NAME, '이미 있는 이름입니다.');
-    }
-    await apiRequest(ENDPOINTS.user.createUser, { player_id, pw: hash_password, name, guild });
+    const data = {
+      player_id: player_id,
+      pw: hash_password,
+      guild: guild,
+      name: name,
+    };
+    await apiRequest(ENDPOINTS.user.createUser, data);
     // await createUser(player_id, hash_password, name, guild);
 
     await createUserMoney(player_id, 5000);
