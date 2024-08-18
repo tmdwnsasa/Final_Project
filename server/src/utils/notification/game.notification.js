@@ -35,19 +35,19 @@ export const createChattingPacket = (playerId, message, type) => {
 export const createMatchingCompleteNotification = (message) => {
   const protoMessages = getProtoMessages();
   const matchingComplete = protoMessages.gameNotification.MatchMakingComplete;
-
   const payload = { message };
+
   const packetMessage = matchingComplete.create(payload);
   const matchingCompletePacket = matchingComplete.encode(packetMessage).finish();
 
   return makeNotification(matchingCompletePacket, PACKET_TYPE.MATCHMAKING);
 };
 
-export const gameStartNotification = (users) => {
+export const gameStartNotification = (users, mapName) => {
   const protoMessages = getProtoMessages();
   const BattleStart = protoMessages.gameNotification.BattleStart;
 
-  const payload = { users };
+  const payload = { users, mapName };
   const packetMessage = BattleStart.create(payload);
   const startPacket = BattleStart.encode(packetMessage).finish();
   return makeNotification(startPacket, PACKET_TYPE.GAME_START);
@@ -63,11 +63,11 @@ export const createPingPacket = (timestamp) => {
   return makeNotification(pingPacket, PACKET_TYPE.PING);
 };
 
-export const createGameSkillPacket = (playerId, x, y, rangeX, rangeY) => {
+export const createGameSkillPacket = (playerId, x, y, rangeX, rangeY, skillType, prefabNum = null) => {
   const protoMessages = getProtoMessages();
   const skill = protoMessages.skillNotification.SkillUpdate;
 
-  const payload = { playerId, x, y, rangeX, rangeY };
+  const payload = { playerId, x, y, rangeX, rangeY, skillType, prefabNum };
   const message = skill.create(payload);
   const skillPacket = skill.encode(message).finish();
   return makeNotification(skillPacket, PACKET_TYPE.SKILL);
@@ -90,4 +90,22 @@ export const createGameEndPacket = (payload) => {
   const message = gameEnd.create(payload);
   const gameEndPacket = gameEnd.encode(message).finish();
   return makeNotification(gameEndPacket, PACKET_TYPE.GAME_END);
+};
+
+export const createCreateUserPacket = (payload) => {
+  const protoMessages = getProtoMessages();
+  const createUser = protoMessages.gameNotification.CreateUser;
+
+  const message = createUser.create(payload);
+  const createUserPacket = createUser.encode(message).finish();
+  return makeNotification(createUserPacket, PACKET_TYPE.CREATE_USER);
+};
+
+export const createRemoveUserPacket = (payload) => {
+  const protoMessages = getProtoMessages();
+  const removeUser = protoMessages.gameNotification.RemoveUser;
+
+  const message = removeUser.create(payload);
+  const removeUserPacket = removeUser.encode(message).finish();
+  return makeNotification(removeUserPacket, PACKET_TYPE.REMOVE_USER);
 };

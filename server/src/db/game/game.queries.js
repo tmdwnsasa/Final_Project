@@ -6,7 +6,7 @@ export const GAME_SQL_QUERIES = {
   CREATE_MATCH_HISTORY:
     'INSERT INTO match_history (game_session_id, player_id, `kill`, death, damage) VALUES(?, ?, ?, ?, ?)',
   CREATE_MATCH_LOG:
-    'INSERT INTO match_log (game_session_id, red_player1_id, red_player2_id, blue_player1_id , blue_player2_id, winner_team, start_time, end_time) VALUES(?, ?, ?, ?, ?, ?, ?, ?)',
+    'INSERT INTO match_log (game_session_id, red_player1_id, red_player2_id, blue_player1_id , blue_player2_id, winner_team, map_name, start_time, end_time) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)',
   FIND_POSSESSION_BY_PLAYER_ID: 'SELECT * FROM possession WHERE player_id = ?',
   CREATE_POSSESSION: 'INSERT INTO possession (player_id, character_id) VALUES(?, ?)',
   CREATE_USER_SCORE: 'INSERT INTO score (player_id, score) VALUES(?, ?)',
@@ -16,5 +16,6 @@ export const GAME_SQL_QUERIES = {
   FIND_USER_SCORE_BY_PLAYER_ID: 'SELECT * FROM score WHERE player_id = ?',
   FIND_USER_RATING_BY_PLAYER_ID: 'SELECT * FROM rating WHERE player_id = ?',
   FIND_CHARACTERS_DATA: 'SELECT * FROM `character`',
-  UPDATE_POSSESSION:'UPDATE possession SET character_id = ? WHERE player_id = ?',
+  FIND_CHARACTER_SKILL_DATA: 'SELECT * FROM character_skills',
+  UPDATE_POSSESSION: 'UPDATE possession SET character_id = ? WHERE player_id = ?',
 };

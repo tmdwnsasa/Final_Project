@@ -1,4 +1,7 @@
+import { characterAssets } from '../../assets/character.asset.js';
+import { mapAssets } from '../../assets/map.asset.js';
 import { config } from '../../config/config.js';
+import { changingOwnerOfMap } from '../../utils/changingOwnerOfMap.js';
 import { gameEnd } from '../../utils/gameEnd.js';
 import {
   createAttackedSuccessPacket,
@@ -8,6 +11,7 @@ import {
   gameStartNotification,
 } from '../../utils/notification/game.notification.js';
 import IntervalManager from '../manager/interval.manager.js';
+import Bullet from './bullet.class.js';
 import { createBullQueue } from '../../utils/bullQueue.js';
 
 const MAX_PLAYERS = 4;
@@ -17,6 +21,7 @@ class Game {
     this.id = id;
     this.users = [];
     this.startTime = Date.now();
+    this.map = null;
     this.intervalManager = new IntervalManager();
 
     this.intervalManager.addInterval(this.id, this.sendAllLocation.bind(this), config.server.frame * 1000, 'location');
@@ -27,6 +32,7 @@ class Game {
   }
 
   addUser(user) {
+    console.log(this.users);
     if (this.users.length >= MAX_PLAYERS) {
       throw new Error('Game session is full');
     }
@@ -48,7 +54,7 @@ class Game {
     this.intervalManager.removeInterval(playerId, 'ping');
   }
 
-  sendAttackedOpposingTeam(attackUser, startX, startY, endX, endY) {
+  sendAttackedOpposingTeam(attackUser, startX, startY, endX, endY, bullet = null) {
     let team;
     if (attackUser.team.includes('red')) {
       team = 'red';
@@ -68,6 +74,10 @@ class Game {
           attackedUserId: user.playerId,
           team,
         });
+
+        if (bullet) {
+          this.intervalManager.removeInterval(bullet.bulletNumber, 'bullet');
+        }
       }
     });
   }
@@ -82,6 +92,20 @@ class Game {
 
   startGame() {
     this.startTime = Date.now();
+    
+    // 전투할 지역 뽑기
+    const disputedArea = [];
+    mapAssets.filter((rows) =>
+      rows.filter((map) => {
+        if (map.isDisputedArea === 1) {
+          disputedArea.push(map);
+        }
+      }),
+    );
+    const randomMapIndex = Math.floor(Math.random() * disputedArea.length);
+    const randomMap = disputedArea[randomMapIndex];
+    this.map = randomMap;
+    console.log(`지역 이름: ${randomMap.mapName}`);
 
     const battleStartData = [
       { playerId: this.users[0]?.name, hp: this.users[0]?.hp, team: 'red1', x: 73, y: 2 },
@@ -92,7 +116,7 @@ class Game {
     this.users.forEach((user, index) => {
       user.updatePosition(battleStartData[index].x, battleStartData[index].y);
     });
-    const battleStartPacket = gameStartNotification(battleStartData);
+    const battleStartPacket = gameStartNotification(battleStartData, this.map.mapName);
     console.log(battleStartData);
     this.users.forEach((user) => {
       user.socket.write(battleStartPacket);
@@ -125,11 +149,62 @@ class Game {
     this.intervalManager.removeInterval(this.id, 'location');
   }
 
-  updateAttack(userId, x, y, rangeX, rangeY) {
-    const packet = createGameSkillPacket(userId, x, y, rangeX, rangeY);
+  updateAttack(userId, x, y, rangeX, rangeY, skillType, prefabNum = null) {
+    const packet = createGameSkillPacket(userId, x, y, rangeX, rangeY, skillType, prefabNum);
     this.users.forEach((user) => {
       user.socket.write(packet);
     });
+  }
+
+  setBullet(attackUser, x, y, rangeX, rangeY, bulletNumber) {
+    const startPosX = attackUser.x + x;
+    const startPosY = attackUser.y + y;
+
+    let direction; // 오른쪽 = 1 , 왼쪽 = 2, 아래 = 3, 위 = 4
+    if (x > 0) {
+      direction = 1;
+    } else if (x < 0) {
+      direction = 2;
+    } else if (y < 0) {
+      direction = 3;
+    } else {
+      direction = 4;
+    }
+
+    const bullet = new Bullet(bulletNumber, startPosX, startPosY, direction);
+
+    this.intervalManager.addInterval(
+      bulletNumber,
+      this.updateBullet.bind(this, bullet, attackUser, rangeX, rangeY),
+      config.client.frame * 1000,
+      'bullet',
+    );
+  }
+
+  updateBullet(bullet, attackUser, rangeX, rangeY) {
+    switch (bullet.direction) {
+      case 1:
+        bullet.x += 10 * config.client.frame;
+        break;
+      case 2:
+        bullet.x -= 10 * config.client.frame;
+        break;
+      case 3:
+        bullet.y -= 10 * config.client.frame;
+        break;
+      case 4:
+        bullet.y += 10 * config.client.frame;
+        break;
+      default:
+        break;
+    }
+
+    const startX = bullet.x - rangeX / 2;
+    const startY = bullet.y + rangeY / 2;
+    const endX = startX + rangeX;
+    const endY = startY - rangeY;
+
+    this.sendAttackedOpposingTeam(attackUser, startX, startY, endX, endY, bullet);
   }
 
   sendAllAttackedSuccess(playerId, hp, team) {
@@ -152,10 +227,15 @@ class Game {
     });
 
     if (deathCount === opposingTeam.length && this.dbSaveRequest === false) {
-      gameEnd(this.id, ourTeam, opposingTeam, team, this.startTime);
+      gameEnd(this.id, ourTeam, opposingTeam, team, this.startTime, this.map.mapName);
+      if (team === 'red') {
+        this.map.countRedWin++;
+      } else {
+        this.map.countBlueWin++;
+      }
+      changingOwnerOfMap(this.map);
       this.dbSaveRequest = true;
     }
   }
 }
-
 export default Game;

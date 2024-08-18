@@ -49,3 +49,9 @@ export const SHARD_3_USER = process.env.AWS_SHARD_3_USER;
 export const SHARD_3_PASSWORD = process.env.AWS_SHARD_3_PASSWORD;
 export const SHARD_3_HOST = process.env.AWS_SHARD_3_HOST;
 export const SHARD_3_PORT = process.env.AWS_SHARD_3_PORT;
+
+export const MAP_DB_NAME = process.env.MAP_DB_NAME;
+export const MAP_DB_USER = process.env.MAP_DB_USER;
+export const MAP_DB_PASSWORD = process.env.MAP_DB_PASSWORD;
+export const MAP_DB_HOST = process.env.MAP_DB_HOST;
+export const MAP_DB_PORT = process.env.MAP_DB_PORT;

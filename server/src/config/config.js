@@ -9,6 +9,7 @@ export const config = {
   },
   client: {
     version: env.CLIENT_VERSION,
+    frame: 1 / 120,
   },
   packet: {
     totalLength: header.TOTAL_LENGTH,
@@ -39,6 +40,13 @@ export const config = {
       password: env.ERROR_DB_PASSWORD,
       host: env.ERROR_DB_HOST,
       port: env.ERROR_DB_PORT,
+    },
+    MAP_DB: {
+      name: env.MAP_DB_NAME,
+      user: env.MAP_DB_USER,
+      password: env.MAP_DB_PASSWORD,
+      host: env.MAP_DB_HOST,
+      port: env.MAP_DB_PORT,
     },
     REDIS: {
       host: env.REDIS_HOST,

@@ -40,7 +40,7 @@ export const createBullQueue = (id) => {
 
   // 결과 처리
   bullQueue.on('completed', (job, result) => {
-    if (!result) {
+    if (result) {
       const { gameSessionId, playerId, hp, team } = result;
       const gameSession = getGameSession(gameSessionId);
       gameSession.sendAllAttackedSuccess(playerId, hp, team);

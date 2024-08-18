@@ -9,6 +9,9 @@ export const PACKET_TYPE = {
   GAME_END: 4,
   CHATTING: 5,
   MATCHMAKING: 6,
+  CREATE_USER: 7,
+  REMOVE_USER: 8,
   ATTACK: 40,
   SKILL: 50,
+  REMOVESKILL: 51,
 };
