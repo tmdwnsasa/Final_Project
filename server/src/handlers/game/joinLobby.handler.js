@@ -1,3 +1,4 @@
+import CharacterSkill from '../../classes/models/characterskill.class.js';
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
 import { getLobbySession } from '../../sessions/lobby.session.js';
 import { createUserInLobby, getUserById } from '../../sessions/user.session.js';
@@ -19,6 +20,7 @@ const joinLobbyHandler = ({ socket, userId, payload }) => {
       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
     }
     const character = user.changeCharacter(characterId);
+    const skill = user.changeCharacterSkill(characterId);
 
     const existUser = lobbySession.getUser(user.id);
     if (!existUser) {
@@ -43,7 +45,7 @@ const joinLobbyHandler = ({ socket, userId, payload }) => {
     const joinLobbyResponse = createResponse(
       HANDLER_IDS.JOIN_LOBBY,
       RESPONSE_SUCCESS_CODE,
-      { ...character, userDatas },
+      { ...character, userDatas, ...skill },
       user.id,
     );
 

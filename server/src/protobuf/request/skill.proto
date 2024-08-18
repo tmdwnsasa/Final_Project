@@ -2,9 +2,15 @@ syntax = 'proto3';
 
 package skill;
 
-message nearAttackPayload {
+message SkillPayload {
   float x = 1;
   float y = 2;
-  float rangeX = 3;
-  float rangeY = 4;
+  bool isDirectionX =3;
+  uint32 skill_Id = 4;
+  int64 timestamp = 5;
+}
+
+message RemoveSkillPayload{
+  string prefabNum = 1;
+  uint32 skillType = 2;
 }
