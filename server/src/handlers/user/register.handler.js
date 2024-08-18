@@ -1,5 +1,5 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
-import { createUser, createUserMoney, findUserByName, findUserByPlayerId } from '../../db/user/user.db.js';
+import { createUserMoney, findUserByName, findUserByPlayerId } from '../../db/user/user.db.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
@@ -10,14 +10,13 @@ import ENDPOINTS from '../../db/endPoint.js';
 
 const registerHandler = async ({ socket, userId, payload }) => {
   try {
-    const { playerId: player_id, password, name, guild } = payload;
+    const { playerId, password, name, guild } = payload;
 
-    console.log(payload);
     const idPasswordRegex = /^[a-zA-Z0-9]{4,10}$/;
     const nameRegex = /^[가-힣a-zA-Z0-9]{2,6}$/;
 
     let errorMessages = [];
-    if (!idPasswordRegex.test(player_id)) {
+    if (!idPasswordRegex.test(playerId)) {
       errorMessages.push('아이디가 조건을 만족하지 않습니다.');
     }
 
@@ -38,16 +37,11 @@ const registerHandler = async ({ socket, userId, payload }) => {
     }
 
     const hash_password = await bcrypt.hash(password, 10);
-    const data = {
-      player_id: player_id,
-      pw: hash_password,
-      guild: guild,
-      name: name,
-    };
-    await apiRequest(ENDPOINTS.user.createUser, data);
-    // await createUser(player_id, hash_password, name, guild);
 
-    await createUserMoney(player_id, 5000);
+    await apiRequest(ENDPOINTS.user.createUser, { player_id: playerId, name, pw: hash_password, guild });
+    await apiRequest(ENDPOINTS.user.createUserMoney, { player_id: playerId, money: 5000 });
+    await apiRequest(ENDPOINTS.game.createPossession, { player_id: playerId, character_id: 0x000 }); // 신규 유저임을 저장 비트 플래그 방식
+    //DB 서버에서 생성중 일부만 성공해도 그냥 넘어가는중 DB 서버에서 트랜잭션으로 처리해도 될까용?
 
     const Response = createResponse(HANDLER_IDS.REGISTER, RESPONSE_SUCCESS_CODE, { message: '회원가입 완료' }, userId);
     socket.write(Response);
