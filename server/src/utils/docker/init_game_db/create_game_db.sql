@@ -1,7 +1,6 @@
 CREATE DATABASE IF NOT EXISTS GAME_DB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE GAME_DB;
 
--- 테이블 생성 순서 맞추기
 CREATE TABLE IF NOT EXISTS `character` (
     character_id INT AUTO_INCREMENT PRIMARY KEY,
     character_name VARCHAR(255), 
@@ -81,7 +80,7 @@ INSERT INTO character_skills (skill_name, skill_type, character_id, damage_facto
 
 -- 원씨 아줌마 스킬 데이터 삽입
 INSERT INTO character_skills (skill_name, skill_type, character_id, damage_factor, cool_time, range_x, range_y, scale) VALUES
-('씨 뿌리기', 2, 2, 1, 1, 1, 1, NULL),
+('씨 뿌리기', 2, 2, 1, 1, 1.2, 1.2, NULL),
 ('불장판', 5, 2, 2, 15, 3, 3, NULL);
 
 -- 탱씨 아저씨 스킬 데이터 삽입
@@ -91,5 +90,5 @@ INSERT INTO character_skills (skill_name, skill_type, character_id, damage_facto
 
 -- 힐씨 아줌마 스킬 데이터 삽입
 INSERT INTO character_skills (skill_name, skill_type, character_id, damage_factor, cool_time, range_x, range_y, scale) VALUES
-('물 뿌리기', 2, 4, 1, 1, 1, 1 , NULL),
+('물 뿌리기', 2, 4, 1, 1, 1.2, 1.2 , NULL),
 ('새참', 5, 4, 1, 5, 1, 1, NULL);

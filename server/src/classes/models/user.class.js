@@ -1,6 +1,8 @@
 import { characterAssets } from '../../assets/character.asset.js';
+import { characterSkillAssets } from '../../assets/characterskill.asset.js';
 import { config } from '../../config/config.js';
 import { createPingPacket } from '../../utils/notification/game.notification.js';
+import CharacterSkill from './characterskill.class.js';
 
 class User {
   constructor(playerId, name, guild, socket, sessionId) {
@@ -22,6 +24,10 @@ class User {
     this.inParty = false; // 파티 중인지
     this.animationStatus = 'stand'; // 'stand', 'walk' 등등
     this.team = 'none';
+
+    //마지막으로 쓴 스킬 시간을 저장
+    this.lastSkillZ = 0;
+    this.lastSkillX = 0;
 
     this.characterId = 0;
     this.hp = 0;
@@ -68,6 +74,13 @@ class User {
     this.defense = characterAssets[characterId].defense;
     this.critical = characterAssets[characterId].critical;
     return characterAssets[characterId];
+  }
+
+  changeCharacterSkill(characterId) {
+    this.zSkill = characterSkillAssets[characterId * 2];
+    this.xSkill = characterSkillAssets[characterId * 2 + 1];
+
+    return { zSkill: this.zSkill, xSkill: this.xSkill };
   }
 
   changeTeam(teamColor) {
