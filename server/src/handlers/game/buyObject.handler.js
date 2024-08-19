@@ -2,8 +2,6 @@ import { characterAssets } from '../../assets/character.asset.js';
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
 import apiRequest from '../../db/apiRequest.js';
 import ENDPOINTS from '../../db/endPoint.js';
-import { findPossessionByPlayerID, purchaseCharacterTransaction } from '../../db/game/game.db.js';
-import { findMoneyByPlayerId } from '../../db/user/user.db.js';
 import { getUserById } from '../../sessions/user.session.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
