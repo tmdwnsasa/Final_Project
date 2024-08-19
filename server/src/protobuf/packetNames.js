@@ -19,6 +19,7 @@ export const packetNames = {
     ReturnLobbyPayload: 'game.ReturnLobbyPayload',
     MatchingPayload: 'game.MatchingPayload',
     ExitGamePayload: 'game.ExitGamePayload',
+    PurchaseEquipmentPayload: 'game.PurchaseEquipmentPayload',
   },
   ui: {
     ChattingPayload: 'ui.ChattingPayload',
