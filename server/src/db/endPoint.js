@@ -16,10 +16,6 @@ const ENDPOINTS = {
       url: `${API_BASE}/user/findUserByPlayerId`,
       method: 'GET',
     },
-    createUserMoney: {
-      url: `${API_BASE}/user/createUserMoney`,
-      method: 'POST',
-    },
     findMoneyByPlayerId: {
       url: `${API_BASE}/user/findMoneyByPlayerId`,
       method: 'GET',
@@ -61,10 +57,6 @@ const ENDPOINTS = {
     getUserRating: {
       url: `${API_BASE}/game/getUserRating`,
       method: 'GET',
-    },
-    createPossession: {
-      url: `${API_BASE}/game/createPossession`,
-      method: 'POST',
     },
     findPossessionByPlayerID: {
       url: `${API_BASE}/game/findPossessionByPlayerID`,
