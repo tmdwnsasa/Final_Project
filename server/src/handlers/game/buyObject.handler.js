@@ -38,7 +38,7 @@ export const purchaseCharacter = async ({ socket, userId, payload }) => {
       2: 4, // 탱씨 아저씨
       3: 8, // 힐씨 아줌마
     };
-    const { name } = payload;
+    const { name, sessionId } = payload;
 
     const user = getUserById(userId);
 
@@ -122,7 +122,8 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
       throw new CustomError(ErrorCodes.INVENTORY_NOT_FOUND, `${user.name}님의 인벤토리를 찾을 수 없습니다`);
     }
 
-    const userMoney = await findMoneyByPlayerId(userId);
+    
+    const userMoney = await apiRequest(ENDPOINTS.user.findMoneyByPlayerId, { player_id: userId });
     const money = userMoney.money;
 
     //장비 찾기
@@ -152,7 +153,7 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
     const packet = createResponse(HANDLER_IDS.PURCHASE_EQUIPMENT, RESPONSE_SUCCESS_CODE, { message }, user.playerId);
     socket.write(packet);
   } catch (err) {
-    console.error(err.message);
+    console.error(err);
     const user = getUserById(userId);
     const message = '장비 구매과정에서 오류가 발생했습니다. 다시 시도해주세요';
     console.log(message);
