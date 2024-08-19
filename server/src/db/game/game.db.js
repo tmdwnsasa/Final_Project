@@ -13,8 +13,8 @@ export const createMatchHistory = async (connection, sessionId, playerId, kill, 
 export const createMatchLog = async (
   connection,
   sessionId,
-  redPlayer1Id,
-  redPlayer2Id,
+  greenPlayer1Id,
+  greenPlayer2Id,
   bluePlayer1Id,
   bluePlayer2Id,
   winTeam,
@@ -24,8 +24,8 @@ export const createMatchLog = async (
   const endTime = Date.now();
   await connection.query(GAME_SQL_QUERIES.CREATE_MATCH_LOG, [
     sessionId,
-    redPlayer1Id,
-    redPlayer2Id,
+    greenPlayer1Id,
+    greenPlayer2Id,
     bluePlayer1Id,
     bluePlayer2Id,
     winTeam,
@@ -34,7 +34,7 @@ export const createMatchLog = async (
     formatDate(new Date(endTime)),
   ]);
   console.log(`${sessionId}매치로그 저장 완료`);
-  return { sessionId, redPlayer1Id, redPlayer2Id, bluePlayer1Id, bluePlayer2Id, winTeam, endTime };
+  return { sessionId, greenPlayer1Id, greenPlayer2Id, bluePlayer1Id, bluePlayer2Id, winTeam, endTime };
 };
 
 export const createUserScore = async (connection, playerId, score) => {
