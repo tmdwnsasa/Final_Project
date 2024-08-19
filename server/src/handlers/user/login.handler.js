@@ -1,16 +1,15 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
-import { findUserByPlayerId, updateUserLogin } from '../../db/user/user.db.js';
 import { addUser, getUserById } from '../../sessions/user.session.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
-import { findPossessionByPlayerID } from '../../db/game/game.db.js';
 import CustomError from '../../utils/error/customError.js';
 import { getGameSessionByPlayerId } from '../../sessions/game.session.js';
 import apiRequest from '../../db/apiRequest.js';
 import ENDPOINTS from '../../db/endPoint.js';
+import { getCharacterIds } from '../game/character.handler.js';
 
 const loginHandler = async ({ socket, userId, payload }) => {
   try {
@@ -63,7 +62,13 @@ const loginHandler = async ({ socket, userId, payload }) => {
         response = createResponse(
           HANDLER_IDS.SELECT_CHARACTER,
           RESPONSE_SUCCESS_CODE,
-          { playerId: playerId, name: user.name, guild: user.guild, sessionId: sessionId, possession: possession },
+          {
+            playerId: playerId,
+            name: user.name,
+            guild: user.guild,
+            sessionId: sessionId,
+            possession: getCharacterIds(possessionDB.characterId), //이 부분 게임 클라이언트 수정해야함 배열 정보를 받는것에서 비트 플래그를 받도록
+          },
           userId,
         );
       }

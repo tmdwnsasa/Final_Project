@@ -24,6 +24,10 @@ const ENDPOINTS = {
       url: `${API_BASE}/user/findMoneyByPlayerId`,
       method: 'GET',
     },
+    updateMoney: {
+      url: `${API_BASE}/user/updateMoney`,
+      method: 'PATCH',
+    },
   },
   game: {
     createMatchHistory: {

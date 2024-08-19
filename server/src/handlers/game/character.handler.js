@@ -5,6 +5,7 @@ import { createPossession } from '../../db/game/game.db.js';
 import CustomError from '../../utils/error/customError.js';
 import apiRequest from '../../db/apiRequest.js';
 import ENDPOINTS from '../../db/endPoint.js';
+import { characterAssets } from '../../assets/character.asset.js';
 
 /**
  * 캐릭터는 DB에 비트 플래그 형식으로 저장되어 있습니다
@@ -61,5 +62,22 @@ const giveCharacterHandler = async ({ socket, userId, payload }) => {
 };
 
 export default giveCharacterHandler;
-const characters = await apiRequest(ENDPOINTS.game.findPossessionByPlayerID, { player_id: 'asdfg' });
-console.log(characters);
+
+/**
+ * 클라이언트 측과 동일한 값을 주고받기 위해서 임시로 제작한 함수
+ * DB 마이그레이션이 끝난 뒤 클라이언트 코드 수정할예정
+ * @param {*} bitFlag
+ * @returns 배열로 반환된다
+ */
+export const getCharacterIds = (bitFlag) => {
+  //비트플래그를 배열로 변환하는 함수
+  const characterIds = [];
+
+  for (let i = 0; i < characterAssets.length; i++) {
+    if ((bitFlag & (1 << i)) !== 0) {
+      characterIds.push(i);
+    }
+  }
+
+  return characterIds;
+};
