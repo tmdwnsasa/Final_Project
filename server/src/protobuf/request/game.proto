@@ -32,3 +32,8 @@ message ReturnLobbyPayload {
 message ExitGamePayload {
   string message = 1;
 }
+
+message PurchaseEquipmentPayload {
+  string name = 1;
+  string price = 2;
+}

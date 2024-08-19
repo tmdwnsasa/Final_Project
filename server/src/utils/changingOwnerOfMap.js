@@ -24,29 +24,29 @@ const changeDisputedArea = async (row, column, team) => {
     map.isDisputedArea = 1;
     map.ownedBy = null;
     map.countBlueWin = 0;
-    map.countRedWin = 0;
+    map.countGreenWin = 0;
     await changingOwner(true, null, map.mapId);
   }
 };
 
 export const changingOwnerOfMap = async (map) => {
-  // red 승리가 많을 경우
-  if (map.countRedWin - map.countBlueWin >= 2) {
-    map.isDisputedArea = 0;
-    map.ownedBy = 'blue';
-    map.countBlueWin = 0;
-    map.countRedWin = 0;
-    await changingOwner(false, 'blue', map.mapId);
-    checkAroundMap(map.mapId, 'blue');
-  }
-  
-  // blue 승리가 많을 경우
-  if (map.countBlueWin - map.countRedWin >= 2) {
+  // green 승리가 많을 경우
+  if (map.countGreenWin - map.countBlueWin >= 2) {
     map.isDisputedArea = 0;
     map.ownedBy = 'green';
     map.countBlueWin = 0;
-    map.countRedWin = 0;
+    map.countGreenWin = 0;
     await changingOwner(false, 'green', map.mapId);
     checkAroundMap(map.mapId, 'green');
+  }
+  
+  // blue 승리가 많을 경우
+  if (map.countBlueWin - map.countGreenWin >= 2) {
+    map.isDisputedArea = 0;
+    map.ownedBy = 'green';
+    map.countBlueWin = 0;
+    map.countGreenWin = 0;
+    await changingOwner(false, 'blue', map.mapId);
+    checkAroundMap(map.mapId, 'blue');
   }
 };
