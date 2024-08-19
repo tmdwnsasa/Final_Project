@@ -15,7 +15,7 @@ import loginHandler from './user/login.handler.js';
 import registerHandler from './user/register.handler.js';
 import exitGameHandler from './game/exitGame.handler.js';
 import { storeHandler } from './game/store.handler.js';
-import { purchaseCharacter } from './game/buyObject.handler.js';
+import { purchaseCharacter, purchaseEquipment } from './game/buyObject.handler.js';
 import removeSkillHandler from './game/removeSkill.handler.js';
 import openMapHandler from './game/openMap.handler.js';
 
@@ -79,6 +79,10 @@ const handlers = {
   [HANDLER_IDS.PURCHASE_CHARACTER]: {
     handler: purchaseCharacter,
     protoType: packetNames.character.PurchaseCharacterPayload,
+  },
+  [HANDLER_IDS.PURCHASE_EQUIPMENT]: {
+    handler: purchaseEquipment,
+    protoType: packetNames.game.PurchaseEquipmentPayload,
   },
   [HANDLER_IDS.OPEN_MAP]: {
     handler: openMapHandler,
