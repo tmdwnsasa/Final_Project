@@ -76,11 +76,11 @@ export const purchaseCharacter = async ({ socket, userId, payload }) => {
     const newUserMoney = money - characterInfo.price;
 
     // db저장 DB 코드에서 트랜잭션으로 처리하도록 나중에 수정해야함
-    await apiRequest(ENDPOINTS.game.updatePossession, {
+    await apiRequest(ENDPOINTS.game.purchaseCharacter, {
       player_id: userId,
       character_id: CharacterMapping[characterInfo.characterId - 1], //id에서 1뺀값을 기준으로 비트플래그 매핑해서 전달
+      money: newUserMoney,
     });
-    await apiRequest(ENDPOINTS.user.updateMoney, { player_id: userId, money: newUserMoney });
     const message = `${name}가 정상적으로 구매 되었다!`;
     console.log(message);
 
@@ -95,8 +95,6 @@ export const purchaseCharacter = async ({ socket, userId, payload }) => {
     socket.write(packet);
   }
 };
-
-
 
 export const purchaseEquipment = async ({ socket, userId, payload }) => {
   try {
@@ -115,7 +113,7 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
     //장비 찾기
     // const findPurchaseEquipment = await findEquipment(name);
     // const findPurchaseEquipment = equipmentAssets.find((obj)=>obj.name === name)
-    if(!findPurchaseEquipment){
+    if (!findPurchaseEquipment) {
       const message = '해당 아이템이 존재하지 않습니다';
       console.log(message);
       const packet = createResponse(HANDLER_IDS.PURCHASE_EQUIPMENT, RESPONSE_SUCCESS_CODE, { message }, user.playerId);
@@ -136,7 +134,7 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
     // db저장
     //트랜잭션 적용해야할듯
     await updateUserInventory(user.playerId, findPurchaseEquipment);
-    await updateUserMoney(null,user.playerId,newUserMoney);
+    await updateUserMoney(null, user.playerId, newUserMoney);
 
     const packet = createResponse(HANDLER_IDS.PURCHASE_EQUIPMENT, RESPONSE_SUCCESS_CODE, { message }, user.playerId);
     socket.write(packet);

@@ -82,6 +82,10 @@ const ENDPOINTS = {
       url: `${API_BASE}/game/updatePossession`,
       method: 'PATCH',
     },
+    purchaseCharacter: {
+      url: `${API_BASE}/game/purchaseCharacter`,
+      method: 'PATCH',
+    },
   },
   db: {
     resetAllSchema: {
