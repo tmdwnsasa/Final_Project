@@ -7,7 +7,7 @@ import { ErrorCodes } from './error/errorCodes.js';
 import { createMatchingCompleteNotification } from './notification/game.notification.js';
 import { getLobbySession } from '../sessions/lobby.session.js';
 
-const createGame = ({ redTeam, blueTeam }) => {
+const createGame = ({ greenTeam, blueTeam }) => {
   try {
     const gameId = uuidv4();
     const gameSession = addGameSession(gameId);
@@ -15,21 +15,21 @@ const createGame = ({ redTeam, blueTeam }) => {
     //게임맵으로 이동후 해당 플레이어들 로비세션에서 삭제
     const lobbySession = getLobbySession();
 
-    [...redTeam, ...blueTeam].forEach(({ id }) => {
+    [...greenTeam, ...blueTeam].forEach(({ id }) => {
       deleteUserInLobby(id);
     });
 
-    [...redTeam, ...blueTeam].forEach(({ id }) => {
+    [...greenTeam, ...blueTeam].forEach(({ id }) => {
       lobbySession.removeUser(id);
     });
 
-    //Red Team
-    redTeam.forEach(({ id }) => {
+    //Green Team
+    greenTeam.forEach(({ id }) => {
       const user = getUserById(id);
       if (!user) {
         throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다: ', id);
       }
-      user.team = 'red';
+      user.team = 'green';
       gameSession.addUser(user);
     });
 
@@ -43,7 +43,7 @@ const createGame = ({ redTeam, blueTeam }) => {
       gameSession.addUser(user);
     });
 
-    redTeam.forEach(({ id }) => {
+    greenTeam.forEach(({ id }) => {
       const user = getUserById(id);
       createUserInGame(user);
     });
@@ -54,9 +54,9 @@ const createGame = ({ redTeam, blueTeam }) => {
     });
 
     //매치메이킹 완료 통지
-    const message = '매칭 완료! 대결 시작!' ;
+    const message = '매칭 완료! 대결 시작!';
     const packet = createMatchingCompleteNotification(message);
-    [...redTeam, ...blueTeam].forEach((player) => {
+    [...greenTeam, ...blueTeam].forEach((player) => {
       if (player.socket) {
         player.socket.write(packet);
       }
@@ -64,7 +64,7 @@ const createGame = ({ redTeam, blueTeam }) => {
 
     gameSession.startGame();
   } catch (err) {
-    [...redTeam, ...blueTeam].forEach(({ socket }) => {
+    [...greenTeam, ...blueTeam].forEach(({ socket }) => {
       handlerError(socket, err);
     });
   }

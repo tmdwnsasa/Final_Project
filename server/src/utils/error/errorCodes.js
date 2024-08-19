@@ -24,4 +24,6 @@ export const ErrorCodes = {
 
   MISMATCH_COOLTIME: 10030,
   BULLQUEUE_ERROR: 10050,
+
+  API_ERROR: 10060,
 };

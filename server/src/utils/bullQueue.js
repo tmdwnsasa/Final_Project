@@ -9,7 +9,7 @@ export const createBullQueue = (id) => {
 
   // 작업 처리
   bullQueue.process((job) => {
-    const { gameSessionId, attackUserId, attackedUserId, team } = job.data;
+    const { gameSessionId, attackUserId, attackedUserId, bullet } = job.data;
 
     const gameSession = getGameSession(gameSessionId);
 
@@ -35,15 +35,19 @@ export const createBullQueue = (id) => {
       attackedUser.death += 1;
     }
 
-    return { gameSessionId, playerId: attackedUser.name, hp: attackedUser.hp, team };
+    if (bullet) {
+      gameSession.intervalManager.removeInterval(bullet.bulletNumber, 'bullet');
+    }
+
+    return { gameSessionId, attackUserId, attackedUserId, hp: attackedUser.hp };
   });
 
   // 결과 처리
   bullQueue.on('completed', (job, result) => {
     if (result) {
-      const { gameSessionId, playerId, hp, team } = result;
+      const { gameSessionId, attackUserId, attackedUserId, hp } = result;
       const gameSession = getGameSession(gameSessionId);
-      gameSession.sendAllAttackedSuccess(playerId, hp, team);
+      gameSession.sendAllAttackedSuccess(attackUserId, attackedUserId, hp);
     }
   });
 

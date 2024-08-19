@@ -1,10 +1,12 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
-import { createUser, createUserMoney, findUserByName, findUserByPlayerId } from '../../db/user/user.db.js';
+import { createUserMoney, findUserByName, findUserByPlayerId } from '../../db/user/user.db.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import bcrypt from 'bcrypt';
+import apiRequest from '../../db/apiRequest.js';
+import ENDPOINTS from '../../db/endPoint.js';
 
 const registerHandler = async ({ socket, userId, payload }) => {
   try {
@@ -34,20 +36,12 @@ const registerHandler = async ({ socket, userId, payload }) => {
       throw new CustomError(ErrorCodes.VALIDATE_ERROR, errorMessages.join(' '));
     }
 
-    const hashpassword = await bcrypt.hash(password, 10);
+    const hash_password = await bcrypt.hash(password, 10);
 
-    let idCheck = await findUserByPlayerId(playerId);
-    if (idCheck) {
-      throw new CustomError(ErrorCodes.ALREADY_EXIST_ID, '이미 있는 아이디입니다.');
-    }
-
-    let nameCheck = await findUserByName(name);
-    if (nameCheck) {
-      throw new CustomError(ErrorCodes.ALREADY_EXIST_NAME, '이미 있는 이름입니다.');
-    }
-
-    await createUser(playerId, hashpassword, name, guild);
-    await createUserMoney(playerId, 5000);
+    await apiRequest(ENDPOINTS.user.createUser, { player_id: playerId, name, pw: hash_password, guild });
+    await apiRequest(ENDPOINTS.user.createUserMoney, { player_id: playerId, money: 5000 });
+    await apiRequest(ENDPOINTS.game.createPossession, { player_id: playerId, character_id: 0x000 }); // 신규 유저임을 저장 비트 플래그 방식
+    //DB 서버에서 생성중 일부만 성공해도 그냥 넘어가는중 DB 서버에서 트랜잭션으로 처리해도 될까용?
 
     const Response = createResponse(HANDLER_IDS.REGISTER, RESPONSE_SUCCESS_CODE, { message: '회원가입 완료' }, userId);
     socket.write(Response);

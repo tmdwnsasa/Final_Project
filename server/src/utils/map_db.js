@@ -3,23 +3,23 @@ import { insertMap } from '../db/map/map.db.js';
 const insertMaps = async () => {
   // 호남 북부 1~15
   for (let i = 1; i <= 15; i++) {
-    await insertMap(`호남 북부 ${i}`, false, 'red');
+    await insertMap(`호남 북부 ${i}`, false, 'blue');
   }
 
   // 호남 중부 1~15
   for (let i = 1; i <= 5; i++) {
-    await insertMap(`호남 중부 ${i}`, false, 'red');
+    await insertMap(`호남 중부 ${i}`, false, 'blue');
   }
   for (let i = 6; i <= 10; i++) {
     await insertMap(`호남 중부 ${i}`, true, null);
   }
   for (let i = 11; i <= 15; i++) {
-    await insertMap(`호남 중부 ${i}`, false, 'blue');
+    await insertMap(`호남 중부 ${i}`, false, 'green');
   }
 
   // 호남 남부 1~15
   for (let i = 1; i <= 15; i++) {
-    await insertMap(`호남 남부 ${i}`, false, 'blue');
+    await insertMap(`호남 남부 ${i}`, false, 'green');
   }
 };
 
