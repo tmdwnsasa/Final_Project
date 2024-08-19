@@ -1,7 +1,7 @@
 import { characterAssets } from '../../assets/character.asset.js';
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
 import { findPossessionByPlayerID, purchaseCharacterTransaction } from '../../db/game/game.db.js';
-import { findMoneyByPlayerId, updateUserMoney } from '../../db/user/user.db.js';
+import { findMoneyByPlayerId, findUserInventoryByPlayerId, purchaseEquipmentTransaction, updateUserInventory, updateUserMoney } from '../../db/user/user.db.js';
 import { getUserById } from '../../sessions/user.session.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
@@ -9,13 +9,17 @@ import { createResponse } from '../../utils/response/createResponse.js';
 
 export const purchaseCharacter = async ({ socket, userId, payload }) => {
   try {
-    const { name, price } = payload;
+    const { name, price, sessionId } = payload;
 
     const intPrice = parseInt(price);
 
-    const user = getUserById(userId);
+    const user = await getUserById(userId);
     if (!user) {
       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
+    }
+
+    if (user.sessionId !== sessionId) {
+      throw new CustomError(ErrorCodes.SESSION_ID_MISMATCH, '세션ID 일치하지 않습니다');
     }
 
     const userMoney = await findMoneyByPlayerId(userId);
@@ -65,26 +69,33 @@ export const purchaseCharacter = async ({ socket, userId, payload }) => {
   }
 };
 
-
-
 export const purchaseEquipment = async ({ socket, userId, payload }) => {
   try {
-    const { name, price } = payload;
+    const { name, price, sessionId } = payload;
 
     const intPrice = parseInt(price);
 
-    const user = getUserById(userId);
+    const user = await getUserById(userId);
     if (!user) {
       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
+    }
+    console.log('111',sessionId);
+    console.log('222',user.sessionId);
+    if (user.sessionId !== sessionId) {
+      throw new CustomError(ErrorCodes.SESSION_ID_MISMATCH, '세션ID 일치하지 않습니다');
+    }
+
+    const userInventory = await findUserInventoryByPlayerId(userId);
+    if(!userInventory){
+      throw new CustomError(ErrorCodes.INVENTORY_NOT_FOUND, `${user.name}님의 인벤토리를 찾을 수 없습니다`);
     }
 
     const userMoney = await findMoneyByPlayerId(userId);
     const money = userMoney.money;
 
     //장비 찾기
-    // const findPurchaseEquipment = await findEquipment(name);
-    // const findPurchaseEquipment = equipmentAssets.find((obj)=>obj.name === name)
-    if(!findPurchaseEquipment){
+    const findPurchaseEquipment = itemAsset.find((obj)=>obj.name === name)
+    if (!findPurchaseEquipment) {
       const message = '해당 아이템이 존재하지 않습니다';
       console.log(message);
       const packet = createResponse(HANDLER_IDS.PURCHASE_EQUIPMENT, RESPONSE_SUCCESS_CODE, { message }, user.playerId);
@@ -104,8 +115,7 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
 
     // db저장
     //트랜잭션 적용해야할듯
-    await updateUserInventory(user.playerId, findPurchaseEquipment);
-    await updateUserMoney(null,user.playerId,newUserMoney);
+    await purchaseEquipmentTransaction(userId, newUserMoney, findPurchaseEquipment.itemId, findPurchaseEquipment.equipSlot )
 
     const packet = createResponse(HANDLER_IDS.PURCHASE_EQUIPMENT, RESPONSE_SUCCESS_CODE, { message }, user.playerId);
     socket.write(packet);
