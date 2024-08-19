@@ -1,5 +1,5 @@
 import {
-    findUserInventoryByPlayerId,
+  findUserInventoryItemsByPlayerId,
     findMoneyByPlayerId,
     findEquippedItemsByPlayerId,
     equipItem,
@@ -8,24 +8,20 @@ import {
   import { findItemStats } from '../../db/game/game.db.js';
   
   class Inventory {
-    constructor(user) {
-      this.user = user;
-      this.playerId = user.playerId;
-      this.characterId = user.characterId;
-      this.money = user.money;
-      this.items = [];  
+    constructor() {
+      this.inventoryItems = [];  
       this.equippedItems = [];  
     }
   
-    async getAllItems() {
+    async getAllInventoryItems() {
       if (this.items.length === 0) {
-        this.items = await findUserInventoryByPlayerId(this.playerId);
+        this.items = await findUserInventoryItemsByPlayerId(this.playerId);
       }
       console.log('Getting all items:', this.items);
       return this.items;
     }
   
-    async getEquippedItems() {
+    async getAllEquippedItems() {
       try {
         this.equippedItems = await findEquippedItemsByPlayerId(this.playerId);
       } catch (error) {
@@ -46,6 +42,11 @@ import {
         defense,
         critical,
       };
+    }
+    
+    
+    async getItemStats(){
+      allItemStats= await findItemStats()
     }
     
     async getEquippedItemStats(){

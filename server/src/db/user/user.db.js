@@ -26,7 +26,7 @@ export const findMoneyByPlayerId = async (player_id) => {
   return toCamelCase(rows[0]);
 };
 
-export const findUserInventoryByPlayerId = async (player_id) => {
+export const findUserInventoryItemsByPlayerId = async (player_id) => {
   const rows = await pools.USER_DB.query(SQL_QUERIES.FIND_USER_INVENTORY_BY_PLAYER_ID, [player_id]);
   return toCamelCase(rows[0]);
 };

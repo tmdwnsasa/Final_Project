@@ -96,7 +96,6 @@ INSERT INTO character_skills (skill_name, skill_type, character_id, damage_facto
 
 CREATE TABLE IF NOT EXISTS item (
     item_id INT AUTO_INCREMENT PRIMARY KEY,
-    item_sprite_name VARCHAR(255) NOT NULL,
     item_name VARCHAR(255), 
     item_equip_slot VARCHAR(255),
     item_hp FLOAT NULL,
@@ -105,8 +104,8 @@ CREATE TABLE IF NOT EXISTS item (
     item_price INT NOT NULL
 );
 
-INSERT INTO item (item_sprite_name, item_name, item_equip_slot, item_hp, item_speed, item_attack, item_price) VALUES
-('Weapon 0','칼', '손', NULL, NULL, 25, 5000),
-('Weapon 1','망토','몸', 10, NULL, NULL, 5000),
-('Weapon 2','삽', '손', NULL, NULL, 15, 5000),
-('Weapon 3','부츠','발', NULL, 3,NULL, 5000);
+INSERT INTO item (item_name, item_equip_slot, item_hp, item_speed, item_attack, item_price) VALUES
+('칼', '손', NULL, NULL, 25, 5000),
+('망토','몸', 10, NULL, NULL, 5000),
+('삽', '손', NULL, NULL, 15, 5000),
+('부츠','발', NULL, 3,NULL, 5000);
