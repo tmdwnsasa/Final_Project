@@ -26,7 +26,7 @@ const inventoryHandler = async ({socket, payload}) => {
     const userMoney = {money : userMoneyValue}
 
     const equippedItems = await userInventory.getEquippedItems();
-    const allItems = await userInventory.getAllItems();
+    const allItems = await userInventory.getAllItems(); 
     const combinedStats = await userInventory.getCombinedStats();
 
     console.log('User combined stats:', combinedStats);
