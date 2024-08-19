@@ -18,6 +18,7 @@ import { storeHandler } from './game/store.handler.js';
 import { purchaseCharacter, purchaseEquipment } from './game/buyObject.handler.js';
 import removeSkillHandler from './game/removeSkill.handler.js';
 import openMapHandler from './game/openMap.handler.js';
+import matchingCancel from './game/matchingCancel.handler.js';
 
 const handlers = {
   [HANDLER_IDS.REGISTER]: {
@@ -58,6 +59,10 @@ const handlers = {
   },
   [HANDLER_IDS.MATCHMAKING]: {
     handler: matchMakingHandler,
+    protoType: packetNames.game.MatchingPayload,
+  },
+  [HANDLER_IDS.MATCHINGCANCEL]: {
+    handler: matchingCancel,
     protoType: packetNames.game.MatchingPayload,
   },
   [HANDLER_IDS.SKILL]: {
