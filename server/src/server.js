@@ -31,3 +31,5 @@ app.use('/api/webhook', bodyParser.json({ verify: verifySignature }), webHookRou
 app.listen(HTTP_PORT, () => {
   console.log(`CI/CD용 HTTP 서버 ${HTTP_PORT}에서 실행 중입니다`);
 });
+
+
