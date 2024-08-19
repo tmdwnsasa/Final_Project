@@ -19,6 +19,7 @@ import { purchaseCharacter } from './game/buyObject.handler.js';
 import inventoryHandler from './user/inventory.handler.js';
 import equipItemHandler from './game/equipItem.handler.js';
 import unequipItemHandler from './game/unequipItem.handler.js';
+import removeSkillHandler from './game/removeSkill.handler.js';
 import openMapHandler from './game/openMap.handler.js';
 
 const handlers = {
@@ -64,15 +65,19 @@ const handlers = {
   },
   [HANDLER_IDS.SKILL]: {
     handler: updateSkillHandler,
-    protoType: packetNames.skill.nearAttackPayload,
+    protoType: packetNames.skill.SkillPayload,
+  },
+  [HANDLER_IDS.SKILLREMOVE]: {
+    handler: removeSkillHandler,
+    protoType: packetNames.skill.RemoveSkillPayload,
   },
   [HANDLER_IDS.EXIT]: {
     handler: exitGameHandler,
     protoType: packetNames.game.ExitGamePayload,
   },
-  [HANDLER_IDS.INVENTORY]:{
+  [HANDLER_IDS.INVENTORY]: {
     handler: inventoryHandler,
-    protoType:packetNames.user.InventoryPayload,
+    protoType: packetNames.user.InventoryPayload,
   },
   [HANDLER_IDS.EQUIP_ITEM]: {
     handler: equipItemHandler,

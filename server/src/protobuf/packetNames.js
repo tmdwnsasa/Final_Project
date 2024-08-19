@@ -29,7 +29,8 @@ export const packetNames = {
     MapPayload: 'ui.MapPayload',
   },
   skill: {
-    nearAttackPayload: 'skill.nearAttackPayload',
+    SkillPayload: 'skill.SkillPayload',
+    RemoveSkillPayload: 'skill.RemoveSkillPayload',
   },
   response: {
     Response: 'response.Response',

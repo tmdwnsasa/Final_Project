@@ -1,8 +1,10 @@
 import { loadProtos } from './loadProtos.js';
 import { createLobbySession } from '../sessions/lobby.session.js';
-import { findCharacterData } from '../db/game/game.db.js';
+import { findCharacterData, findCharacterSkillData } from '../db/game/game.db.js';
 import Character from '../classes/models/character.class.js';
 import { characterAssets } from '../assets/character.asset.js';
+import { characterSkillAssets } from '../assets/characterskill.asset.js';
+import CharacterSkill from '../classes/models/characterskill.class.js';
 import { findMapData } from '../db/map/map.db.js';
 import Map from '../classes/models/map.class.js';
 import { mapAssets } from '../assets/map.asset.js';
@@ -18,6 +20,14 @@ const initServer = async () => {
       const characterAsset = new Character(...characterValues);
 
       characterAssets.push(characterAsset);
+    });
+
+    const characterSkills = await findCharacterSkillData();
+    characterSkills.forEach((character_skills) => {
+      const characterValues = Object.values(character_skills);
+      const characterSkillAsset = new CharacterSkill(...characterValues);
+
+      characterSkillAssets.push(characterSkillAsset);
     });
     console.log('Character Assets loaded success');
 

@@ -28,31 +28,31 @@ export const findMoneyByPlayerId = async (player_id) => {
 
 export const findUserInventoryByPlayerId = async (player_id) => {
   const [rows] = await pools.USER_DB.query(SQL_QUERIES.FIND_USER_INVENTORY_BY_PLAYER_ID, [player_id]);
-  return toCamelCase(rows);
+  return toCamelCase(rows[0]);
 };
 
 export const findEquippedItemsByPlayerId = async (player_id) => {
   const [rows] = await pools.USER_DB.query(SQL_QUERIES.FIND_EQUIPPED_ITEMS_BY_PLAYER_ID, [player_id]);
-  return toCamelCase(rows);
+  return toCamelCase(rows[0]);
 };
 
 export const equipItem = async (player_id, item_id, equipped_items) => {
   try {
     await pools.USER_DB.query(SQL_QUERIES.EQUIP_ITEM, [equipped_items, player_id, item_id]);
-    return { player_id, item_id, equipped_items};
+    return { player_id, item_id, equipped_items };
   } catch (error) {
     console.error(`Error equipping item: ${error.message}`);
-    throw error;  
+    throw error;
   }
 };
 
-export const unequipItem = async (player_id, item_id,equipped_items) => {
+export const unequipItem = async (player_id, item_id, equipped_items) => {
   try {
-    await pools.USER_DB.query(SQL_QUERIES.UNEQUIP_ITEM, [player_id, item_id,equipped_items]);
+    await pools.USER_DB.query(SQL_QUERIES.UNEQUIP_ITEM, [player_id, item_id, equipped_items]);
     return { player_id, item_id, equipped_items };
   } catch (error) {
     console.error(`Error unequipping item: ${error.message}`);
-    throw error; 
+    throw error;
   }
 };
 

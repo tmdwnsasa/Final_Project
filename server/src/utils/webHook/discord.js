@@ -17,12 +17,12 @@ function getTeamMateName(gitUsername) {
   return teamMate[gitUsername] || '외부인'; // 매칭되는 이름이 없을 경우
 }
 
-export const sendGitPushAlert = async (commitMessage, pusher,url) => {
+export const sendGitPushAlert = async (commitMessage, pusher) => {
   const message = {
     content: `게임서버에 git push를 하셨더라구요~ 
   ${commitMessage}
   ${getTeamMateName(pusher)} 님께서 올려주셨는데 그러면 서버 바로 다시 시작할께요?
-  [내용 보러 github로 가기]{${url}}
+  [내용 보러 github로 가기](https://github.com/tmdwnsasa/Final_Project/commit/dev)
   감사합니다~ 감사합니다~!`,
   };
 
