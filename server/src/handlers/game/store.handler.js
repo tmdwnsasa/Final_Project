@@ -5,7 +5,6 @@ import { getUserById } from '../../sessions/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
 export const storeHandler = async ({ socket, userId, payload }) => {
-  console.log(userId);
   const { message } = payload;
   console.log(message);
   const user = getUserById(userId);
