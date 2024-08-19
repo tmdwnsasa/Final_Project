@@ -11,6 +11,7 @@ import {
   gameStartNotification,
 } from '../../utils/notification/game.notification.js';
 import IntervalManager from '../manager/interval.manager.js';
+import Bullet from './bullet.class.js';
 import { createBullQueue } from '../../utils/bullQueue.js';
 
 const MAX_PLAYERS = 4;
@@ -53,7 +54,7 @@ class Game {
     this.intervalManager.removeInterval(playerId, 'ping');
   }
 
-  sendAttackedOpposingTeam(attackUser, startX, startY, endX, endY) {
+  sendAttackedOpposingTeam(attackUser, startX, startY, endX, endY, bullet = null) {
     let team;
     if (attackUser.team.includes('red')) {
       team = 'red';
@@ -73,6 +74,10 @@ class Game {
           attackedUserId: user.playerId,
           team,
         });
+
+        if (bullet) {
+          this.intervalManager.removeInterval(bullet.bulletNumber, 'bullet');
+        }
       }
     });
   }
@@ -144,11 +149,62 @@ class Game {
     this.intervalManager.removeInterval(this.id, 'location');
   }
 
-  updateAttack(userId, x, y, rangeX, rangeY) {
-    const packet = createGameSkillPacket(userId, x, y, rangeX, rangeY);
+  updateAttack(userId, x, y, rangeX, rangeY, skillType, prefabNum = null) {
+    const packet = createGameSkillPacket(userId, x, y, rangeX, rangeY, skillType, prefabNum);
     this.users.forEach((user) => {
       user.socket.write(packet);
     });
+  }
+
+  setBullet(attackUser, x, y, rangeX, rangeY, bulletNumber) {
+    const startPosX = attackUser.x + x;
+    const startPosY = attackUser.y + y;
+
+    let direction; // 오른쪽 = 1 , 왼쪽 = 2, 아래 = 3, 위 = 4
+    if (x > 0) {
+      direction = 1;
+    } else if (x < 0) {
+      direction = 2;
+    } else if (y < 0) {
+      direction = 3;
+    } else {
+      direction = 4;
+    }
+
+    const bullet = new Bullet(bulletNumber, startPosX, startPosY, direction);
+
+    this.intervalManager.addInterval(
+      bulletNumber,
+      this.updateBullet.bind(this, bullet, attackUser, rangeX, rangeY),
+      config.client.frame * 1000,
+      'bullet',
+    );
+  }
+
+  updateBullet(bullet, attackUser, rangeX, rangeY) {
+    switch (bullet.direction) {
+      case 1:
+        bullet.x += 10 * config.client.frame;
+        break;
+      case 2:
+        bullet.x -= 10 * config.client.frame;
+        break;
+      case 3:
+        bullet.y -= 10 * config.client.frame;
+        break;
+      case 4:
+        bullet.y += 10 * config.client.frame;
+        break;
+      default:
+        break;
+    }
+
+    const startX = bullet.x - rangeX / 2;
+    const startY = bullet.y + rangeY / 2;
+    const endX = startX + rangeX;
+    const endY = startY - rangeY;
+
+    this.sendAttackedOpposingTeam(attackUser, startX, startY, endX, endY, bullet);
   }
 
   sendAllAttackedSuccess(playerId, hp, team) {
@@ -182,5 +238,4 @@ class Game {
     }
   }
 }
-
 export default Game;

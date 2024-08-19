@@ -117,8 +117,13 @@ export const findCharacterData = async () => {
 };
 
 export const findItemStats = async()=>{
-  const [rows] = await pools.GAME_DB.query(GAME_SQL_QUERIES.FIND_ITEM_STATS);
-  return toCamelCase(rows);
+  const rows = await pools.GAME_DB.query(GAME_SQL_QUERIES.FIND_ITEM_STATS);
+  return toCamelCase(rows[0]);
+};
+
+export const findCharacterSkillData = async () => {
+  const rows = await pools.GAME_DB.query(GAME_SQL_QUERIES.FIND_CHARACTER_SKILL_DATA);
+  return toCamelCase(rows[0]);
 };
 
 export async function dbSaveTransaction(winTeam, loseTeam, users, gameSessionId, winnerTeam, startTime, map) {

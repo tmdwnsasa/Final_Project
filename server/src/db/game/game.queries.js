@@ -18,5 +18,5 @@ export const GAME_SQL_QUERIES = {
   FIND_CHARACTERS_DATA: 'SELECT * FROM `character`',
   UPDATE_POSSESSION:'UPDATE possession SET character_id = ? WHERE player_id = ?',
   FIND_ITEM_STATS: 'SELECT * FROM item',
-
+  FIND_CHARACTER_SKILL_DATA: 'SELECT * FROM character_skills',
 };

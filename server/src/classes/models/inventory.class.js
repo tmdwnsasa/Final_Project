@@ -49,10 +49,14 @@ import {
     }
     
     async getEquippedItemStats(){
-        const itemStats = await findItemStats();
+        let itemStats = [];
+        itemStats = await findItemStats();
+        console.log('----------',itemStats);
+
         const equippedItems = await this.getEquippedItems();
         const equippedItemIds = equippedItems.map(item=> item.itemId);
         const equippedItemStats = itemStats.filter(itemStat => equippedItemIds.includes(itemStat.itemId));
+
 
         console.log('Equipped Item Stats:', equippedItemStats);
 

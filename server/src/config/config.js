@@ -9,6 +9,7 @@ export const config = {
   },
   client: {
     version: env.CLIENT_VERSION,
+    frame: 1 / 120,
   },
   packet: {
     totalLength: header.TOTAL_LENGTH,
