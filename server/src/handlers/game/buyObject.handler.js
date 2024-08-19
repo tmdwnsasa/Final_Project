@@ -84,6 +84,13 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
     //장비 찾기
     // const findPurchaseEquipment = await findEquipment(name);
     // const findPurchaseEquipment = equipmentAssets.find((obj)=>obj.name === name)
+    if(!findPurchaseEquipment){
+      const message = '해당 아이템이 존재하지 않습니다';
+      console.log(message);
+      const packet = createResponse(HANDLER_IDS.PURCHASE_EQUIPMENT, RESPONSE_SUCCESS_CODE, { message }, user.playerId);
+      socket.write(packet);
+      return;
+    }
 
     if (money < intPrice) {
       const message = '잔액이 부족합니다';
