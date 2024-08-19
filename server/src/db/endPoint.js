@@ -30,12 +30,8 @@ const ENDPOINTS = {
     },
   },
   game: {
-    createMatchHistory: {
-      url: `${API_BASE}/game/createMatchHistory`,
-      method: 'POST',
-    },
-    createMatchLog: {
-      url: `${API_BASE}/game/createMatchLog`,
+    dbSaveTransaction: {
+      url: `${API_BASE}/game/dbSaveTransaction`,
       method: 'POST',
     },
     createUserScore: {
@@ -46,21 +42,9 @@ const ENDPOINTS = {
       url: `${API_BASE}/game/createUserRating`,
       method: 'POST',
     },
-    getUserScore: {
-      url: `${API_BASE}/game/getUserScore`,
-      method: 'GET',
-    },
-    updateUserRating: {
-      url: `${API_BASE}/game/updateUserRating`,
-      method: 'PATCH',
-    },
     createCharacter: {
       url: `${API_BASE}/game/createCharacter`,
       method: 'POST',
-    },
-    getUserRating: {
-      url: `${API_BASE}/game/getUserRating`,
-      method: 'GET',
     },
     createPossession: {
       url: `${API_BASE}/game/createPossession`,

@@ -1,3 +1,5 @@
+import apiRequest from '../db/apiRequest.js';
+import ENDPOINTS from '../db/endPoint.js';
 import {
   createMatchHistory,
   createUserRating,
@@ -20,7 +22,15 @@ export const gameEnd = async (gameSessionId, winnerTeam, loserTeam, winTeamColor
 
     for (let i = 1; i < 4; i++) {
       try {
-        await dbSaveTransaction(winnerTeam, loserTeam, users, gameSessionId, winTeamColor, startTime, mapName);
+        await apiRequest(ENDPOINTS.game.dbSaveTransaction, {
+          win_team: winnerTeam,
+          lose_team: loserTeam,
+          users,
+          session_id: gameSessionId,
+          win_team_color: winTeamColor,
+          start_time: startTime,
+          map_name: mapName,
+        });
         break;
       } catch (err) {
         console.error(`db저장 실패 ${i}번째 시도 중..,${err.message}`);
