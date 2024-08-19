@@ -1,6 +1,10 @@
 import { characterAssets } from '../../assets/character.asset.js';
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
-import { findMoneyByPlayerId, findUserInventoryByPlayerId, purchaseEquipmentTransaction } from '../../db/user/user.db.js';
+import {
+  findMoneyByPlayerId,
+  findUserInventoryByPlayerId,
+  purchaseEquipmentTransaction,
+} from '../../db/user/user.db.js';
 import apiRequest from '../../db/apiRequest.js';
 import ENDPOINTS from '../../db/endPoint.js';
 import { getUserById } from '../../sessions/user.session.js';
@@ -81,11 +85,11 @@ export const purchaseCharacter = async ({ socket, userId, payload }) => {
     const newUserMoney = money - characterInfo.price;
 
     // db저장 DB 코드에서 트랜잭션으로 처리하도록 나중에 수정해야함
-    await apiRequest(ENDPOINTS.game.updatePossession, {
+    await apiRequest(ENDPOINTS.game.purchaseCharacter, {
       player_id: userId,
       character_id: CharacterMapping[characterInfo.characterId - 1], //id에서 1뺀값을 기준으로 비트플래그 매핑해서 전달
+      money: newUserMoney,
     });
-    await apiRequest(ENDPOINTS.user.updateMoney, { player_id: userId, money: newUserMoney });
     const message = `${name}가 정상적으로 구매 되었다!`;
     console.log(message);
 
@@ -111,23 +115,22 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
     if (!user) {
       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
     }
-    console.log('111',sessionId);
-    console.log('222',user.sessionId);
+    console.log('111', sessionId);
+    console.log('222', user.sessionId);
     if (user.sessionId !== sessionId) {
       throw new CustomError(ErrorCodes.SESSION_ID_MISMATCH, '세션ID 일치하지 않습니다');
     }
 
     const userInventory = await findUserInventoryByPlayerId(userId);
-    if(!userInventory){
+    if (!userInventory) {
       throw new CustomError(ErrorCodes.INVENTORY_NOT_FOUND, `${user.name}님의 인벤토리를 찾을 수 없습니다`);
     }
 
-    
     const userMoney = await apiRequest(ENDPOINTS.user.findMoneyByPlayerId, { player_id: userId });
     const money = userMoney.money;
 
     //장비 찾기
-    const findPurchaseEquipment = itemAsset.find((obj)=>obj.name === name)
+    const findPurchaseEquipment = itemAsset.find((obj) => obj.name === name);
     if (!findPurchaseEquipment) {
       const message = '해당 아이템이 존재하지 않습니다';
       console.log(message);
@@ -148,7 +151,12 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
 
     // db저장
     //트랜잭션 적용해야할듯
-    await purchaseEquipmentTransaction(userId, newUserMoney, findPurchaseEquipment.itemId, findPurchaseEquipment.equipSlot )
+    await purchaseEquipmentTransaction(
+      userId,
+      newUserMoney,
+      findPurchaseEquipment.itemId,
+      findPurchaseEquipment.equipSlot,
+    );
 
     const packet = createResponse(HANDLER_IDS.PURCHASE_EQUIPMENT, RESPONSE_SUCCESS_CODE, { message }, user.playerId);
     socket.write(packet);
