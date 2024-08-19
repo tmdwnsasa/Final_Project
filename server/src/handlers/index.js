@@ -21,8 +21,6 @@ import openMapHandler from './game/openMap.handler.js';
 import inventoryHandler from './user/inventory.handler.js';
 import equipItemHandler from './game/equipItem.handler.js';
 import unequipItemHandler from './game/unequipItem.handler.js';
-import removeSkillHandler from './game/removeSkill.handler.js';
-import openMapHandler from './game/openMap.handler.js';
 
 const handlers = {
   [HANDLER_IDS.REGISTER]: {
