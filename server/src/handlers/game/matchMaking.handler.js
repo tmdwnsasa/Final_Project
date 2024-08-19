@@ -1,11 +1,6 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
 import { matchQueueSession } from '../../sessions/session.js';
-import {
-  addUserToQueue,
-  removeUserFromQueue,
-  getAllPlayersInQueue,
-  getQueueLength,
-} from '../../sessions/matchQueue.session.js';
+import { addUserToQueue, removeUserFromQueue, getAllPlayersInQueue } from '../../sessions/matchQueue.session.js';
 import { getUserBySocket } from '../../sessions/user.session.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
@@ -13,7 +8,7 @@ import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import createGame from '../../utils/createGame.js';
 import { getUsersForGame } from '../../sessions/matchQueue.session.js';
-import { lobbySession } from '../../sessions/session.js';
+import { getLobbySession } from '../../sessions/lobby.session.js';
 
 const matchMakingHandler = ({ socket, payload }) => {
   try {
@@ -26,6 +21,11 @@ const matchMakingHandler = ({ socket, payload }) => {
 
     if (user.sessionId !== sessionID) {
       throw new CustomError(ErrorCodes.SESSION_ID_MISMATCH, '세션ID 일치하지 않습니다');
+    }
+
+    const lobbySession = getLobbySession();
+    if (!lobbySession) {
+      throw new CustomError(ErrorCodes.GAME_NOT_FOUND, '로비 세션을 찾을 수 없습니다.');
     }
 
     const response = createResponse(
@@ -53,7 +53,7 @@ const matchMakingHandler = ({ socket, payload }) => {
     }
 
     addUserToQueue(user);
-    console.log(`${user.playerId} added to matching queue. Queue length: ${getQueueLength()}`);
+    console.log(`${user.playerId} added to matching queue. Queue : ` + getAllPlayersInQueue());
 
     let greenIndex = [];
     let blueIndex = [];
