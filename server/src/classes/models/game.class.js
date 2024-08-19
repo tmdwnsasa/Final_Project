@@ -65,11 +65,8 @@ class Game {
           gameSessionId: this.id,
           attackUserId: attackUser.playerId,
           attackedUserId: user.playerId,
+          bullet,
         });
-
-        if (bullet) {
-          this.intervalManager.removeInterval(bullet.bulletNumber, 'bullet');
-        }
       }
     });
   }
