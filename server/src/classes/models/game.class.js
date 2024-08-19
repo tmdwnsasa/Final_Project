@@ -225,10 +225,10 @@ class Game {
       gameEnd(this.id, ourTeam, opposingTeam, attackUser.team, this.startTime, this.map.mapName);
       if (attackUser.team === 'green') {
         this.map.countGreenWin++;
-        updateBlueWinCount(this.map.countRedWin, this.map.mapId);
+        updateGreenWinCount(this.map.countGreenWin, this.map.mapId);
       } else {
         this.map.countBlueWin++;
-        updateGreenWinCount(this.map.countBlueWin, this.map.mapId);
+        updateBlueWinCount(this.map.countBlueWin, this.map.mapId);
       }
       changingOwnerOfMap(this.map);
       this.dbSaveRequest = true;

@@ -20,7 +20,7 @@ const checkAroundMap = (mapId, team) => {
 
 const changeDisputedArea = async (row, column, team) => {
   const map = mapAssets[row][column];
-  if (map.isDisputedArea === 0 && map.ownedBy !== team) {
+  if (map && map.isDisputedArea === 0 && map.ownedBy !== team) {
     map.isDisputedArea = 1;
     map.ownedBy = null;
     map.countBlueWin = 0;
