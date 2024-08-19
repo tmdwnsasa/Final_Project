@@ -33,8 +33,8 @@ CREATE TABLE IF NOT EXISTS possession (
 
 CREATE TABLE IF NOT EXISTS match_log (
     game_session_id VARCHAR(255) PRIMARY KEY,
-    red_player1_id VARCHAR(36),
-    red_player2_id VARCHAR(36),
+    green_player1_id VARCHAR(36),
+    green_player2_id VARCHAR(36),
     blue_player1_id VARCHAR(36),
     blue_player2_id VARCHAR(36),
     winner_team VARCHAR(36),

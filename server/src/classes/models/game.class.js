@@ -13,6 +13,7 @@ import {
 import IntervalManager from '../manager/interval.manager.js';
 import Bullet from './bullet.class.js';
 import { createBullQueue } from '../../utils/bullQueue.js';
+import { updateBlueWinCount, updateGreenWinCount } from '../../db/map/map.db.js';
 
 const MAX_PLAYERS = 4;
 
@@ -221,8 +222,10 @@ class Game {
       gameEnd(this.id, ourTeam, opposingTeam, attackUser.team, this.startTime, this.map.mapName);
       if (attackUser.team === 'green') {
         this.map.countGreenWin++;
+        updateGreenWinCount(this.map.countGreenWin, this.map.mapId);
       } else {
         this.map.countBlueWin++;
+        updateBlueWinCount(this.map.countBlueWin, this.map.mapId);
       }
       changingOwnerOfMap(this.map);
       this.dbSaveRequest = true;

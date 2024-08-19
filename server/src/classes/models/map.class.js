@@ -1,11 +1,11 @@
 class Map {
-  constructor(mapId, mapName, isDisputedArea, ownedBy) {
+  constructor(mapId, mapName, isDisputedArea, ownedBy, countBlueWin, countGreenWin) {
     this.mapId = mapId;
     this.mapName = mapName;
     this.isDisputedArea = isDisputedArea;
     this.ownedBy = ownedBy;
-    this.countGreenWin = 0;
-    this.countBlueWin = 0;
+    this.countGreenWin = countGreenWin;
+    this.countBlueWin = countBlueWin;
   }
 }
 
