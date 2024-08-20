@@ -9,7 +9,7 @@ export const createBullQueue = (id) => {
 
   // 작업 처리
   bullQueue.process((job) => {
-    const { gameSessionId, attackUserId, attackedUserId, bullet } = job.data;
+    const { gameSessionId, attackUserId, attackedUserId } = job.data;
 
     const gameSession = getGameSession(gameSessionId);
 
@@ -33,10 +33,6 @@ export const createBullQueue = (id) => {
     if (attackedUser.hp <= 0) {
       attackUser.kill += 1;
       attackedUser.death += 1;
-    }
-
-    if (bullet) {
-      gameSession.intervalManager.removeInterval(bullet.bulletNumber, 'bullet');
     }
 
     return { gameSessionId, attackUserId, attackedUserId, hp: attackedUser.hp };
