@@ -2,6 +2,7 @@ import { characterAssets } from '../../assets/character.asset.js';
 import { characterSkillAssets } from '../../assets/characterskill.asset.js';
 import { config } from '../../config/config.js';
 import { createPingPacket } from '../../utils/notification/game.notification.js';
+import { findItemStats } from '../../db/game/game.db.js';
 import Inventory from './inventory.class.js';
 import CharacterSkill from './characterskill.class.js';
 
@@ -42,7 +43,7 @@ class User {
     this.death = 0;
     this.damage = 0;
 
-    this.inventory = new Inventory(this);
+    this.inventory = new Inventory();
   }
 
   updatePosition(x, y) {
@@ -77,6 +78,71 @@ class User {
     this.defense = characterAssets[characterId].defense;
     this.critical = characterAssets[characterId].critical;
     return characterAssets[characterId];
+  }
+
+  async getAllInventoryItems(){
+    this.inventory.inventoryItems = await findUserInventoryItemsByPlayerId(this.playerId);
+    return this.inventory.inventoryItems;
+  }
+
+  async getEquippedItemStats(){
+    let itemStats = [];
+    itemStats = await findItemStats();
+    console.log('----------',itemStats);
+    const equippedItemIds = equippedItems.map(item=> item.itemId);
+    const equippedItemStats = itemStats.filter(itemStat => equippedItemIds.includes(itemStat.itemId));
+
+
+    console.log('Equipped Item Stats:', equippedItemStats);
+
+    return equippedItemStats;
+}
+
+
+async getCombinedStats() {
+    const characterStats = this.getCharacterStats();
+    const equippedItemStats = await this.getEquippedItemStats();
+    const combinedStats = { ...characterStats };
+  
+      equippedItemStats.forEach(itemStat=> {
+        combinedStats.hp += itemStat.itemHp || 0;
+        combinedStats.speed += itemStat.itemSpeed || 0;
+        combinedStats.power += itemStat.itemAttack || 0;
+      })
+      this.user.hp = combinedStats.hp;
+      this.user.speed = combinedStats.speed;
+      this.user.power = combinedStats.power;
+
+    return combinedStats;
+  }
+
+  async equipItem(itemId) {
+    const item = this.inventory.inventoryItems.find((item) => item.itemId === itemId);
+    if (item) {
+      await equipItemtoPlayerId(this.playerId, itemId);
+      this.inventory.equippedItems.push(item);
+
+      console.log(`Item with itemId ${itemId} equipped.`);
+      const updatedStats = await this.getCombinedStats();
+      return updatedStats;
+    } else {
+      console.error(`Item with itemId ${itemId} not found in inventory.`);
+    }
+  }
+
+  async unequipItem(itemId) {
+    const itemIndex = this.inventory.equippedItems.findIndex((item) => item.itemId === itemId);
+    if (itemIndex !== -1) {
+      await unequipItemfromPlayerId(this.playerId, itemId);
+      this.inventory.equippedItems.splice(itemIndex, 1);
+
+      console.log(`Item with itemId ${itemId} unequipped.`);
+
+      const updatedStats = await this.getCombinedStats();
+      return updatedStats;
+    } else {
+      console.error(`Item with itemId ${itemId} is not currently equipped.`);
+    }
   }
 
   changeCharacterSkill(characterId) {

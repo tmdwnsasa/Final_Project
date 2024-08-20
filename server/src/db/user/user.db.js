@@ -36,9 +36,9 @@ export const findEquippedItemsByPlayerId = async (player_id) => {
   return toCamelCase(rows[0]);
 };
 
-export const equipItem = async (player_id, item_id, equipped_items) => {
+export const equipItemtoPlayerId = async (player_id, item_id, equipped_items) => {
   try {
-    await pools.USER_DB.query(SQL_QUERIES.EQUIP_ITEM, [equipped_items, player_id, item_id]);
+    await pools.USER_DB.query(SQL_QUERIES.EQUIP_ITEM, [player_id, item_id,equipped_items]);
     return { player_id, item_id, equipped_items };
   } catch (error) {
     console.error(`Error equipping item: ${error.message}`);
@@ -46,7 +46,7 @@ export const equipItem = async (player_id, item_id, equipped_items) => {
   }
 };
 
-export const unequipItem = async (player_id, item_id, equipped_items) => {
+export const unequipItemfromPlayerId = async (player_id, item_id, equipped_items) => {
   try {
     await pools.USER_DB.query(SQL_QUERIES.UNEQUIP_ITEM, [player_id, item_id, equipped_items]);
     return { player_id, item_id, equipped_items };
@@ -54,6 +54,11 @@ export const unequipItem = async (player_id, item_id, equipped_items) => {
     console.error(`Error unequipping item: ${error.message}`);
     throw error;
   }
+};
+
+export const updateUserInventory = async (userConnection, playerId,itemId) => {
+  await userConnection.query(SQL_QUERIES.UPDATE_USER_INVENTORY, [playerId,itemId]);
+  return { playerId, userInventory };
 };
 
 export const updateUserMoney = async (userConnection, playerId, userMoney) => {
@@ -69,4 +74,23 @@ export const gameEndUpdateUserMoney = async (playerId, userMoney) => {
 export const createUserMoney = async (playerId, money) => {
   await pools.USER_DB.query(SQL_QUERIES.CREATE_USER_MONEY, [playerId, money]);
   return { playerId, money };
+};
+
+export const purchaseItemTransaction = async (playerId, newUserMoney, itemId, equipSlot) => {
+  const userConnection = await pools.USER_DB.getConnection();
+  try {
+    await userConnection.beginTransaction();
+
+    await updateUserMoney(userConnection, playerId, newUserMoney);
+    await updateUserInventory(userConnection, equipSlot,playerId, itemId,);
+
+    await userConnection.commit();
+    console.log('트랜잭션과정 DB저장 성공');
+  } catch (err) {
+    await userConnection.rollback();
+    console.error('트랜잭션과정 DB저장 실패:', err);
+    throw err;
+  } finally {
+    userConnection.release();
+  }
 };

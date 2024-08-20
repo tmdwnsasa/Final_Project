@@ -34,11 +34,11 @@ message ExitGamePayload {
 }
 
 message EquipItemPayload {
-  int itemId = 1;
+  string itemId = 1;
 }
 
 message UnequipItemPayload {
-  int itemId = 1;
+  string itemId = 1;
 }
 
 message PurchaseEquipmentPayload {

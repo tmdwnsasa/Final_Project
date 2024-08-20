@@ -1,33 +1,35 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
-import { getUserBySocket } from '../../sessions/user.session.js';
+import { findUserInventoryItemsByPlayerId } from '../../db/user/user.db.js';
+import { getUserById } from '../../sessions/user.session.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
-const UnequipHandler = async ({ socket, payload }) => {
+const unequipHandler = async ({ socket, userId, payload }) => {
   try {
     const { itemId } = payload;
+
+    const itemIdInt = parseInt(itemId, 10); 
+
+    // Check if conversion was successful
+    if (isNaN(itemIdInt)) {
+      throw new CustomError(ErrorCodes.INVALID_ITEM_ID, 'Invalid item ID received.');
+    }
     console.log('Unequip Request - Received payload:', payload);
 
-    const user = getUserBySocket(socket);
+    const user = getUserById(userId);
     if (!user) {
-      throw new CustomError(ErrorCodes.USER_NOT_FOUND, 'User not found.');
+      throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
     }
-
-    if (user.sessionId !== sessionId) {
-      throw new CustomError(ErrorCodes.SESSION_ID_MISMATCH, 'Session ID does not match.');
-    }
-
-    const userInventory = user.inventory;
-    await userInventory.getAllItems();
+    const userInventory = await findUserInventoryItemsByPlayerId(user.playerId);
 
     const item = userInventory.items.find((item) => item.itemId === itemId);
     if (!item) {
       throw new CustomError(ErrorCodes.ITEM_NOT_FOUND, 'Item not found in inventory.');
     }
 
-    const equippedItems = await userInventory.getEquippedItems();
+    const equippedItems = await userInventory.getAllEquippedItems();
     const isEquipped = equippedItems.some((equippedItem) => equippedItem.itemId === itemId);
 
     if (!isEquipped) {
@@ -43,11 +45,11 @@ const UnequipHandler = async ({ socket, payload }) => {
 
     await userInventory.unequipItem(itemId);
     const updatedStats = await userInventory.getCombinedStats();
-    const allItems = await userInventory.getAllItems();
+    const allInventoryItems = await findUserInventoryItemsByPlayerId(playerId);
     
     updatedInventoryData ={
         updatedStats,
-        allItems,
+        allInventoryItems,
         equippedItems
       }
     
@@ -64,4 +66,4 @@ const UnequipHandler = async ({ socket, payload }) => {
   }
 };
 
-export default UnequipHandler;
+export default unequipHandler;

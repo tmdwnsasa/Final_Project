@@ -1,34 +1,39 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
-import { getUserBySocket } from '../../sessions/user.session.js';
+import { findUserInventoryItemsByPlayerId} from '../../db/user/user.db.js';
+import { getUserById } from '../../sessions/user.session.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
+import { itemStats } from '../../assets/itemStat.asset.js';
 
-const equipItemHandler = async ({ socket, payload }) => {
+const equipItemHandler = async ({ socket, userId, payload }) => {
   try {
     const { itemId} = payload;
+
+    const itemIdInt = parseInt(itemId, 10); 
+
+
+    if (isNaN(itemIdInt)) {
+      throw new CustomError(ErrorCodes.INVALID_ITEM_ID, 'Invalid item ID received.');
+    }
     console.log('Equip Request - Received payload:', payload);
 
-    const user = getUserBySocket(socket);
+    const user = getUserById(userId);
     if (!user) {
-      throw new CustomError(ErrorCodes.USER_NOT_FOUND, 'User not found.');
+      throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
     }
 
-    if (user.sessionId !== sessionId) {
-      throw new CustomError(ErrorCodes.SESSION_ID_MISMATCH, 'Session ID does not match.');
+    //아이템ID와 일치하는지 확인
+    const itemInfo = itemStats.find((item) => item.itemId === itemIdInt);
+    if (!itemInfo) {
+      throw new CustomError(ErrorCodes.ITEM_NOT_FOUND, 'Item does not exist.');
     }
 
-    const userInventory = user.inventory;
-    await userInventory.getAllItems();
-
-    const item = userInventory.items.find((item) => item.itemId === itemId);
-    if (!item) {
-      throw new CustomError(ErrorCodes.ITEM_NOT_FOUND, 'Item not found in inventory.');
-    }
-
-    const equippedItems = await userInventory.getEquippedItems();
-    const isEquipped = equippedItems.some((equippedItem) => equippedItem.itemId === itemId);
+    //이미 장착되어있는지 확인
+    // const userInventory = user.inventory;
+    const getAllInventoryItems = await user.getAllInventoryItems(userId);
+    const isEquipped = equippedItems.some((equippedItem) => equippedItem.itemId === itemIdInt);
 
     if (isEquipped) {
       const response = createResponse(
@@ -41,13 +46,13 @@ const equipItemHandler = async ({ socket, payload }) => {
       return;
     }
 
-    await userInventory.equipItem(itemId);
-    const updatedStats = await userInventory.getCombinedStats();
-    const allItems = await userInventory.getAllItems();
+    await equipItem(itemIdInt);
+    const updatedStats = await getCombinedStats();
+    const allInventoryItems = await findUserInventoryItemsByPlayerId(userId);
 
     updatedInventoryData ={
       updatedStats,
-      allItems,
+      allInventoryItems,
       equippedItems
     }
 
