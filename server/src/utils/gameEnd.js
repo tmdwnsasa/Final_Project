@@ -33,17 +33,6 @@ export const gameEnd = async (gameSessionId, winnerTeam, loserTeam, winTeamColor
     } catch (err) {
       console.error(`db저장 실패..,${err.message}`);
     }
-    //게임 종료 시 골드 지급
-    for (const user of users) {
-      try {
-        const userMoney = await findMoneyByPlayerId(user.playerId);
-        const money = userMoney.money;
-        await gameEndUpdateUserMoney(user.playerId, money + 5000);
-        console.log(`${user.name}한테 골드 지급`);
-      } catch (err) {
-        console.error(`골드 저장 중 에러 발생:`, err);
-      }
-    }
 
     const winPayload = {
       result: 'Win',
