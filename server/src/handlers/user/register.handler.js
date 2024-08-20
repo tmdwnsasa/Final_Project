@@ -38,9 +38,14 @@ const registerHandler = async ({ socket, userId, payload }) => {
 
     const hash_password = await bcrypt.hash(password, 10);
 
-    await apiRequest(ENDPOINTS.user.createUser, { player_id: playerId, name, pw: hash_password, guild });
-    await apiRequest(ENDPOINTS.user.createUserMoney, { player_id: playerId, money: 5000 });
-    await apiRequest(ENDPOINTS.game.createPossession, { player_id: playerId, character_id: 0x000 }); // 신규 유저임을 저장 비트 플래그 방식
+    await apiRequest(ENDPOINTS.user.createUser, {
+      player_id: playerId,
+      name,
+      pw: hash_password,
+      guild,
+      money: 5000,
+      character_id: 0x000,
+    });
     //DB 서버에서 생성중 일부만 성공해도 그냥 넘어가는중 DB 서버에서 트랜잭션으로 처리해도 될까용?
 
     const Response = createResponse(HANDLER_IDS.REGISTER, RESPONSE_SUCCESS_CODE, { message: '회원가입 완료' }, userId);

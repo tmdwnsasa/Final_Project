@@ -1,7 +1,5 @@
-import { findUserByPlayerId } from '../../db/user/user.db.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
-import { createPossession } from '../../db/game/game.db.js';
 import CustomError from '../../utils/error/customError.js';
 import apiRequest from '../../db/apiRequest.js';
 import ENDPOINTS from '../../db/endPoint.js';

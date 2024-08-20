@@ -59,8 +59,12 @@ class Game {
     // 상대 팀 유저 배열
     const opposingTeam = this.users.filter((user) => user.team !== attackUser.team);
     opposingTeam.forEach((user) => {
-      if (user.x > startX && user.y < startY && user.x < endX && user.y > endY) {
+      if (user.x > startX && user.y < startY && user.x < endX && user.y > endY && user.hp > 0) {
         // 상대방 히트
+        if (bullet) {
+          this.intervalManager.removeInterval(bullet.bulletNumber, 'bullet');
+        }
+
         // 불큐 작업 추가
         this.bullQueue.add({
           gameSessionId: this.id,
