@@ -20,25 +20,18 @@ export const gameEnd = async (gameSessionId, winnerTeam, loserTeam, winTeamColor
       return { playerId: user.playerId, name: user.name, kill: user.kill, death: user.death, damage: user.damage };
     });
 
-    for (let i = 1; i < 4; i++) {
-      try {
-        await apiRequest(ENDPOINTS.game.dbSaveTransaction, {
-          win_team: winnerTeam,
-          lose_team: loserTeam,
-          users,
-          session_id: gameSessionId,
-          win_team_color: winTeamColor,
-          start_time: startTime,
-          map_name: mapName,
-        });
-        break;
-      } catch (err) {
-        console.error(`db저장 실패 ${i}번째 시도 중..,${err.message}`);
-        if (i === 3) {
-          console.log('3번 모두 저장 실패!');
-          //db저장 수작업해야하니 추후에 추가
-        }
-      }
+    try {
+      await apiRequest(ENDPOINTS.game.dbSaveTransaction, {
+        win_team: winnerTeam,
+        lose_team: loserTeam,
+        users,
+        session_id: gameSessionId,
+        win_team_color: winTeamColor,
+        start_time: startTime,
+        map_name: mapName,
+      });
+    } catch (err) {
+      console.error(`db저장 실패..,${err.message}`);
     }
     //게임 종료 시 골드 지급
     for (const user of users) {

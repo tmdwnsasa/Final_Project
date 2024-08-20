@@ -30,14 +30,6 @@ const ENDPOINTS = {
       url: `${API_BASE}/game/dbSaveTransaction`,
       method: 'POST',
     },
-    createUserScore: {
-      url: `${API_BASE}/game/createUserScore`,
-      method: 'POST',
-    },
-    createUserRating: {
-      url: `${API_BASE}/game/createUserRating`,
-      method: 'POST',
-    },
     createCharacter: {
       url: `${API_BASE}/game/createCharacter`,
       method: 'POST',
