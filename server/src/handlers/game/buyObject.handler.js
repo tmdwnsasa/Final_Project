@@ -1,10 +1,6 @@
 import { characterAssets } from '../../assets/character.asset.js';
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
-import {
-  findMoneyByPlayerId,
-  findUserInventoryByPlayerId,
-  purchaseEquipmentTransaction,
-} from '../../db/user/user.db.js';
+import { findUserInventoryByPlayerId, purchaseEquipmentTransaction } from '../../db/user/user.db.js';
 import apiRequest from '../../db/apiRequest.js';
 import ENDPOINTS from '../../db/endPoint.js';
 import { getUserById } from '../../sessions/user.session.js';
@@ -107,16 +103,13 @@ export const purchaseCharacter = async ({ socket, userId, payload }) => {
 
 export const purchaseEquipment = async ({ socket, userId, payload }) => {
   try {
-    const { name, price, sessionId } = payload;
-
-    const intPrice = parseInt(price);
+    const { name, sessionId } = payload;
 
     const user = await getUserById(userId);
     if (!user) {
       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
     }
-    console.log('111', sessionId);
-    console.log('222', user.sessionId);
+
     if (user.sessionId !== sessionId) {
       throw new CustomError(ErrorCodes.SESSION_ID_MISMATCH, '세션ID 일치하지 않습니다');
     }
@@ -139,7 +132,7 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
       return;
     }
 
-    if (money < intPrice) {
+    if (money < findPurchaseEquipment.price) {
       const message = '잔액이 부족합니다';
       console.log(message);
       const packet = createResponse(HANDLER_IDS.PURCHASE_EQUIPMENT, RESPONSE_SUCCESS_CODE, { message }, user.playerId);
@@ -147,16 +140,17 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
       return;
     }
     //가격 차감
-    const newUserMoney = money - intPrice;
+    const newUserMoney = money - findPurchaseEquipment.price;
 
-    // db저장
-    //트랜잭션 적용해야할듯
-    await purchaseEquipmentTransaction(
-      userId,
-      newUserMoney,
-      findPurchaseEquipment.itemId,
-      findPurchaseEquipment.equipSlot,
-    );
+    // db서버한테 저장 요청
+    await apiRequest(ENDPOINTS.game.purchaseEquipment, {
+      player_id: userId,
+      item_id: findPurchaseEquipment.itemId,
+      equip_slot: findPurchaseEquipment.equipSlot,
+      money: newUserMoney,
+    });
+    const message = `${name}(이)가 정상적으로 구매 되었다!`;
+    console.log(message);
 
     const packet = createResponse(HANDLER_IDS.PURCHASE_EQUIPMENT, RESPONSE_SUCCESS_CODE, { message }, user.playerId);
     socket.write(packet);

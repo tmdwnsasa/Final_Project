@@ -69,6 +69,28 @@ const updateSkillHandler = ({ socket, userId, payload }) => {
         }, maxLatency);
         break;
       }
+      case 5: {
+        if (isDirectionX) {
+          rangeX = skill.range_x;
+          rangeY = skill.range_y;
+        } else {
+          rangeX = skill.range_y;
+          rangeY = skill.range_x;
+        }
+        gameSession.updateAttack(user.name, x, y, rangeX, rangeY, skillType);
+
+        const startX = user.x + x - rangeX / 2;
+        const startY = user.y + y + rangeY / 2;
+        const endX = startX + rangeX;
+        const endY = startY - rangeY;
+
+        //Latency를 이용한 스킬 판정에 핑 차이 적용
+        const maxLatency = gameSession.getMaxLatency();
+        setTimeout(() => {
+          gameSession.sendAttackedOpposingTeam(user, startX, startY, endX, endY);
+        }, maxLatency);
+        break;
+      }
       default:
         break;
     }
