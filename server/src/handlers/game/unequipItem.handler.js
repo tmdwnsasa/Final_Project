@@ -1,5 +1,5 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
-import { findUserInventoryItemsByPlayerId } from '../../db/user/user.db.js';
+import { findUserInventoryItemsByPlayerId, unequipItemPlayerId } from '../../db/user/user.db.js';
 import { getUserById } from '../../sessions/user.session.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
@@ -10,7 +10,7 @@ const unequipHandler = async ({ socket, userId, payload }) => {
   try {
     const { itemId } = payload;
 
-    const itemIdInt = parseInt(itemId, 10); 
+    const itemIdInt = parseInt(itemId, 10);
 
     // Check if conversion was successful
     if (isNaN(itemIdInt)) {
@@ -22,42 +22,51 @@ const unequipHandler = async ({ socket, userId, payload }) => {
     if (!user) {
       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
     }
-    const userInventory = await findUserInventoryItemsByPlayerId(user.playerId);
 
-    const item = userInventory.items.find((item) => item.itemId === itemId);
+    //해당 유저의 인벤토리에 해제하려는 장비가 있는지 확인
+    const userInventory = await findUserInventoryItemsByPlayerId(user.playerId);
+    const item = userInventory.find((item) => item.itemId === itemIdInt);
+
     if (!item) {
       throw new CustomError(ErrorCodes.ITEM_NOT_FOUND, 'Item not found in inventory.');
     }
 
-    const equippedItems = await userInventory.getAllEquippedItems();
-    const isEquipped = equippedItems.some((equippedItem) => equippedItem.itemId === itemId);
+    //장착되지 않았을 경우
+    const inventoryItems = await user.getAllInventoryItems();
+    const equippedItems = inventoryItems.filter((inventoryItem) => {
+      if (inventoryItem.equippedItems === 1) return inventoryItem;
+    });
+    const isEquipped = equippedItems.some((inventoryItem) => inventoryItem.itemId === item.itemId);
 
     if (!isEquipped) {
       const response = createResponse(
         HANDLER_IDS.UNEQUIP_ITEM,
         RESPONSE_SUCCESS_CODE,
-        { responseMessage: 'Item is not equipped.' }, //장착되지 않았을 경우
-        user.playerId
+        { responseMessage: 'Item is not equipped.' },
+        user.playerId,
       );
       socket.write(response);
       return;
     }
 
-    await userInventory.unequipItem(itemId);
-    const updatedStats = await userInventory.getCombinedStats();
-    const allInventoryItems = await findUserInventoryItemsByPlayerId(playerId);
-    
-    updatedInventoryData ={
-        updatedStats,
-        allInventoryItems,
-        equippedItems
-      }
-    
+    await unequipItemPlayerId(userId, itemId);
+    const updatedStats = await user.getCombinedStats();
+    const allInventoryItems = await findUserInventoryItemsByPlayerId(userId);
+    const allEquippedItems = allInventoryItems.filter((inventoryItem) => inventoryItem.equippedItems === 1);
+
+    console.log('invenitems : ', allInventoryItems);
+    console.log('Equippeditems : ', allEquippedItems);
+    const updatedInventoryData = {
+      updatedStats,
+      allInventoryItems,
+      allEquippedItems,
+    };
+
     const response = createResponse(
       HANDLER_IDS.UNEQUIP_ITEM,
       RESPONSE_SUCCESS_CODE,
-      { updatedInventoryData, responseMessage: 'Item unequipped successfully.' },
-      user.playerId
+      { ...updatedInventoryData, message: 'Item unequipped successfully.' },
+      user.playerId,
     );
 
     socket.write(response);

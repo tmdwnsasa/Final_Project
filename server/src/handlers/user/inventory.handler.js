@@ -5,11 +5,10 @@ import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
-const inventoryHandler = async ({socket, payload}) => {
+const inventoryHandler = async ({ socket, payload }) => {
   try {
     const { sessionId } = payload;
     console.log('Received payload:', payload);
-
 
     const user = getUserBySocket(socket);
     if (!user) {
@@ -23,28 +22,23 @@ const inventoryHandler = async ({socket, payload}) => {
     const userInventory = user.inventory;
 
     const userMoneyValue = await userInventory.getPlayersMoney();
-    const userMoney = {money : userMoneyValue}
+    const userMoney = { money: userMoneyValue };
 
     const equippedItems = await userInventory.getEquippedItems();
-    const allItems = await userInventory.getAllItems(); 
+    const allItems = await userInventory.getAllItems();
     const combinedStats = await userInventory.getCombinedStats();
 
-    console.log('User combined stats:', combinedStats);
+    //console.log('User combined stats:', combinedStats);
 
     const inventoryData = {
       userMoney,
       equippedItems,
       allItems,
-      combinedStats
+      combinedStats,
     };
 
-    const response = createResponse(
-      HANDLER_IDS.INVENTORY, 
-      RESPONSE_SUCCESS_CODE, 
-      inventoryData,
-      user.playerId
-    );
-    
+    const response = createResponse(HANDLER_IDS.INVENTORY, RESPONSE_SUCCESS_CODE, inventoryData, user.playerId);
+
     socket.write(response);
   } catch (err) {
     handlerError(socket, err);

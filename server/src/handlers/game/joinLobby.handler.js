@@ -7,7 +7,7 @@ import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
-const joinLobbyHandler = ({ socket, userId, payload }) => {
+const joinLobbyHandler = async ({ socket, userId, payload }) => {
   try {
     const { characterId } = payload;
     const lobbySession = getLobbySession();
@@ -42,10 +42,12 @@ const joinLobbyHandler = ({ socket, userId, payload }) => {
         if (data.playerId !== userId) return data;
       });
 
+    const updatedStats = await user.getCombinedStats();
+
     const joinLobbyResponse = createResponse(
       HANDLER_IDS.JOIN_LOBBY,
       RESPONSE_SUCCESS_CODE,
-      { ...character, userDatas, ...skill },
+      { ...character, userDatas, ...skill, updatedStats },
       user.id,
     );
 

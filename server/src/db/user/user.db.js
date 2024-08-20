@@ -36,28 +36,28 @@ export const findEquippedItemsByPlayerId = async (player_id) => {
   return toCamelCase(rows[0]);
 };
 
-export const equipItemtoPlayerId = async (player_id, item_id, equipped_items) => {
+export const equipItemPlayerId = async (player_id, item_id) => {
   try {
-    await pools.USER_DB.query(SQL_QUERIES.EQUIP_ITEM, [player_id, item_id,equipped_items]);
-    return { player_id, item_id, equipped_items };
+    await pools.USER_DB.query(SQL_QUERIES.EQUIP_ITEM, [player_id, item_id]);
+    return { player_id, item_id };
   } catch (error) {
     console.error(`Error equipping item: ${error.message}`);
     throw error;
   }
 };
 
-export const unequipItemfromPlayerId = async (player_id, item_id, equipped_items) => {
+export const unequipItemPlayerId = async (player_id, item_id) => {
   try {
-    await pools.USER_DB.query(SQL_QUERIES.UNEQUIP_ITEM, [player_id, item_id, equipped_items]);
-    return { player_id, item_id, equipped_items };
+    await pools.USER_DB.query(SQL_QUERIES.UNEQUIP_ITEM, [player_id, item_id]);
+    return { player_id, item_id };
   } catch (error) {
     console.error(`Error unequipping item: ${error.message}`);
     throw error;
   }
 };
 
-export const updateUserInventory = async (userConnection, playerId,itemId) => {
-  await userConnection.query(SQL_QUERIES.UPDATE_USER_INVENTORY, [playerId,itemId]);
+export const updateUserInventory = async (userConnection, playerId, itemId) => {
+  await userConnection.query(SQL_QUERIES.UPDATE_USER_INVENTORY, [playerId, itemId]);
   return { playerId, userInventory };
 };
 
@@ -82,7 +82,7 @@ export const purchaseItemTransaction = async (playerId, newUserMoney, itemId, eq
     await userConnection.beginTransaction();
 
     await updateUserMoney(userConnection, playerId, newUserMoney);
-    await updateUserInventory(userConnection, equipSlot,playerId, itemId,);
+    await updateUserInventory(userConnection, equipSlot, playerId, itemId);
 
     await userConnection.commit();
     console.log('트랜잭션과정 DB저장 성공');

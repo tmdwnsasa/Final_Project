@@ -10,7 +10,7 @@ import Map from '../classes/models/map.class.js';
 import { mapAssets } from '../assets/map.asset.js';
 import Item from '../classes/models/item.class.js';
 import { itemStats } from '../assets/itemStat.asset.js';
-import { findItemStats } from '../db/game/game.db.js';
+import { findAllItems } from '../db/game/game.db.js';
 
 const initServer = async () => {
   try {
@@ -34,14 +34,12 @@ const initServer = async () => {
     });
     console.log('Character Assets loaded success');
 
-
-    const items = await findItemStats();
+    const items = await findAllItems();
     items.forEach((item) => {
       const itemValues = Object.values(item);
       const itemAsset = new Item(...itemValues);
 
       itemStats.push(itemAsset);
-
     });
 
     console.log('Item Stats loaded success');

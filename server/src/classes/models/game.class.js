@@ -1,4 +1,3 @@
-import { characterAssets } from '../../assets/character.asset.js';
 import { mapAssets } from '../../assets/map.asset.js';
 import { config } from '../../config/config.js';
 import { changingOwnerOfMap } from '../../utils/changingOwnerOfMap.js';
@@ -92,7 +91,7 @@ class Game {
 
   startGame() {
     this.startTime = Date.now();
-    
+
     // 전투할 지역 뽑기
     const disputedArea = [];
     mapAssets.filter((rows) =>
