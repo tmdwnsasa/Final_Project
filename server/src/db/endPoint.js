@@ -16,10 +16,6 @@ const ENDPOINTS = {
       url: `${API_BASE}/user/findUserByPlayerId`,
       method: 'GET',
     },
-    createUserMoney: {
-      url: `${API_BASE}/user/createUserMoney`,
-      method: 'POST',
-    },
     findMoneyByPlayerId: {
       url: `${API_BASE}/user/findMoneyByPlayerId`,
       method: 'GET',
@@ -64,6 +60,10 @@ const ENDPOINTS = {
     },
     updatePossession: {
       url: `${API_BASE}/game/updatePossession`,
+      method: 'PATCH',
+    },
+    purchaseCharacter: {
+      url: `${API_BASE}/game/purchaseCharacter`,
       method: 'PATCH',
     },
   },
