@@ -146,6 +146,7 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
     await apiRequest(ENDPOINTS.game.purchaseEquipment, {
       player_id: userId,
       item_id: findPurchaseEquipment.itemId,
+      item_sprite_name: findPurchaseEquipment.item_sprite_name,
       equip_slot: findPurchaseEquipment.equipSlot,
       money: newUserMoney,
     });
