@@ -1,5 +1,6 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
-import { findUserInventoryItemsByPlayerId, unequipItemPlayerId } from '../../db/user/user.db.js';
+import apiRequest from '../../db/apiRequest.js';
+import ENDPOINTS from '../../db/endPoint.js';
 import { getUserById } from '../../sessions/user.session.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
@@ -24,7 +25,7 @@ const unequipHandler = async ({ socket, userId, payload }) => {
     }
 
     //해당 유저의 인벤토리에 해제하려는 장비가 있는지 확인
-    const userInventory = await findUserInventoryItemsByPlayerId(user.playerId);
+    const userInventory = await apiRequest (ENDPOINTS.user.findUserInventory,{player_id : user.playerId});
     const item = userInventory.find((item) => item.itemId === itemIdInt);
 
     if (!item) {
@@ -32,8 +33,8 @@ const unequipHandler = async ({ socket, userId, payload }) => {
     }
 
     //장착되지 않았을 경우
-    const inventoryItems = await user.getAllInventoryItems();
-    const equippedItems = inventoryItems.filter((inventoryItem) => {
+    const groupedItemIdsInInventory = await apiRequest (ENDPOINTS.user.findItemIdInInventory,{player_id:user.playerId, item_id: itemIdInt});
+    const equippedItems = groupedItemIdsInInventory.filter((inventoryItem) => {
       if (inventoryItem.equippedItems === 1) return inventoryItem;
     });
     const isEquipped = equippedItems.some((inventoryItem) => inventoryItem.itemId === item.itemId);
@@ -49,9 +50,9 @@ const unequipHandler = async ({ socket, userId, payload }) => {
       return;
     }
 
-    await unequipItemPlayerId(userId, itemId);
+    await apiRequest (ENDPOINTS.user.unequipItem,{player_id:user.playerId,item_id: itemIdInt})
     const updatedStats = await user.getCombinedStats();
-    const allInventoryItems = await findUserInventoryItemsByPlayerId(userId);
+    const allInventoryItems =  await apiRequest (ENDPOINTS.user.findUserInventory,{player_id : user.playerId});
     const allEquippedItems = allInventoryItems.filter((inventoryItem) => inventoryItem.equippedItems === 1);
 
     console.log('invenitems : ', allInventoryItems);

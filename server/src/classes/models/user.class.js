@@ -5,7 +5,8 @@ import { createPingPacket } from '../../utils/notification/game.notification.js'
 import { findAllItems } from '../../db/game/game.db.js';
 import Inventory from './inventory.class.js';
 import CharacterSkill from './characterskill.class.js';
-import { equipItemPlayerId, findUserInventoryItemsByPlayerId } from '../../db/user/user.db.js';
+import apiRequest from '../../db/apiRequest.js';
+import ENDPOINTS from '../../db/endPoint.js';
 
 class User {
   constructor(playerId, name, guild, socket, sessionId) {
@@ -82,22 +83,20 @@ class User {
   }
 
   async getAllInventoryItems() {
-    this.inventory.inventoryItems = await findUserInventoryItemsByPlayerId(this.playerId);
+    this.inventory.inventoryItems = await apiRequest (ENDPOINTS.user.findUserInventory,{player_id : this.playerId});
+
     return this.inventory.inventoryItems;
   }
 
   async getEquippedItemStats() {
     let itemStats = [];
     itemStats = await findAllItems();
-    //console.log('----------', itemStats);
     const inventoryItems = await this.getAllInventoryItems();
     const equippedItems = inventoryItems.filter((inventoryItem) => {
       if (inventoryItem.equippedItems === 1) return inventoryItem;
     });
     const equippedItemIds = equippedItems.map((item) => item.itemId);
     const equippedItemStats = itemStats.filter((itemStat) => equippedItemIds.includes(itemStat.itemId));
-
-    //console.log('Equipped Item Stats:', equippedItemStats);
 
     return equippedItemStats;
   }
@@ -125,35 +124,6 @@ class User {
     this.power = combinedStats.power;
 
     return combinedStats;
-  }
-
-  async equipItem(itemId) {
-    const item = this.inventory.inventoryItems.find((item) => item.itemId === itemId);
-    if (item) {
-      await equipItemPlayerId(this.playerId, itemId);
-      this.inventory.equippedItems.push(item);
-
-      console.log(`Item with itemId ${itemId} equipped.`);
-      const updatedStats = await this.getCombinedStats();
-      return updatedStats;
-    } else {
-      console.error(`Item with itemId ${itemId} not found in inventory.`);
-    }
-  }
-
-  async unequipItem(itemId) {
-    const itemIndex = this.inventory.equippedItems.findIndex((item) => item.itemId === itemId);
-    if (itemIndex !== -1) {
-      await unequipItemPlayerId(this.playerId, itemId);
-      this.inventory.equippedItems.splice(itemIndex, 1);
-
-      console.log(`Item with itemId ${itemId} unequipped.`);
-
-      const updatedStats = await this.getCombinedStats();
-      return updatedStats;
-    } else {
-      console.error(`Item with itemId ${itemId} is not currently equipped.`);
-    }
   }
 
   changeCharacterSkill(characterId) {

@@ -1,12 +1,12 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
-import { equipItemPlayerId, findUserInventoryItemsByPlayerId } from '../../db/user/user.db.js';
 import { getUserById } from '../../sessions/user.session.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
-import { itemStats } from '../../assets/itemStat.asset.js';
 import { findItemStats } from '../../db/game/game.db.js';
+import apiRequest from '../../db/apiRequest.js';
+import ENDPOINTS from '../../db/endPoint.js';
 
 const equipItemHandler = async ({ socket, userId, payload }) => {
   try {
@@ -30,8 +30,8 @@ const equipItemHandler = async ({ socket, userId, payload }) => {
     }
 
     //이미 장착되어있는지 확인
-    const inventoryItems = await user.getAllInventoryItems();
-    const equippedItems = inventoryItems.filter((inventoryItem) => {
+    const groupedItemIdsInInventory = await apiRequest (ENDPOINTS.user.findItemIdInInventory,{player_id:user.playerId, item_id: itemIdInt});
+    const equippedItems = groupedItemIdsInInventory.filter((inventoryItem) => {
       if (inventoryItem.equippedItems === 1) return inventoryItem;
     });
 
@@ -48,13 +48,15 @@ const equipItemHandler = async ({ socket, userId, payload }) => {
       return;
     }
 
-    await equipItemPlayerId(userId, itemId);
+    await apiRequest (ENDPOINTS.user.equipItem,{player_id:user.playerId,item_id: itemIdInt});
+
     const updatedStats = await user.getCombinedStats();
-    const allInventoryItems = await findUserInventoryItemsByPlayerId(userId);
+    const allInventoryItems =  await apiRequest (ENDPOINTS.user.findUserInventory,{player_id : user.playerId});
     const allEquippedItems = allInventoryItems.filter((inventoryItem) => inventoryItem.equippedItems === 1);
 
     console.log('invenitems : ', allInventoryItems);
     console.log('Equippeditems : ', allEquippedItems);
+
     const updatedInventoryData = {
       updatedStats,
       allInventoryItems,

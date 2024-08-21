@@ -114,9 +114,9 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
     }
 
-    const userMoney = await findMoneyByPlayerId(userId);
+    const userMoney = await apiRequest(ENDPOINTS.user.findMoneyByPlayerId, { player_id: userId });
     const money = userMoney.money;
-
+    
     //장비 찾기
     const findPurchaseEquipment = itemStats.find((item) => item.itemName === name);
     if (!findPurchaseEquipment) {
@@ -127,12 +127,8 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
       return;
     }
 
-    console.log('Found Equipment:', findPurchaseEquipment);
-
     const itemId = parseInt(findPurchaseEquipment.itemId);
     const equipSlot = findPurchaseEquipment.itemEquipSlot;
-
-    console.log('itemId:', itemId, 'equipSlot:', equipSlot);
 
     const userInventory = await findUserInventoryItemsByPlayerId(userId);
     const inventory = userInventory.find((item) => item.itemId === findPurchaseEquipment.itemId);

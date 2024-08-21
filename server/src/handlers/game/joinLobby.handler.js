@@ -22,12 +22,6 @@ const joinLobbyHandler = async ({ socket, userId, payload }) => {
     const character = user.changeCharacter(characterId);
     const skill = user.changeCharacterSkill(characterId);
 
-    const existUser = lobbySession.getUser(user.id);
-    if (!existUser) {
-      lobbySession.addUser(user);
-      createUserInLobby(user);
-    }
-
     const userDatas = lobbySession
       .getAllUsers()
       .filter((user) => {
@@ -50,6 +44,12 @@ const joinLobbyHandler = async ({ socket, userId, payload }) => {
       { ...character, userDatas, ...skill, updatedStats },
       user.id,
     );
+
+    const existUser = lobbySession.getUser(user.id);
+    if (!existUser) {
+      lobbySession.addUser(user);
+      createUserInLobby(user);
+    }
 
     socket.write(joinLobbyResponse);
   } catch (err) {

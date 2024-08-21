@@ -1,18 +1,11 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
-import {
-  findUserByPlayerId,
-  updateUserLogin,
-  findUserInventoryItemsByPlayerId,
-  findEquippedItemsByPlayerId,
-  findMoneyByPlayerId,
-} from '../../db/user/user.db.js';
 import { addUser, getUserById } from '../../sessions/user.session.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
-import { findPossessionByPlayerID, findAllItems } from '../../db/game/game.db.js';
+import {findAllItems} from '../../db/game/game.db.js';
 import CustomError from '../../utils/error/customError.js';
 import { getGameSessionByPlayerId } from '../../sessions/game.session.js';
 import apiRequest from '../../db/apiRequest.js';
@@ -56,11 +49,11 @@ const loginHandler = async ({ socket, userId, payload }) => {
     } else {
 
       //인벤토리 정보
-      const allInventoryItems = await findUserInventoryItemsByPlayerId(playerId);
-      const allEquippedItems = await findEquippedItemsByPlayerId(playerId);
+      const allInventoryItems =  await apiRequest (ENDPOINTS.user.findUserInventory,{player_id : playerId});
+      const allEquippedItems = await apiRequest (ENDPOINTS.user.findEquippedItems,{player_id:playerId});
       const allItems = await findAllItems();
 
-      const userMoney = await findMoneyByPlayerId(playerId);
+      const userMoney = await apiRequest(ENDPOINTS.user.findMoneyByPlayerId,{player_id:playerId});
       console.log(userMoney);
 
       // 첫 로그인

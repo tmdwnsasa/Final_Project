@@ -24,6 +24,26 @@ const ENDPOINTS = {
       url: `${API_BASE}/user/updateMoney`,
       method: 'PATCH',
     },
+    findUserInventory: {
+      url:`${API_BASE}/user/findUserInventory`,
+      method: 'GET',
+    },
+    findEquippedItems:{
+      url: `${API_BASE}/user/findEquippedItems`,
+      method: 'GET',
+    },
+    findItemIdInInventory:{
+      url : `${API_BASE}/user/findItemIdInInventory`,
+      method : 'GET',
+    },
+    equipItem:{
+      url:`${API_BASE}/user/equipItem`,
+      method: 'PATCH',
+    },
+    unequipItem:{
+      url:`${API_BASE}/user/unequipItem`,
+      method: 'PATCH',
+    }
   },
   game: {
     dbSaveTransaction: {
