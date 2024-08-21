@@ -63,11 +63,21 @@ export const createPingPacket = (timestamp) => {
   return makeNotification(pingPacket, PACKET_TYPE.PING);
 };
 
-export const createGameSkillPacket = (playerId, x, y, rangeX, rangeY, skillType, prefabNum = null) => {
+export const createGameSkillPacket = (
+  playerId,
+  x,
+  y,
+  rangeX,
+  rangeY,
+  skillType,
+  prefabNum = null,
+  speed = null,
+  duration = null,
+) => {
   const protoMessages = getProtoMessages();
   const skill = protoMessages.skillNotification.SkillUpdate;
 
-  const payload = { playerId, x, y, rangeX, rangeY, skillType, prefabNum };
+  const payload = { playerId, x, y, rangeX, rangeY, skillType, prefabNum, speed, duration };
   const message = skill.create(payload);
   const skillPacket = skill.encode(message).finish();
   return makeNotification(skillPacket, PACKET_TYPE.SKILL);

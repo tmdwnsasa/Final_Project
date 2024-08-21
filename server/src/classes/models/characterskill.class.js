@@ -1,5 +1,16 @@
 class CharacterSkill {
-  constructor(skill_id, skill_name, skill_type, character_id, damage_factor, cool_time, range_x, range_y, scale) {
+  constructor(
+    skill_id,
+    skill_name,
+    skill_type,
+    character_id,
+    damage_factor,
+    cool_time,
+    duration,
+    speed,
+    range_x,
+    range_y,
+  ) {
     this.skill_id = skill_id;
     this.skill_name = skill_name;
     this.skill_type = skill_type;
@@ -8,7 +19,8 @@ class CharacterSkill {
     this.cool_time = cool_time;
     this.range_x = range_x;
     this.range_y = range_y;
-    this.scale = scale;
+    this.duration = duration;
+    this.speed = speed;
   }
 }
 
