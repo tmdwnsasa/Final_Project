@@ -69,6 +69,15 @@ const updateSkillHandler = ({ socket, userId, payload }) => {
         }, maxLatency);
         break;
       }
+      case 4: {
+        if (user.characterId === 1) {
+          user.changeStateByBuffSkill(1.2, 1.2, undefined, undefined);
+          gameSession.updateAttack(user.name, x, y, rangeX, rangeY, skillType);
+          break;
+        }
+
+        break;
+      }
       default:
         break;
     }

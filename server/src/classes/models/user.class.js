@@ -87,6 +87,23 @@ class User {
     this.team = teamColor;
   }
 
+  changeStateByBuffSkill(speedFactor = 1, powerFactor = 1, defenseFactor = 1, criticalFactor = 1) {
+    const beforeState = {speed: this.speed, power: this.power, defense: this.defense, critical: this.critical}
+    this.speed *= speedFactor;
+    this.power *= powerFactor;
+    this.defense *= defenseFactor;
+    this.critical *= criticalFactor;
+    setTimeout(() => {this.clearBuffSkill(beforeState)}, 5000);
+  }
+
+  clearBuffSkill(beforeState) {
+    const {speed, power, defense, critical} = beforeState;
+    this.speed = speed;
+    this.power = power;
+    this.defense = defense;
+    this.critical = critical;
+  }
+
   ping() {
     const now = Date.now();
 
