@@ -4,6 +4,7 @@ import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { getGameSessionByPlayerId } from '../../sessions/game.session.js';
 import { characterSkillAssets } from '../../assets/characterskill.asset.js';
 import { v4 as uuidv4 } from 'uuid';
+import { config } from '../../config/config.js';
 
 const updateSkillHandler = ({ socket, userId, payload }) => {
   try {
@@ -60,13 +61,80 @@ const updateSkillHandler = ({ socket, userId, payload }) => {
         const bulletNumber = uuidv4();
         rangeX = skill.range_x;
         rangeY = skill.range_y;
-        gameSession.updateAttack(user.name, x, y, rangeX, rangeY, skillType, bulletNumber);
+        gameSession.updateAttack(user.name, x, y, rangeX, rangeY, skillType, bulletNumber, skill.speed);
+
+        const maxLatency = gameSession.getMaxLatency();
+        setTimeout(() => {
+          gameSession.setBullet(user, x, y, rangeX, rangeY, skill.speed, bulletNumber);
+        }, maxLatency);
+        break;
+      }
+      case 4: {
+        if (user.characterId === 1) {
+          gameSession.updateAttack(user.name, x, y, rangeX, rangeY, skillType, undefined, undefined, skill.duration);
+          const maxLatency = gameSession.getMaxLatency();
+          setTimeout(() => {
+            user.changeStateByBuffSkill(1.2, 1.2, undefined, undefined, skill.duration);
+          }, maxLatency);
+        }
+        break;
+      }
+      case 5: {
+        rangeX = skill.range_x;
+        rangeY = skill.range_y;
+        gameSession.updateAttack(
+          user.name,
+          x * 2,
+          y * 2,
+          rangeX,
+          rangeY,
+          skillType,
+          undefined,
+          undefined,
+          skill.duration,
+        );
+
+        const startX = user.x + x * 2 - rangeX / 2;
+        const startY = user.y + y * 2 + rangeY / 2;
+        const endX = startX + rangeX;
+        const endY = startY - rangeY;
+
+        const maxLatency = gameSession.getMaxLatency();
+        setTimeout(() => {
+          gameSession.intervalManager.addInterval(
+            user.playerId,
+            gameSession.sendHealOurTeam.bind(gameSession, user, startX, startY, endX, endY),
+            config.server.frame * 1000,
+            'heal',
+          );
+
+          setTimeout(() => {
+            gameSession.intervalManager.removeInterval(user.playerId, 'heal');
+          }, skill.duration * 1000);
+        }, maxLatency);
+        break;
+      }
+      case 7: {
+        if (isDirectionX) {
+          rangeX = skill.range_x;
+          rangeY = skill.range_y;
+        } else {
+          rangeX = skill.range_y;
+          rangeY = skill.range_x;
+        }
+        gameSession.updateAttack(user.name, x, y, rangeX, rangeY, skillType);
+
+        const startX = user.x + x - rangeX / 2;
+        const startY = user.y + y + rangeY / 2;
+        const endX = startX + rangeX;
+        const endY = startY - rangeY;
 
         //Latency를 이용한 스킬 판정에 핑 차이 적용
         const maxLatency = gameSession.getMaxLatency();
         setTimeout(() => {
-          gameSession.setBullet(user, x, y, rangeX, rangeY, bulletNumber);
+          gameSession.sendAttackedOpposingTeam(user, startX, startY, endX, endY, undefined, skill.duration);
         }, maxLatency);
+
         break;
       }
       default:
