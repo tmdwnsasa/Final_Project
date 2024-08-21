@@ -76,6 +76,36 @@ class Game {
     });
   }
 
+  sendAttackedOpposingTeam1(attackUser, startX, startY, endX, endY, bullet = null) {
+    // 상대 팀 유저 배열
+    const opposingTeam = this.users.filter((user) => user.team !== attackUser.team);
+    opposingTeam.forEach((user) => {
+      if (user.x > startX && user.y < startY && user.x < endX && user.y > endY && user.hp > 0) {
+        // 상대방 히트
+
+        // 불큐 작업 추가
+        this.bullQueue.add({
+          gameSessionId: this.id,
+          attackUserId: attackUser.playerId,
+          attackedUserId: user.playerId,
+          bullet,
+        });
+        setTimeout(() => {
+          this.intervalManager.removeInterval(attackUser, 'fireAoe');
+        }, 3000);
+      }
+    });
+  }
+
+  intervalAttack(attackUser, startX, startY, endX, endY) {
+    this.intervalManager.addInterval(
+      attackUser,
+      this.sendAttackedOpposingTeam1.bind(this, attackUser, startX, startY, endX, endY),
+      1000,
+      'fireAoe',
+    );
+  }
+
   getMaxLatency() {
     let maxLatency = 0;
     this.users.forEach((user) => {

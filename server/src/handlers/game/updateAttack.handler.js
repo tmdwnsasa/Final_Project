@@ -87,7 +87,7 @@ const updateSkillHandler = ({ socket, userId, payload }) => {
         //Latency를 이용한 스킬 판정에 핑 차이 적용
         const maxLatency = gameSession.getMaxLatency();
         setTimeout(() => {
-          gameSession.sendAttackedOpposingTeam(user, startX, startY, endX, endY);
+          gameSession.intervalAttack(user, startX, startY, endX, endY);
         }, maxLatency);
         break;
       }
