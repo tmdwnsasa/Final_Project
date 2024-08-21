@@ -4,6 +4,7 @@ import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { getGameSessionByPlayerId } from '../../sessions/game.session.js';
 import { characterSkillAssets } from '../../assets/characterskill.asset.js';
 import { v4 as uuidv4 } from 'uuid';
+import { config } from '../../config/config.js';
 
 const updateSkillHandler = ({ socket, userId, payload }) => {
   try {
@@ -76,6 +77,41 @@ const updateSkillHandler = ({ socket, userId, payload }) => {
             user.changeStateByBuffSkill(1.2, 1.2, undefined, undefined, skill.duration);
           }, maxLatency);
         }
+        break;
+      }
+      case 5: {
+        rangeX = skill.range_x;
+        rangeY = skill.range_y;
+        gameSession.updateAttack(
+          user.name,
+          x * 2,
+          y * 2,
+          rangeX,
+          rangeY,
+          skillType,
+          undefined,
+          undefined,
+          skill.duration,
+        );
+
+        const startX = user.x + x * 2 - rangeX / 2;
+        const startY = user.y + y * 2 + rangeY / 2;
+        const endX = startX + rangeX;
+        const endY = startY - rangeY;
+
+        const maxLatency = gameSession.getMaxLatency();
+        setTimeout(() => {
+          gameSession.intervalManager.addInterval(
+            user.playerId,
+            gameSession.sendHealOurTeam.bind(gameSession, user, startX, startY, endX, endY),
+            config.server.frame * 1000,
+            'heal',
+          );
+
+          setTimeout(() => {
+            gameSession.intervalManager.removeInterval(user.playerId, 'heal');
+          }, skill.duration * 1000);
+        }, maxLatency);
         break;
       }
       case 7: {
