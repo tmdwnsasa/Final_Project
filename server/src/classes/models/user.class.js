@@ -2,7 +2,6 @@ import { characterAssets } from '../../assets/character.asset.js';
 import { characterSkillAssets } from '../../assets/characterskill.asset.js';
 import { config } from '../../config/config.js';
 import { createPingPacket } from '../../utils/notification/game.notification.js';
-import CharacterSkill from './characterskill.class.js';
 
 class User {
   constructor(playerId, name, guild, socket, sessionId) {
@@ -40,6 +39,9 @@ class User {
     this.kill = 0;
     this.death = 0;
     this.damage = 0;
+
+    this.state = 0;
+    this.stateDuration = 0;
   }
 
   updatePosition(x, y) {
@@ -87,17 +89,19 @@ class User {
     this.team = teamColor;
   }
 
-  changeStateByBuffSkill(speedFactor = 1, powerFactor = 1, defenseFactor = 1, criticalFactor = 1) {
-    const beforeState = {speed: this.speed, power: this.power, defense: this.defense, critical: this.critical}
+  changeStateByBuffSkill(speedFactor = 1, powerFactor = 1, defenseFactor = 1, criticalFactor = 1, duration) {
+    const beforeState = { speed: this.speed, power: this.power, defense: this.defense, critical: this.critical };
     this.speed *= speedFactor;
     this.power *= powerFactor;
     this.defense *= defenseFactor;
     this.critical *= criticalFactor;
-    setTimeout(() => {this.clearBuffSkill(beforeState)}, 5000);
+    setTimeout(() => {
+      this.clearBuffSkill(beforeState);
+    }, duration * 1000);
   }
 
   clearBuffSkill(beforeState) {
-    const {speed, power, defense, critical} = beforeState;
+    const { speed, power, defense, critical } = beforeState;
     this.speed = speed;
     this.power = power;
     this.defense = defense;
@@ -118,6 +122,13 @@ class User {
   }
 
   calculatePosition(latency) {
+    if (this.state !== 0) {
+      return {
+        x: this.x,
+        y: this.y,
+      };
+    }
+
     const timeDiff = latency / 1000;
 
     const distance = this.speed * config.server.frame;
