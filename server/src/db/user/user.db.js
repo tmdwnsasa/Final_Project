@@ -7,6 +7,7 @@ export const findUserByPlayerId = async (player_id) => {
   return toCamelCase(rows[0]);
 };
 
+
 export const findUserByName = async (name) => {
   const [rows] = await pools.USER_DB.query(SQL_QUERIES.FIND_USER_BY_NAME, [name]);
   return toCamelCase(rows[0]);

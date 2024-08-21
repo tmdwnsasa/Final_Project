@@ -12,6 +12,7 @@ import {
 import IntervalManager from '../manager/interval.manager.js';
 import Bullet from './bullet.class.js';
 import { createBullQueue } from '../../utils/bullQueue.js';
+import { updateBlueWinCount, updateGreenWinCount } from '../../db/map/map.db.js';
 
 const MAX_PLAYERS = 4;
 
@@ -54,29 +55,22 @@ class Game {
   }
 
   sendAttackedOpposingTeam(attackUser, startX, startY, endX, endY, bullet = null) {
-    let team;
-    if (attackUser.team.includes('red')) {
-      team = 'red';
-    } else {
-      team = 'blue';
-    }
-
     // 상대 팀 유저 배열
-    const opposingTeam = this.users.filter((user) => !user.team.includes(team));
+    const opposingTeam = this.users.filter((user) => user.team !== attackUser.team);
     opposingTeam.forEach((user) => {
-      if (user.x > startX && user.y < startY && user.x < endX && user.y > endY) {
+      if (user.x > startX && user.y < startY && user.x < endX && user.y > endY && user.hp > 0) {
         // 상대방 히트
+        if (bullet) {
+          this.intervalManager.removeInterval(bullet.bulletNumber, 'bullet');
+        }
+
         // 불큐 작업 추가
         this.bullQueue.add({
           gameSessionId: this.id,
           attackUserId: attackUser.playerId,
           attackedUserId: user.playerId,
-          team,
+          bullet,
         });
-
-        if (bullet) {
-          this.intervalManager.removeInterval(bullet.bulletNumber, 'bullet');
-        }
       }
     });
   }
@@ -107,8 +101,8 @@ class Game {
     console.log(`지역 이름: ${randomMap.mapName}`);
 
     const battleStartData = [
-      { playerId: this.users[0]?.name, hp: this.users[0]?.hp, team: 'red1', x: 73, y: 2 },
-      { playerId: this.users[1]?.name, hp: this.users[1]?.hp, team: 'red2', x: 73, y: -2 },
+      { playerId: this.users[0]?.name, hp: this.users[0]?.hp, team: 'green1', x: 73, y: 2 },
+      { playerId: this.users[1]?.name, hp: this.users[1]?.hp, team: 'green2', x: 73, y: -2 },
       { playerId: this.users[2]?.name, hp: this.users[2]?.hp, team: 'blue1', x: 87, y: 2 },
       { playerId: this.users[3]?.name, hp: this.users[3]?.hp, team: 'blue2', x: 87, y: -2 },
     ];
@@ -206,8 +200,10 @@ class Game {
     this.sendAttackedOpposingTeam(attackUser, startX, startY, endX, endY, bullet);
   }
 
-  sendAllAttackedSuccess(playerId, hp, team) {
-    const packet = createAttackedSuccessPacket(playerId, hp);
+  sendAllAttackedSuccess(attackUserId, attackedUserId, hp) {
+    const attackUser = this.getUser(attackUserId);
+    const attackedUser = this.getUser(attackedUserId);
+    const packet = createAttackedSuccessPacket(attackedUser.name, hp);
 
     this.users.forEach((user) => {
       user.socket.write(packet);
@@ -216,9 +212,9 @@ class Game {
     // 상대방 모두 죽었는지 체크
     let deathCount = 0;
     // 우리 팀 유저 배열
-    const ourTeam = this.users.filter((user) => user.team.includes(team));
+    const ourTeam = this.users.filter((user) => user.team === attackUser.team);
     // 상대 팀 유저 배열
-    const opposingTeam = this.users.filter((user) => !user.team.includes(team));
+    const opposingTeam = this.users.filter((user) => user.team !== attackUser.team);
     opposingTeam.forEach((user) => {
       if (user.hp <= 0) {
         deathCount += 1;
@@ -226,11 +222,13 @@ class Game {
     });
 
     if (deathCount === opposingTeam.length && this.dbSaveRequest === false) {
-      gameEnd(this.id, ourTeam, opposingTeam, team, this.startTime, this.map.mapName);
-      if (team === 'red') {
-        this.map.countRedWin++;
+      gameEnd(this.id, ourTeam, opposingTeam, attackUser.team, this.startTime, this.map.mapName);
+      if (attackUser.team === 'green') {
+        this.map.countGreenWin++;
+        updateGreenWinCount(this.map.countGreenWin, this.map.mapId);
       } else {
         this.map.countBlueWin++;
+        updateBlueWinCount(this.map.countBlueWin, this.map.mapId);
       }
       changingOwnerOfMap(this.map);
       this.dbSaveRequest = true;

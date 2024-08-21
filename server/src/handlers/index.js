@@ -21,6 +21,7 @@ import openMapHandler from './game/openMap.handler.js';
 import inventoryHandler from './user/inventory.handler.js';
 import equipItemHandler from './game/equipItem.handler.js';
 import unequipItemHandler from './game/unequipItem.handler.js';
+import matchingCancel from './game/matchingCancel.handler.js';
 
 const handlers = {
   [HANDLER_IDS.REGISTER]: {
@@ -61,6 +62,10 @@ const handlers = {
   },
   [HANDLER_IDS.MATCHMAKING]: {
     handler: matchMakingHandler,
+    protoType: packetNames.game.MatchingPayload,
+  },
+  [HANDLER_IDS.MATCHINGCANCEL]: {
+    handler: matchingCancel,
     protoType: packetNames.game.MatchingPayload,
   },
   [HANDLER_IDS.SKILL]: {
