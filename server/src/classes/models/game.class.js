@@ -54,7 +54,7 @@ class Game {
     this.intervalManager.removeInterval(playerId, 'ping');
   }
 
-  sendAttackedOpposingTeam(attackUser, startX, startY, endX, endY, bullet = null, stun = null) {
+  sendAttackedOpposingTeam(attackUser, startX, startY, endX, endY, bullet = null, stun = null, aoe = null) {
     // 상대 팀 유저 배열
     const opposingTeam = this.users.filter((user) => user.team !== attackUser.team);
     opposingTeam.forEach((user) => {
@@ -73,6 +73,11 @@ class Game {
 
           this.intervalManager.addInterval(user.playerId, this.returnUserState.bind(this, user), stun * 1000, 'stun');
         }
+        if (aoe) {
+          setTimeout(() => {
+            this.intervalManager.removeInterval(attackUser, 'fireAoe');
+          }, aoe * 1000);
+        }
 
         // 불큐 작업 추가
         this.bullQueue.add({
@@ -84,6 +89,15 @@ class Game {
     });
   }
 
+  intervalAttack(attackUser, startX, startY, endX, endY, aoe) {
+    this.intervalManager.addInterval(
+      attackUser,
+      this.sendAttackedOpposingTeam.bind(this, attackUser, startX, startY, endX, endY, undefined, undefined, aoe),
+      500,
+      'fireAoe',
+    );
+  }
+  
   sendHealOurTeam(healUser, startX, startY, endX, endY) {
     let packet;
     this.users.forEach((user) => {

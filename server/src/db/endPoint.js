@@ -58,6 +58,10 @@ const ENDPOINTS = {
       url: `${API_BASE}/game/purchaseCharacter`,
       method: 'PATCH',
     },
+    purchaseEquipment: {
+      url: `${API_BASE}/game/purchaseEquipment`,
+      method: 'PATCH',
+    },
   },
   db: {
     resetAllSchema: {
