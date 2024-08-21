@@ -1,7 +1,11 @@
 import { characterAssets } from '../../assets/character.asset.js';
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
 import { findPossessionByPlayerID, purchaseCharacterTransaction } from '../../db/game/game.db.js';
-import { findMoneyByPlayerId, findUserInventoryItemsByPlayerId, purchaseItemTransaction } from '../../db/user/user.db.js';
+import {
+  findMoneyByPlayerId,
+  findUserInventoryItemsByPlayerId,
+  purchaseItemTransaction,
+} from '../../db/user/user.db.js';
 import { getUserById } from '../../sessions/user.session.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
@@ -66,8 +70,6 @@ export const purchaseCharacter = async ({ socket, userId, payload }) => {
   }
 };
 
-
-
 export const purchaseEquipment = async ({ socket, userId, payload }) => {
   try {
     const { name, price } = payload;
@@ -85,7 +87,7 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
     //장비 찾기
     // const findPurchaseEquipment = await findEquipment(name);
     const findPurchaseEquipment = itemStats.find((item) => item.itemName === name);
-    if(!findPurchaseEquipment){
+    if (!findPurchaseEquipment) {
       const message = '해당 아이템이 존재하지 않습니다';
       console.log(message);
       const packet = createResponse(HANDLER_IDS.PURCHASE_EQUIPMENT, RESPONSE_SUCCESS_CODE, { message }, user.playerId);
@@ -95,23 +97,20 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
 
     console.log('Found Equipment:', findPurchaseEquipment);
 
-
     const itemId = parseInt(findPurchaseEquipment.itemId);
     const equipSlot = findPurchaseEquipment.itemEquipSlot;
 
     console.log('itemId:', itemId, 'equipSlot:', equipSlot);
 
-
     const userInventory = await findUserInventoryItemsByPlayerId(userId);
     const inventory = userInventory.find((item) => item.itemId === findPurchaseEquipment.itemId);
-    if(inventory){
+    if (inventory) {
       const message = '이미 보유한 아이템입니다';
       console.log(message);
       const packet = createResponse(HANDLER_IDS.PURCHASE_EQUIPMENT, RESPONSE_SUCCESS_CODE, { message }, user.playerId);
       socket.write(packet);
       return;
     }
-
 
     if (money < intPrice) {
       const message = '잔액이 부족합니다';
@@ -128,12 +127,21 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
     // await updateUserInventory(user.playerId, findPurchaseEquipment);
     // await updateUserMoney(null,user.playerId,newUserMoney);
 
-    await purchaseItemTransaction(userId, newUserMoney,itemId, equipSlot);
+    await purchaseItemTransaction(userId, newUserMoney, itemId, equipSlot);
     const message = `${name}가 정상적으로 구매 되었다!`;
     console.log(message);
 
+    const allInventoryItems = await findUserInventoryItemsByPlayerId(userId);
+    const allEquippedItems = allInventoryItems.filter((inventoryItem) => inventoryItem.equippedItems === 1);
 
-    const packet = createResponse(HANDLER_IDS.PURCHASE_EQUIPMENT, RESPONSE_SUCCESS_CODE, { message }, user.playerId);
+    const remainMoney = await findMoneyByPlayerId(userId);
+
+    const packet = createResponse(
+      HANDLER_IDS.PURCHASE_EQUIPMENT,
+      RESPONSE_SUCCESS_CODE,
+      { allInventoryItems, allEquippedItems, remainMoney: remainMoney.money, message },
+      user.playerId,
+    );
     socket.write(packet);
   } catch (err) {
     console.error(err.message);

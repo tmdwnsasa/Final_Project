@@ -62,6 +62,7 @@ const loginHandler = async ({ socket, userId, payload }) => {
       const allItems = await findAllItems();
 
       const userMoney = await findMoneyByPlayerId(playerId);
+      console.log(userMoney);
 
       // 첫 로그인
       if (possessionDB.length === 0) {
@@ -76,7 +77,7 @@ const loginHandler = async ({ socket, userId, payload }) => {
             allInventoryItems,
             allEquippedItems,
             allItems,
-            money: userMoney,
+            userMoney: userMoney.money,
           },
           userId,
         );
@@ -96,7 +97,7 @@ const loginHandler = async ({ socket, userId, payload }) => {
             allInventoryItems,
             allEquippedItems,
             allItems,
-            userMoney,
+            userMoney: userMoney.money,
           },
           userId,
         );

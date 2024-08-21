@@ -56,9 +56,9 @@ export const unequipItemPlayerId = async (player_id, item_id) => {
   }
 };
 
-export const updateUserInventory = async (userConnection, playerId, itemId) => {
-  await userConnection.query(SQL_QUERIES.UPDATE_USER_INVENTORY, [playerId, itemId]);
-  return { playerId, userInventory };
+export const createInventory = async (userConnection, playerId, itemId, equipSlot) => {
+  await userConnection.query(SQL_QUERIES.CREATE_INVENTORY, [playerId, itemId, equipSlot]);
+  return { playerId, itemId, equipSlot };
 };
 
 export const updateUserMoney = async (userConnection, playerId, userMoney) => {
@@ -82,7 +82,7 @@ export const purchaseItemTransaction = async (playerId, newUserMoney, itemId, eq
     await userConnection.beginTransaction();
 
     await updateUserMoney(userConnection, playerId, newUserMoney);
-    await updateUserInventory(userConnection, equipSlot, playerId, itemId);
+    await createInventory(userConnection, playerId, itemId, equipSlot);
 
     await userConnection.commit();
     console.log('트랜잭션과정 DB저장 성공');

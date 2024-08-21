@@ -12,8 +12,7 @@ export const SQL_QUERIES = {
     'UPDATE inventory SET equipped_items = FALSE, equip_slot = NULL WHERE player_id = ? AND item_id = ? AND equip_slot = ?',
   UPDATE_MONEY: 'UPDATE money SET money = ? WHERE player_id = ?',
   CREATE_USER_MONEY: 'INSERT INTO money (player_id, money) VALUES (?, ?)',
-  UPDATE_USER_INVENTORY:
-    'UPDATE inventory SET equip_slot = ?, equipped_items = FALSE WHERE player_id = ? AND item_id = ?',
+  CREATE_INVENTORY: 'INSERT INTO inventory (player_id, item_id, equip_slot) VALUES (?, ?, ?)',
   EQUIP_ITEM: 'UPDATE inventory SET equipped_items = TRUE WHERE player_id = ? AND item_id = ?',
   UNEQUIP_ITEM: 'UPDATE inventory SET equipped_items = FALSE WHERE player_id = ? AND item_id = ?',
 };
