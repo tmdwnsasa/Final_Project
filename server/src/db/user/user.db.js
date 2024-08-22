@@ -27,14 +27,39 @@ export const findMoneyByPlayerId = async (player_id) => {
   return toCamelCase(rows[0]);
 };
 
-export const findUserInventoryByPlayerId = async (player_id) => {
-  const [rows] = await pools.USER_DB.query(SQL_QUERIES.FIND_USER_INVENTORY_BY_PLAYER_ID, [player_id]);
+export const findUserInventoryItemsByPlayerId = async (player_id) => {
+  const rows = await pools.USER_DB.query(SQL_QUERIES.FIND_USER_INVENTORY_BY_PLAYER_ID, [player_id]);
   return toCamelCase(rows[0]);
 };
 
 export const findEquippedItemsByPlayerId = async (player_id) => {
-  const [rows] = await pools.USER_DB.query(SQL_QUERIES.FIND_EQUIPPED_ITEMS_BY_PLAYER_ID, [player_id]);
+  const rows = await pools.USER_DB.query(SQL_QUERIES.FIND_EQUIPPED_ITEMS_BY_PLAYER_ID, [player_id]);
   return toCamelCase(rows[0]);
+};
+
+export const equipItemPlayerId = async (player_id, item_id) => {
+  try {
+    await pools.USER_DB.query(SQL_QUERIES.EQUIP_ITEM, [player_id, item_id]);
+    return { player_id, item_id };
+  } catch (error) {
+    console.error(`Error equipping item: ${error.message}`);
+    throw error;
+  }
+};
+
+export const unequipItemPlayerId = async (player_id, item_id) => {
+  try {
+    await pools.USER_DB.query(SQL_QUERIES.UNEQUIP_ITEM, [player_id, item_id]);
+    return { player_id, item_id };
+  } catch (error) {
+    console.error(`Error unequipping item: ${error.message}`);
+    throw error;
+  }
+};
+
+export const createInventory = async (userConnection, playerId, itemId, equipSlot) => {
+  await userConnection.query(SQL_QUERIES.CREATE_INVENTORY, [playerId, itemId, equipSlot]);
+  return { playerId, itemId, equipSlot };
 };
 
 export const equipItem = async (player_id, item_id, equipped_items) => {
@@ -56,6 +81,7 @@ export const unequipItem = async (player_id, item_id, equipped_items) => {
     throw error;
   }
 };
+
 
 export const updateUserMoney = async (user_connection, player_id, money) => {
   await user_connection.query(SQL_QUERIES.UPDATE_MONEY, [money, player_id]);
@@ -93,5 +119,24 @@ export const purchaseEquipmentTransaction = async (player_id, money, item_id, eq
     throw err;
   } finally {
     user_connection.release();
+  }
+};
+
+export const purchaseItemTransaction = async (playerId, newUserMoney, itemId, equipSlot) => {
+  const userConnection = await pools.USER_DB.getConnection();
+  try {
+    await userConnection.beginTransaction();
+
+    await updateUserMoney(userConnection, playerId, newUserMoney);
+    await createInventory(userConnection, playerId, itemId, equipSlot);
+
+    await userConnection.commit();
+    console.log('트랜잭션과정 DB저장 성공');
+  } catch (err) {
+    await userConnection.rollback();
+    console.error('트랜잭션과정 DB저장 실패:', err);
+    throw err;
+  } finally {
+    userConnection.release();
   }
 };

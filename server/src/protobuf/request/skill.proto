@@ -5,7 +5,7 @@ package skill;
 message SkillPayload {
   float x = 1;
   float y = 2;
-  bool isDirectionX =3;
+  bool isDirectionX = 3;
   uint32 skill_Id = 4;
   int64 timestamp = 5;
 }

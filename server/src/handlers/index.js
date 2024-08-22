@@ -18,6 +18,9 @@ import { storeHandler } from './game/store.handler.js';
 import { purchaseCharacter, purchaseEquipment } from './game/buyObject.handler.js';
 import removeSkillHandler from './game/removeSkill.handler.js';
 import openMapHandler from './game/openMap.handler.js';
+import inventoryHandler from './user/inventory.handler.js';
+import equipItemHandler from './game/equipItem.handler.js';
+import unequipItemHandler from './game/unequipItem.handler.js';
 import matchingCancel from './game/matchingCancel.handler.js';
 
 const handlers = {
@@ -76,6 +79,18 @@ const handlers = {
   [HANDLER_IDS.EXIT]: {
     handler: exitGameHandler,
     protoType: packetNames.game.ExitGamePayload,
+  },
+  [HANDLER_IDS.INVENTORY]: {
+    handler: inventoryHandler,
+    protoType: packetNames.user.InventoryPayload,
+  },
+  [HANDLER_IDS.EQUIP_ITEM]: {
+    handler: equipItemHandler,
+    protoType: packetNames.game.EquipItemPayload,
+  },
+  [HANDLER_IDS.UNEQUIP_ITEM]: {
+    handler: unequipItemHandler,
+    protoType: packetNames.game.UnequipItemPayload,
   },
   [HANDLER_IDS.STORE]: {
     handler: storeHandler,

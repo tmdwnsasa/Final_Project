@@ -14,3 +14,7 @@ message LoginPayload {
   string password = 2;
   float frame = 3;
 }
+
+message InventoryPayload {
+  string sessionId = 1;
+}

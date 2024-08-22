@@ -8,6 +8,9 @@ import CharacterSkill from '../classes/models/characterskill.class.js';
 import { findMapData } from '../db/map/map.db.js';
 import Map from '../classes/models/map.class.js';
 import { mapAssets } from '../assets/map.asset.js';
+import Item from '../classes/models/item.class.js';
+import { itemAssets } from '../assets/itemStat.asset.js';
+import { findAllItems } from '../db/game/game.db.js';
 
 const initServer = async () => {
   try {
@@ -30,6 +33,16 @@ const initServer = async () => {
       characterSkillAssets.push(characterSkillAsset);
     });
     console.log('Character Assets loaded success');
+
+    const items = await findAllItems();
+    items.forEach((item) => {
+      const itemValues = Object.values(item);
+      const itemAsset = new Item(...itemValues);
+
+      itemAssets.push(itemAsset);
+    });
+    
+    console.log('Item Stats loaded success');
 
     const maps = await findMapData();
     let row = 0;

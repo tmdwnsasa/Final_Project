@@ -19,6 +19,19 @@
                 "enableSsl": "Disabled"
             },
             "previewLimit": 50,
+            "server": "map.cliqyggm6tax.ap-northeast-2.rds.amazonaws.com",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "map_db",
+            "database": "map",
+            "username": "admin"
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
             "server": "localhost",
             "port": 3308,
             "driver": "MySQL",
