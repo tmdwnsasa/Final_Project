@@ -32,3 +32,18 @@ export const sendGitPushAlert = async (commitMessage, pusher) => {
     console.log('Discord로 에러 메세지를 보내는데 실패했습니다', error);
   }
 };
+
+const teamMateIp = {};
+
+const loginHook = config.webHook.LOGIN;
+export const sendLoginAlert = async (address) => {
+  const message = {
+    content: `${address}접속!!,신병 받아라!!!!`,
+  };
+
+  try {
+    await axios.post(loginHook, message);
+  } catch (error) {
+    console.log('Discord로 에러 메세지를 보내는데 실패했습니다', error);
+  }
+};
