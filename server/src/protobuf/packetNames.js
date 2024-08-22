@@ -48,9 +48,6 @@ export const packetNames = {
   uiNotification: {
     ChattingUpdate: 'uiNotification.ChattingUpdate',
   },
-  serverNotification: {
-    reboot: 'serverNotification.serverPacket',
-  },
   skillNotification: {
     SkillUpdate: 'skillNotification.SkillUpdate',
   },

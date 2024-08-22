@@ -1,7 +1,0 @@
-syntax = 'proto3';
-
-package serverNotification;
-
-message serverPacket {
-  int32 responseCode = 1;
-}
