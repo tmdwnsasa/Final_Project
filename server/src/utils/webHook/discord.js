@@ -33,12 +33,15 @@ export const sendGitPushAlert = async (commitMessage, pusher) => {
   }
 };
 
-const teamMateIp = {};
+const teamMateIp = ['175.200.217.238',"117.110.62.160","14.55.170.106","182.216.209.88","172.31.160.1","211.48.53.50","59.5.130.242","14.55.170.106"];
 
 const loginHook = config.webHook.LOGIN;
 export const sendLoginAlert = async (address) => {
+  if (teamMateIp.includes(address)) {
+    return;
+  }
   const message = {
-    content: `${address}접속!!,신병 받아라!!!!`,
+    content: `${address}접속!! 팩트는 게임이 건강해지고 있다는거임`,
   };
 
   try {
