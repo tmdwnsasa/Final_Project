@@ -74,7 +74,7 @@ const updateSkillHandler = ({ socket, userId, payload }) => {
           gameSession.updateAttack(user.name, x, y, rangeX, rangeY, skillType, undefined, undefined, skill.duration);
           const maxLatency = gameSession.getMaxLatency();
           setTimeout(() => {
-            user.changeStateByBuffSkill(1.2, 1.2, undefined, undefined, skill.duration);
+            user.changeStateByBuffSkill(1.2, 2, undefined, undefined, skill.duration);
           }, maxLatency);
         }
         break;
