@@ -6,10 +6,11 @@ const updateRouter = express.Router();
 
 export const updateAnnounce = (req, res) => {
   try {
+    const {message} = req.body;
     const users = getAllUsers();
     const packet = createChattingPacket(
       `<color=red>알림</color>`,
-      `<color=red>서버가 재시작됩니다. 게임 곧 꺼집니다.</color>`,
+      `<color=red>${message}.</color>`,
       '1',
     );
     users.forEach((user) => {
