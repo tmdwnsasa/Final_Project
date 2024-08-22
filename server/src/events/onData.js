@@ -41,14 +41,14 @@ export const onData = (socket) => async (data) => {
           case PACKET_TYPE.NORMAL: {
             const { handlerId, userId, payload, sequence } = packetParser(packet);
 
-            const user = getUserById(userId);
+            // const user = getUserById(userId);
 
-            if (user && user.sequence !== sequence && handlerId !== HANDLER_IDS.UPDATE_LOCATION) {
-              lobbySession.removeUser(userId);
-              removeUserFromQueue(socket);
+            // if (user && user.sequence !== sequence && handlerId !== HANDLER_IDS.UPDATE_LOCATION) {
+            //   lobbySession.removeUser(userId);
+            //   removeUserFromQueue(socket);
 
-              throw new CustomError(ErrorCodes.INVALID_SEQUENCE, 'sequence 에러');
-            }
+            //   throw new CustomError(ErrorCodes.INVALID_SEQUENCE, 'sequence 에러');
+            // }
 
             const handler = getHandlerById(handlerId);
             await handler({
