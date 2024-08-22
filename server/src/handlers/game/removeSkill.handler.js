@@ -25,15 +25,15 @@ const removeSkillHandler = ({ socket, userId, payload }) => {
       default:
         break;
     }
-    // const response = createResponse(
-    //   HANDLER_IDS.SKILLREMOVE,
-    //   RESPONSE_SUCCESS_CODE,
-    //   {
-    //     message: '스킬 프리팹 삭제 완료',
-    //   },
-    //   user.playerId,
-    // );
-    // socket.write(response);
+    const response = createResponse(
+      HANDLER_IDS.SKILLREMOVE,
+      RESPONSE_SUCCESS_CODE,
+      {
+        message: '스킬 프리팹 삭제 완료',
+      },
+      user.playerId,
+    );
+    socket.write(response);
   } catch (error) {
     handlerError(socket, error);
   }
