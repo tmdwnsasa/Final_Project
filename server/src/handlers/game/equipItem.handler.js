@@ -30,7 +30,7 @@ const equipItemHandler = async ({ socket, userId, payload }) => {
     }
 
     //이미 장착되어있는지 확인
-    const groupedItemIdsInInventory = await apiRequest (ENDPOINTS.user.findItemIdInInventory,{player_id:user.playerId, item_id: itemIdInt});
+    const groupedItemIdsInInventory = await apiRequest(ENDPOINTS.user.findUserInventory, { player_id: user.playerId });
     const equippedItems = groupedItemIdsInInventory.filter((inventoryItem) => {
       if (inventoryItem.equippedItems === 1) return inventoryItem;
     });
@@ -48,10 +48,10 @@ const equipItemHandler = async ({ socket, userId, payload }) => {
       return;
     }
 
-    await apiRequest (ENDPOINTS.user.equipItem,{player_id:user.playerId,item_id: itemIdInt});
+    await apiRequest(ENDPOINTS.user.equipItem, { player_id: user.playerId, item_id: itemIdInt });
 
     const updatedStats = await user.getCombinedStats();
-    const allInventoryItems =  await apiRequest (ENDPOINTS.user.findUserInventory,{player_id : user.playerId});
+    const allInventoryItems = await apiRequest(ENDPOINTS.user.findUserInventory, { player_id: user.playerId });
     const allEquippedItems = allInventoryItems.filter((inventoryItem) => inventoryItem.equippedItems === 1);
 
     console.log('invenitems : ', allInventoryItems);

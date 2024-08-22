@@ -114,14 +114,14 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
       throw new CustomError(ErrorCodes.SESSION_ID_MISMATCH, '세션ID 일치하지 않습니다');
     }
 
-    const userInventory =await apiRequest (ENDPOINTS.user.findUserInventory,{player_id : user.playerId});
+    const userInventory = await apiRequest(ENDPOINTS.user.findUserInventory, { player_id: user.playerId });
     if (!userInventory) {
       throw new CustomError(ErrorCodes.INVENTORY_NOT_FOUND, `${user.name}님의 인벤토리를 찾을 수 없습니다`);
     }
 
     const userMoney = await apiRequest(ENDPOINTS.user.findMoneyByPlayerId, { player_id: userId });
     const money = userMoney.money;
-    
+
     //장비 찾기
     const findPurchaseEquipment = itemAssets.find((obj) => obj.itemName === name);
     if (!findPurchaseEquipment) {
@@ -132,7 +132,7 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
       return;
     }
 
-    //해당 아이템이 보유하고 있는 확인 
+    //해당 아이템이 보유하고 있는 확인
     const inventory = userInventory.find((item) => item.itemId === findPurchaseEquipment.itemId);
     if (inventory) {
       const message = '이미 보유한 아이템입니다';
@@ -162,10 +162,10 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
     const message = `${name}(이)가 정상적으로 구매 되었다!`;
     console.log(message);
 
-    const allInventoryItems =  await apiRequest (ENDPOINTS.user.findUserInventory,{player_id : user.playerId});
+    const allInventoryItems = await apiRequest(ENDPOINTS.user.findUserInventory, { player_id: user.playerId });
     const allEquippedItems = allInventoryItems.filter((inventoryItem) => inventoryItem.equippedItems === 1);
 
-    const remainMoney =  await apiRequest(ENDPOINTS.user.findMoneyByPlayerId, { player_id: userId });
+    const remainMoney = await apiRequest(ENDPOINTS.user.findMoneyByPlayerId, { player_id: userId });
 
     const packet = createResponse(
       HANDLER_IDS.PURCHASE_EQUIPMENT,
@@ -174,7 +174,6 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
       user.playerId,
     );
     socket.write(packet);
-
   } catch (err) {
     console.error(err);
     const user = getUserById(userId);

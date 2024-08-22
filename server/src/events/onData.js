@@ -9,6 +9,7 @@ import CustomError from '../utils/error/customError.js';
 import { getProtoMessages } from '../init/loadProtos.js';
 import { lobbySession } from '../sessions/session.js';
 import { removeUserFromQueue } from '../sessions/matchQueue.session.js';
+import { HANDLER_IDS } from '../constants/handlerIds.js';
 
 export const onData = (socket) => async (data) => {
   socket.buffer = Buffer.concat([socket.buffer, data]);
@@ -42,7 +43,7 @@ export const onData = (socket) => async (data) => {
 
             const user = getUserById(userId);
 
-            if (user && user.sequence !== sequence) {
+            if (user && user.sequence !== sequence && handlerId !== HANDLER_IDS.UPDATE_LOCATION) {
               lobbySession.removeUser(userId);
               removeUserFromQueue(socket);
 
