@@ -1,1 +1,1 @@
-export const itemStats = [];
+export const itemAssets = [];

@@ -9,7 +9,7 @@ message ChattingPayload {
 }
 
 message StorePayload {
-  string message = 1;
+  string sessionId = 1;
 }
 
 message MapPayload {

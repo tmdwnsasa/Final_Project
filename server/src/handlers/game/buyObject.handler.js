@@ -1,18 +1,12 @@
 import { characterAssets } from '../../assets/character.asset.js';
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
-import { findPossessionByPlayerID, purchaseCharacterTransaction } from '../../db/game/game.db.js';
-import {
-  findMoneyByPlayerId,
-  findUserInventoryItemsByPlayerId,
-  purchaseItemTransaction,
-} from '../../db/user/user.db.js';
 import apiRequest from '../../db/apiRequest.js';
 import ENDPOINTS from '../../db/endPoint.js';
 import { getUserById } from '../../sessions/user.session.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { createResponse } from '../../utils/response/createResponse.js';
-import { itemStats } from '../../assets/itemStat.asset.js';
+import { itemAssets } from '../../assets/itemStat.asset.js';
 import { getCharacterIds } from './character.handler.js';
 /**
  * 캐릭터는 DB에 비트 플래그 형식으로 저장되어 있습니다
@@ -44,12 +38,16 @@ export const purchaseCharacter = async ({ socket, userId, payload }) => {
       2: 4, // 탱씨 아저씨
       3: 8, // 힐씨 아줌마
     };
-    const { name } = payload;
+    const { name, sessionId } = payload;
 
     const user = getUserById(userId);
 
     if (!user) {
       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
+    }
+
+    if (user.sessionId !== sessionId) {
+      throw new CustomError(ErrorCodes.SESSION_ID_MISMATCH, '세션ID 일치하지 않습니다');
     }
 
     const userMoney = await apiRequest(ENDPOINTS.user.findMoneyByPlayerId, { player_id: userId });
@@ -105,20 +103,27 @@ export const purchaseCharacter = async ({ socket, userId, payload }) => {
 
 export const purchaseEquipment = async ({ socket, userId, payload }) => {
   try {
-    const { name, price } = payload;
+    const { name, sessionId } = payload;
 
-    const intPrice = parseInt(price);
-
-    const user = getUserById(userId);
+    const user = await getUserById(userId);
     if (!user) {
       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
+    }
+
+    if (user.sessionId !== sessionId) {
+      throw new CustomError(ErrorCodes.SESSION_ID_MISMATCH, '세션ID 일치하지 않습니다');
+    }
+
+    const userInventory =await apiRequest (ENDPOINTS.user.findUserInventory,{player_id : user.playerId});
+    if (!userInventory) {
+      throw new CustomError(ErrorCodes.INVENTORY_NOT_FOUND, `${user.name}님의 인벤토리를 찾을 수 없습니다`);
     }
 
     const userMoney = await apiRequest(ENDPOINTS.user.findMoneyByPlayerId, { player_id: userId });
     const money = userMoney.money;
     
     //장비 찾기
-    const findPurchaseEquipment = itemStats.find((item) => item.itemName === name);
+    const findPurchaseEquipment = itemAssets.find((obj) => obj.itemName === name);
     if (!findPurchaseEquipment) {
       const message = '해당 아이템이 존재하지 않습니다';
       console.log(message);
@@ -127,10 +132,7 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
       return;
     }
 
-    const itemId = parseInt(findPurchaseEquipment.itemId);
-    const equipSlot = findPurchaseEquipment.itemEquipSlot;
-
-    const userInventory = await findUserInventoryItemsByPlayerId(userId);
+    //해당 아이템이 보유하고 있는 확인 
     const inventory = userInventory.find((item) => item.itemId === findPurchaseEquipment.itemId);
     if (inventory) {
       const message = '이미 보유한 아이템입니다';
@@ -140,7 +142,7 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
       return;
     }
 
-    if (money < intPrice) {
+    if (money < findPurchaseEquipment.itemPrice) {
       const message = '잔액이 부족합니다';
       console.log(message);
       const packet = createResponse(HANDLER_IDS.PURCHASE_EQUIPMENT, RESPONSE_SUCCESS_CODE, { message }, user.playerId);
@@ -148,17 +150,22 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
       return;
     }
     //가격 차감
-    const newUserMoney = money - intPrice;
+    const newUserMoney = money - findPurchaseEquipment.itemPrice;
 
-    // db저장
-    await purchaseItemTransaction(userId, newUserMoney, itemId, equipSlot);
-    const message = `${name}가 정상적으로 구매 되었다!`;
+    // db서버한테 저장 요청
+    await apiRequest(ENDPOINTS.user.purchaseEquipment, {
+      player_id: userId,
+      item_id: findPurchaseEquipment.itemId,
+      equip_slot: findPurchaseEquipment.itemEquipSlot,
+      money: newUserMoney,
+    });
+    const message = `${name}(이)가 정상적으로 구매 되었다!`;
     console.log(message);
 
-    const allInventoryItems = await findUserInventoryItemsByPlayerId(userId);
+    const allInventoryItems =  await apiRequest (ENDPOINTS.user.findUserInventory,{player_id : user.playerId});
     const allEquippedItems = allInventoryItems.filter((inventoryItem) => inventoryItem.equippedItems === 1);
 
-    const remainMoney = await findMoneyByPlayerId(userId);
+    const remainMoney =  await apiRequest(ENDPOINTS.user.findMoneyByPlayerId, { player_id: userId });
 
     const packet = createResponse(
       HANDLER_IDS.PURCHASE_EQUIPMENT,
@@ -167,8 +174,9 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
       user.playerId,
     );
     socket.write(packet);
+
   } catch (err) {
-    console.error(err.message);
+    console.error(err);
     const user = getUserById(userId);
     const message = '장비 구매과정에서 오류가 발생했습니다. 다시 시도해주세요';
     console.log(message);

@@ -43,7 +43,11 @@ const ENDPOINTS = {
     unequipItem:{
       url:`${API_BASE}/user/unequipItem`,
       method: 'PATCH',
-    }
+    },
+    purchaseEquipment: {
+      url: `${API_BASE}/user/purchaseEquipment`,
+      method: 'PATCH',
+    },
   },
   game: {
     dbSaveTransaction: {

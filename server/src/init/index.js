@@ -9,7 +9,7 @@ import { findMapData } from '../db/map/map.db.js';
 import Map from '../classes/models/map.class.js';
 import { mapAssets } from '../assets/map.asset.js';
 import Item from '../classes/models/item.class.js';
-import { itemStats } from '../assets/itemStat.asset.js';
+import { itemAssets } from '../assets/itemStat.asset.js';
 import { findAllItems } from '../db/game/game.db.js';
 
 const initServer = async () => {
@@ -39,9 +39,9 @@ const initServer = async () => {
       const itemValues = Object.values(item);
       const itemAsset = new Item(...itemValues);
 
-      itemStats.push(itemAsset);
+      itemAssets.push(itemAsset);
     });
-
+    
     console.log('Item Stats loaded success');
 
     const maps = await findMapData();

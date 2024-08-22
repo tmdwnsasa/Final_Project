@@ -44,4 +44,5 @@ message UnequipItemPayload {
 message PurchaseEquipmentPayload {
   string name = 1;
   string price = 2;
+  string sessionId = 3;
 }
