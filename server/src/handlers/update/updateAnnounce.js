@@ -21,6 +21,22 @@ export const updateAnnounce = (req, res) => {
   }
 };
 
+export const autoAnnounce = () => {
+  try {
+    const users = getAllUsers();
+    const packet = createChattingPacket(
+      `<color=red>알림</color>`,
+      `<color=red>서버가 재시작됩니다. 게임 곧 꺼집니다.</color>`,
+      '1',
+    );
+    users.forEach((user) => {
+      user.socket.write(packet);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 updateRouter.post('/', updateAnnounce);
 
 export default updateRouter;

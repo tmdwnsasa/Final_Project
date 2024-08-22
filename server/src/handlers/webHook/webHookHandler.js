@@ -2,17 +2,16 @@ import dotenv from 'dotenv';
 import simpleGit from 'simple-git';
 import { exec } from 'child_process';
 import { sendGitPushAlert } from '../../utils/webHook/discord.js';
-import { updateAnnounce } from '../update/updateAnnounce.js';
+import { autoAnnounce } from '../update/updateAnnounce.js';
 dotenv.config();
 
 const REPO_DIR = process.env.REPO_DIR;
 const PM2_PROCESS_NAME = process.env.PM2_PROCESS_NAME;
 
 export const webHook = (req, res) => {
-  console.log('pull 이벤트 발생');
+  console.log('git 이벤트 발생');
   if (req.body.ref === 'refs/heads/dev') {
     // dev 브랜치에 push 이벤트 발생 시
-    updateAnnounce();
     const git = simpleGit(REPO_DIR);
     git.pull(async (err, update) => {
       if (err) {
@@ -22,6 +21,7 @@ export const webHook = (req, res) => {
 
       if (update && update.summary.changes) {
         await sendGitPushAlert(req.body.commits[0].message, req.body.pusher.name);
+        autoAnnounce();
         exec(`pm2 restart ${PM2_PROCESS_NAME}`, (err, stdout, stderr) => {
           if (err) {
             console.error('PM2 restart failed:', err);
