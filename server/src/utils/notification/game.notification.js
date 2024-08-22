@@ -12,6 +12,16 @@ const makeNotification = (message, type) => {
   return Buffer.concat([packetLength, packetType, message]);
 };
 
+export const createServerNotificationPacket = () => {
+  const protoMessages = getProtoMessages();
+  const notification = protoMessages.serverNotification.reboot;
+
+  const payload = { responseCode: 99999 };
+  const message = notification.create(payload);
+  const serverPacket = notification.encode(message).finish();
+  return makeNotification(serverPacket, PACKET_TYPE.NORMAL);
+};
+
 export const createLocationPacket = (users) => {
   const protoMessages = getProtoMessages();
   const Location = protoMessages.gameNotification.LocationUpdate;
