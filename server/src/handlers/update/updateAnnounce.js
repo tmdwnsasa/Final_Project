@@ -4,7 +4,7 @@ import { getAllUsers } from '../../sessions/user.session.js';
 import { createChattingPacket } from '../../utils/notification/game.notification.js';
 const updateRouter = express.Router();
 
-const updateAnnounce = (req, res) => {
+export const updateAnnounce = (req, res) => {
   try {
     const users = getAllUsers();
     const packet = createChattingPacket(

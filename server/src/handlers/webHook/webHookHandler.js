@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import simpleGit from 'simple-git';
 import { exec } from 'child_process';
 import { sendGitPushAlert } from '../../utils/webHook/discord.js';
+import { updateAnnounce } from '../update/updateAnnounce.js';
 dotenv.config();
 
 const REPO_DIR = process.env.REPO_DIR;
@@ -11,6 +12,7 @@ export const webHook = (req, res) => {
   console.log('pull 이벤트 발생');
   if (req.body.ref === 'refs/heads/dev') {
     // dev 브랜치에 push 이벤트 발생 시
+    updateAnnounce();
     const git = simpleGit(REPO_DIR);
     git.pull(async (err, update) => {
       if (err) {
