@@ -86,7 +86,7 @@ const checkAllDisputedArea = async () => {
 
 export const changingOwnerOfMap = async (map) => {
   // green 승리가 많을 경우
-  if (map.countGreenWin - map.countBlueWin >= 1) {
+  if (map.countGreenWin - map.countBlueWin >= 2) {
     map.isDisputedArea = 0;
     map.ownedBy = 'green';
     map.countBlueWin = 0;
@@ -96,7 +96,7 @@ export const changingOwnerOfMap = async (map) => {
   }
 
   // blue 승리가 많을 경우
-  if (map.countBlueWin - map.countGreenWin >= 1) {
+  if (map.countBlueWin - map.countGreenWin >= 2) {
     map.isDisputedArea = 0;
     map.ownedBy = 'blue';
     map.countBlueWin = 0;
