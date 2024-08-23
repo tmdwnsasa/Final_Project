@@ -113,3 +113,15 @@ export const deleteOtherUserInGame = (playerId, gameSession) => {
     player.socket.write(packet);
   });
 };
+
+export const clearInLobby = (lobbySession, playerId) => {
+  const user = getUserById(playerId);
+  const lobbyUsers = lobbySession.getAllUsers();
+  lobbyUsers.forEach((removedUser) => {
+    const packet = createRemoveUserPacket({
+      name: removedUser.name,
+      characterId: removedUser.characterId - 1,
+    });
+    user.socket.write(packet);
+  });
+};

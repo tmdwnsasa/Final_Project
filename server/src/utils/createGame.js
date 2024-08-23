@@ -1,5 +1,5 @@
 import { addGameSession } from '../sessions/game.session.js';
-import { createUserInGame, deleteUserInLobby, getUserById } from '../sessions/user.session.js';
+import { clearInLobby, createUserInGame, deleteUserInLobby, getUserById } from '../sessions/user.session.js';
 import { handlerError } from './error/errorHandler.js';
 import CustomError from './error/customError.js';
 import { v4 as uuidv4 } from 'uuid';
@@ -21,6 +21,10 @@ const createGame = ({ greenTeam, blueTeam }) => {
 
     [...greenTeam, ...blueTeam].forEach(({ id }) => {
       lobbySession.removeUser(id);
+    });
+
+    [...greenTeam, ...blueTeam].forEach(({ id }) => {
+      clearInLobby(lobbySession, id);
     });
 
     //Green Team
