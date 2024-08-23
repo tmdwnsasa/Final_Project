@@ -6,17 +6,14 @@ const updateRouter = express.Router();
 
 export const updateAnnounce = (req, res) => {
   try {
-    const {message} = req.body;
+    const { message } = req.body;
     const users = getAllUsers();
-    const packet = createChattingPacket(
-      `<color=red>알림</color>`,
-      `<color=red>${message}.</color>`,
-      '1',
-    );
+    const packet = createChattingPacket(`<color=red>알림</color>`, `<color=red>${message}.</color>`, '1');
     users.forEach((user) => {
       user.socket.write(packet);
     });
-    res.status(200).json({ message: 'done' });
+    console.log(`[서버]:${message}`);
+    res.status(200).json({ message });
   } catch (error) {
     res.status(500).json(error);
   }
