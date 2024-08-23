@@ -20,8 +20,8 @@ const inventoryHandler = async ({ socket, userId, payload }) => {
     const updatedStats = await user.getCombinedStats();
     const allInventoryItems = await apiRequest(ENDPOINTS.user.findUserInventory, { player_id: user.playerId });
     const allEquippedItems = allInventoryItems.filter((inventoryItem) => inventoryItem.equippedItems === 1);
-    const money = await apiRequest(ENDPOINTS.user.findMoneyByPlayerId, { player_id: userId });
-
+    const userMoney = await apiRequest(ENDPOINTS.user.findMoneyByPlayerId, { player_id: userId });
+    const money = userMoney.money;
 
     const updatedInventoryData = {
       updatedStats,
