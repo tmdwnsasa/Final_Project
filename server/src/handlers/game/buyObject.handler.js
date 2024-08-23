@@ -79,6 +79,7 @@ export const purchaseCharacter = async ({ socket, userId, payload }) => {
     }
     //가격 차감
     const newUserMoney = money - characterInfo.price;
+    user.money = newUserMoney;
 
     // db저장 DB 코드에서 트랜잭션으로 처리하도록 나중에 수정해야함
     await apiRequest(ENDPOINTS.game.purchaseCharacter, {
@@ -151,6 +152,7 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
     }
     //가격 차감
     const newUserMoney = money - findPurchaseEquipment.itemPrice;
+    user.money = newUserMoney;
 
     // db서버한테 저장 요청
     await apiRequest(ENDPOINTS.user.purchaseEquipment, {
