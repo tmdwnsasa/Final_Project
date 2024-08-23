@@ -85,7 +85,7 @@ class User {
   }
 
   async getAllInventoryItems() {
-    this.inventory.inventoryItems = await apiRequest (ENDPOINTS.user.findUserInventory,{player_id : this.playerId});
+    this.inventory.inventoryItems = await apiRequest(ENDPOINTS.user.findUserInventory, { player_id: this.playerId });
 
     return this.inventory.inventoryItems;
   }
@@ -124,6 +124,8 @@ class User {
     this.hp = combinedStats.hp;
     this.speed = combinedStats.speed;
     this.power = combinedStats.power;
+
+    this.maxHp = this.hp;
 
     return combinedStats;
   }

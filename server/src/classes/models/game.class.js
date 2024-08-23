@@ -13,7 +13,6 @@ import IntervalManager from '../manager/interval.manager.js';
 import Bullet from './bullet.class.js';
 import { createBullQueue } from '../../utils/bullQueue.js';
 import { updateBlueWinCount, updateGreenWinCount } from '../../db/map/map.db.js';
-import { characterAssets } from '../../assets/character.asset.js';
 
 const MAX_PLAYERS = 4;
 
@@ -104,8 +103,8 @@ class Game {
         // 우리 팀이 밣았는지 체크
         if (user.team === healUser.team) {
           const totalHp = user.hp + healUser.power * 3;
-          if (totalHp > characterAssets[user.characterId - 1].hp) {
-            user.hp = characterAssets[user.characterId - 1].hp;
+          if (totalHp > user.maxHp) {
+            user.hp = user.maxHp;
           } else {
             user.hp = totalHp;
           }
