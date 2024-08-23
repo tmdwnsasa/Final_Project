@@ -46,15 +46,21 @@ const teamMateIp = [
   '14.55.170.106',
 ];
 
+const emergencyList = ['112.152.81.70'];
+
 const loginHook = config.webHook.LOGIN;
 export const sendLoginAlert = async (address) => {
   if (teamMateIp.includes(address)) {
     return;
   }
-  const message = {
+  let message = {
     content: `${address}접속!! 팩트는 게임이 건강해지고 있다는거임`,
   };
-
+  if (emergencyList.includes(address)) {
+    message = {
+      content: `공습경보!!!!!!초비상!!!!!!!!!!!!!!!!!!`,
+    };
+  }
   try {
     await axios.post(loginHook, message);
   } catch (error) {
