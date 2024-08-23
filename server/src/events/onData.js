@@ -47,7 +47,8 @@ export const onData = (socket) => async (data) => {
               user &&
               user.sequence !== sequence &&
               handlerId !== HANDLER_IDS.UPDATE_LOCATION &&
-              handlerId !== HANDLER_IDS.SKILLREMOVE
+              handlerId !== HANDLER_IDS.SKILLREMOVE &&
+              handlerId !== HANDLER_IDS.SKILL
             ) {
               lobbySession.removeUser(userId);
               removeUserFromQueue(socket);
