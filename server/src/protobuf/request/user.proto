@@ -16,5 +16,5 @@ message LoginPayload {
 }
 
 message InventoryPayload {
-  string sessionId = 1;
+  string message = 1;
 }

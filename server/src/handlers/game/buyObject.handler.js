@@ -164,17 +164,19 @@ export const purchaseEquipment = async ({ socket, userId, payload }) => {
     const message = `${name}(이)가 정상적으로 구매 되었다!`;
     console.log(message);
 
-    const allInventoryItems = await apiRequest(ENDPOINTS.user.findUserInventory, { player_id: user.playerId });
-    const allEquippedItems = allInventoryItems.filter((inventoryItem) => inventoryItem.equippedItems === 1);
+    // const allInventoryItems = await apiRequest(ENDPOINTS.user.findUserInventory, { player_id: user.playerId });
+    // const allEquippedItems = allInventoryItems.filter((inventoryItem) => inventoryItem.equippedItems === 1);
 
     const remainMoney = await apiRequest(ENDPOINTS.user.findMoneyByPlayerId, { player_id: userId });
 
     const packet = createResponse(
       HANDLER_IDS.PURCHASE_EQUIPMENT,
       RESPONSE_SUCCESS_CODE,
-      { allInventoryItems, allEquippedItems, remainMoney: remainMoney.money, message },
+      {remainMoney:remainMoney.money,message},
+      // {allInventoryItems, allEquippedItems, remainMoney: remainMoney.money, message},
       user.playerId,
     );
+
     socket.write(packet);
   } catch (err) {
     console.error(err);
