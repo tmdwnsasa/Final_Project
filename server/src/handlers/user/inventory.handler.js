@@ -1,43 +1,41 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
-import { getUserBySocket } from '../../sessions/user.session.js';
+import apiRequest from '../../db/apiRequest.js';
+import ENDPOINTS from '../../db/endPoint.js';
+import { getUserById } from '../../sessions/user.session.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
-const inventoryHandler = async ({ socket, payload }) => {
+const inventoryHandler = async ({ socket, userId, payload }) => {
   try {
-    const { sessionId } = payload;
+    const { message } = payload;
     console.log('Received payload:', payload);
 
-    const user = getUserBySocket(socket);
+    const user = getUserById(userId);
     if (!user) {
       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
     }
 
-    if (user.sessionId !== sessionId) {
-      throw new CustomError(ErrorCodes.SESSION_ID_MISMATCH, '세션ID 일치하지 않습니다');
-    }
+    const updatedStats = await user.getCombinedStats();
+    const allInventoryItems = await apiRequest(ENDPOINTS.user.findUserInventory, { player_id: user.playerId });
+    const allEquippedItems = allInventoryItems.filter((inventoryItem) => inventoryItem.equippedItems === 1);
+    const money = await apiRequest(ENDPOINTS.user.findMoneyByPlayerId, { player_id: userId });
 
-    const userInventory = user.inventory;
 
-    const userMoneyValue = await userInventory.getPlayersMoney();
-    const userMoney = { money: userMoneyValue };
-
-    const equippedItems = await userInventory.getEquippedItems();
-    const allItems = await userInventory.getAllItems();
-    const combinedStats = await userInventory.getCombinedStats();
-
-    //console.log('User combined stats:', combinedStats);
-
-    const inventoryData = {
-      userMoney,
-      equippedItems,
-      allItems,
-      combinedStats,
+    const updatedInventoryData = {
+      updatedStats,
+      allInventoryItems,
+      allEquippedItems,
+      money
     };
 
-    const response = createResponse(HANDLER_IDS.INVENTORY, RESPONSE_SUCCESS_CODE, inventoryData, user.playerId);
+    const response = createResponse(
+      HANDLER_IDS.EQUIP_ITEM,
+      RESPONSE_SUCCESS_CODE,
+      { ...updatedInventoryData, message: '인벤토리 정보 불러오기 완료' },
+      user.playerId,
+    );
 
     socket.write(response);
   } catch (err) {
