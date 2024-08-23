@@ -22,6 +22,7 @@ export const config = {
   webHook: {
     DISCORD: env.DISCORD_WEB_HOOK,
     GITHUB: env.GITHUB_WEB_HOOK,
+    LOGIN: env.DISCORD_USER_LOGIN,
   },
   database: {
     REDIS: {
