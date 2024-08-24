@@ -22,6 +22,7 @@ import inventoryHandler from './user/inventory.handler.js';
 import equipItemHandler from './game/equipItem.handler.js';
 import unequipItemHandler from './game/unequipItem.handler.js';
 import matchingCancel from './game/matchingCancel.handler.js';
+import reselectCharacter from './game/reselectCharacter.handler.js';
 
 const handlers = {
   [HANDLER_IDS.REGISTER]: {
@@ -107,6 +108,10 @@ const handlers = {
   [HANDLER_IDS.OPEN_MAP]: {
     handler: openMapHandler,
     protoType: packetNames.ui.MapPayload,
+  },
+  [HANDLER_IDS.RESELECTCHARACTER]: {
+    handler: reselectCharacter,
+    protoType: packetNames.game.ReselectCharacterPayload,
   },
 };
 
