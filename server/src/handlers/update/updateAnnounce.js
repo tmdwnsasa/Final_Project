@@ -18,7 +18,7 @@ export const updateAnnounce = (req, res) => {
     res.status(500).json(error);
   }
 };
-//테스트
+
 export const autoAnnounce = () => {
   try {
     const users = getAllUsers();

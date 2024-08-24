@@ -10,6 +10,7 @@ export const packetNames = {
   user: {
     RegisterPayload: 'user.RegisterPayload',
     LoginPayload: 'user.LoginPayload',
+    InventoryPayload: 'user.InventoryPayload',
   },
   game: {
     CreateGamePayload: 'game.CreateGamePayload',
@@ -19,6 +20,9 @@ export const packetNames = {
     ReturnLobbyPayload: 'game.ReturnLobbyPayload',
     MatchingPayload: 'game.MatchingPayload',
     ExitGamePayload: 'game.ExitGamePayload',
+    EquipItemPayload: 'game.EquipItemPayload',
+    UnequipItemPayload: 'game.UnequipItemPayload',
+    PurchaseEquipmentPayload: 'game.PurchaseEquipmentPayload',
   },
   ui: {
     ChattingPayload: 'ui.ChattingPayload',
@@ -26,7 +30,8 @@ export const packetNames = {
     MapPayload: 'ui.MapPayload',
   },
   skill: {
-    nearAttackPayload: 'skill.nearAttackPayload',
+    SkillPayload: 'skill.SkillPayload',
+    RemoveSkillPayload: 'skill.RemoveSkillPayload',
   },
   response: {
     Response: 'response.Response',

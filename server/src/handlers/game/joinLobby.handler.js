@@ -1,3 +1,4 @@
+import CharacterSkill from '../../classes/models/characterskill.class.js';
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
 import { getLobbySession } from '../../sessions/lobby.session.js';
 import { createUserInLobby, getUserById } from '../../sessions/user.session.js';
@@ -6,7 +7,7 @@ import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
-const joinLobbyHandler = ({ socket, userId, payload }) => {
+const joinLobbyHandler = async ({ socket, userId, payload }) => {
   try {
     const { characterId } = payload;
     const lobbySession = getLobbySession();
@@ -19,12 +20,7 @@ const joinLobbyHandler = ({ socket, userId, payload }) => {
       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다');
     }
     const character = user.changeCharacter(characterId);
-
-    const existUser = lobbySession.getUser(user.id);
-    if (!existUser) {
-      lobbySession.addUser(user);
-      createUserInLobby(user);
-    }
+    const skill = user.changeCharacterSkill(characterId);
 
     const userDatas = lobbySession
       .getAllUsers()
@@ -40,12 +36,20 @@ const joinLobbyHandler = ({ socket, userId, payload }) => {
         if (data.playerId !== userId) return data;
       });
 
+    const updatedStats = await user.getCombinedStats();
+
     const joinLobbyResponse = createResponse(
       HANDLER_IDS.JOIN_LOBBY,
       RESPONSE_SUCCESS_CODE,
-      { ...character, userDatas },
+      { ...character, userDatas, ...skill, updatedStats },
       user.id,
     );
+
+    const existUser = lobbySession.getUser(user.id);
+    if (!existUser) {
+      lobbySession.addUser(user);
+      createUserInLobby(user);
+    }
 
     socket.write(joinLobbyResponse);
   } catch (err) {

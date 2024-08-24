@@ -13,4 +13,5 @@ export const PACKET_TYPE = {
   REMOVE_USER: 8,
   ATTACK: 40,
   SKILL: 50,
+  REMOVESKILL: 51,
 };

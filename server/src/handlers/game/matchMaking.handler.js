@@ -8,7 +8,7 @@ import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import createGame from '../../utils/createGame.js';
 import { getUsersForGame } from '../../sessions/matchQueue.session.js';
-import { lobbySession } from '../../sessions/session.js';
+import { getLobbySession } from '../../sessions/lobby.session.js';
 
 const matchMakingHandler = ({ socket, payload }) => {
   try {
@@ -21,6 +21,11 @@ const matchMakingHandler = ({ socket, payload }) => {
 
     if (user.sessionId !== sessionID) {
       throw new CustomError(ErrorCodes.SESSION_ID_MISMATCH, '세션ID 일치하지 않습니다');
+    }
+
+    const lobbySession = getLobbySession();
+    if (!lobbySession) {
+      throw new CustomError(ErrorCodes.GAME_NOT_FOUND, '로비 세션을 찾을 수 없습니다.');
     }
 
     const response = createResponse(
@@ -48,25 +53,42 @@ const matchMakingHandler = ({ socket, payload }) => {
     }
 
     addUserToQueue(user);
-    console.log(`${user.playerId} added to matching queue. Queue length: ${matchQueueSession.length}`);
+    console.log(`${user.playerId} added to matching queue. Queue : ` + getAllPlayersInQueue());
 
-    if (matchQueueSession.length >= 4) {
+    let greenIndex = [];
+    let blueIndex = [];
+    matchQueueSession.forEach((user, index) => {
+      if (user.guild === 1 && blueIndex.length < 2) {
+        blueIndex.push(index);
+      } else if (user.guild === 2 && greenIndex.length < 2) {
+        greenIndex.push(index);
+      }
+    });
+
+    if (blueIndex.length === 2 && greenIndex.length === 2) {
       const players = getUsersForGame();
 
-      const redTeam = players.slice(0, 2);
-      const blueTeam = players.slice(2, 4);
+      let greenTeam = [];
+      let blueTeam = [];
+
+      blueIndex.forEach((index) => {
+        blueTeam = blueTeam.concat(players.slice(index, index + 1));
+      });
+      greenIndex.forEach((index) => {
+        greenTeam = greenTeam.concat(players.slice(index, index + 1));
+      });
 
       console.log(
-        `팀 매칭 완료: Red Team - ${redTeam.map((player) => player.playerId).join(', ')}, Blue Team - ${blueTeam.map((player) => player.playerId).join(', ')}`,
+        `팀 매칭 완료: Green Team - ${greenTeam.map((player) => player.playerId).join(', ')}, Blue Team - ${blueTeam.map((player) => player.playerId).join(', ')}`,
       );
 
       createGame({
-        redTeam: redTeam.map((player) => ({ socket: player.socket, id: player.playerId })),
+        greenTeam: greenTeam.map((player) => ({ socket: player.socket, id: player.playerId })),
         blueTeam: blueTeam.map((player) => ({ socket: player.socket, id: player.playerId })),
         payload: { sessionID },
       });
 
-      redTeam.forEach((player) => removeUserFromQueue(player.socket));
+      greenTeam.forEach((player) => removeUserFromQueue(player.socket));
       blueTeam.forEach((player) => removeUserFromQueue(player.socket));
 
       console.log('현재 매칭큐에 있는 유저들: ', getAllPlayersInQueue());

@@ -9,4 +9,8 @@ message SkillUpdate {
   float y = 3;
   float rangeX = 4;
   float rangeY = 5;
+  uint32 skillType = 6;
+  string prefabNum = 7;
+  float speed = 8;
+  float duration = 9;
 }

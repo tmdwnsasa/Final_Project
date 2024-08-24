@@ -19,8 +19,17 @@ const returnLobbyHandler = ({ socket, userId, payload }) => {
   const lobbySession = getLobbySession();
   deleteUserInGame(userId);
   gameSession.removeUser(userId);
-  console.log(gameSession.getAllUsers().map((user) => user.name));
-  if (!gameSession.getAllUsers().length) {
+
+  let exitUser = 0;
+  const remainingUsers = gameSession.getAllUsers();
+  remainingUsers.forEach((user) => {
+    const inUserSession = getUserById(user.playerId);
+    if (!inUserSession) {
+      exitUser++;
+    }
+  });
+
+  if (!gameSession.getAllUsers().length || exitUser === gameSession.getAllUsers().length) {
     removeGameSession(gameSession.id);
   }
   deleteOtherUserInGame(user.playerId, gameSession);

@@ -7,8 +7,13 @@ export const config = {
     host: env.HOST,
     frame: 1 / 60,
   },
+  dbServer: {
+    host: env.DB_HOST,
+    port: env.DB_PORT,
+  },
   client: {
     version: env.CLIENT_VERSION,
+    frame: 1 / 120,
   },
   packet: {
     totalLength: header.TOTAL_LENGTH,
@@ -17,8 +22,13 @@ export const config = {
   webHook: {
     DISCORD: env.DISCORD_WEB_HOOK,
     GITHUB: env.GITHUB_WEB_HOOK,
+    LOGIN: env.DISCORD_USER_LOGIN,
   },
   database: {
+    REDIS: {
+      host: env.REDIS_HOST,
+      port: env.REDIS_PORT,
+    },
     GAME_DB: {
       name: env.GAME_DB_NAME,
       user: env.GAME_DB_USER,
@@ -46,33 +56,6 @@ export const config = {
       password: env.MAP_DB_PASSWORD,
       host: env.MAP_DB_HOST,
       port: env.MAP_DB_PORT,
-    },
-    REDIS: {
-      host: env.REDIS_HOST,
-      port: env.REDIS_PORT,
-    },
-    SHARDS: {
-      1: {
-        name: env.SHARD_1_NAME,
-        user: env.SHARD_1_USER,
-        password: env.SHARD_1_PASSWORD,
-        host: env.SHARD_1_HOST,
-        port: env.SHARD_1_PORT,
-      },
-      2: {
-        name: env.SHARD_2_NAME,
-        user: env.SHARD_2_USER,
-        password: env.SHARD_2_PASSWORD,
-        host: env.SHARD_2_HOST,
-        port: env.SHARD_2_PORT,
-      },
-      3: {
-        name: env.SHARD_3_NAME,
-        user: env.SHARD_3_USER,
-        password: env.SHARD_3_PASSWORD,
-        host: env.SHARD_3_HOST,
-        port: env.SHARD_3_PORT,
-      },
     },
   },
 };
