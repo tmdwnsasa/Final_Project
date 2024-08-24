@@ -34,21 +34,23 @@ export const sendGitPushAlert = async (commitMessage, pusher) => {
 };
 
 const teamMateIp = [
-  '나린2',
+  '1111',
+  '2222',
+  '3333',
   'qqqqqq',
-  '양우성',
-  'nalyn',
-  '나린',
-  '은직',
-  '은직2',
-  '밥먹는중',
-  '노후를대비해이세계에서땅문서8만장을모읍니다',
-  'luna',
-  '강창민튜',
-  '강창민튜터',
+  'yang',
+  'eunjik',
+  'eunjik1',
+  'food',
+  'hong',
+  'mhh001018',
+  'mhh1018',
+  'mhh101800',
+  'quah',
+  'hhhhh',
 ];
 
-const emergencyList = ['null', 'test'];
+const emergencyList = ['test12345', 'undefined'];
 
 const loginHook = config.webHook.LOGIN;
 export const sendLoginAlert = async (playerId) => {
