@@ -42,7 +42,7 @@ const joinLobbyHandler = async ({ socket, userId, payload }) => {
       HANDLER_IDS.JOIN_LOBBY,
       RESPONSE_SUCCESS_CODE,
       { ...character, userDatas, ...skill, updatedStats },
-      user.id,
+      user.playerId,
     );
 
     const existUser = lobbySession.getUser(user.id);

@@ -46,3 +46,7 @@ message PurchaseEquipmentPayload {
   string price = 2;
   string sessionId = 3;
 }
+
+message ReselectCharacterPayload {
+  string message = 1;
+}
