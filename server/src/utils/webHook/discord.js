@@ -34,16 +34,24 @@ export const sendGitPushAlert = async (commitMessage, pusher) => {
 };
 
 const teamMateIp = [
-  '112.152.81.70',
-  '121.175.145.128',
-  '175.200.217.238',
-  '117.110.62.160',
-  '14.55.170.106',
-  '182.216.209.88',
-  '172.31.160.1',
-  '211.48.53.50',
-  '59.5.130.242',
-  '14.55.170.106',
+  '1111',
+  '2222',
+  '3333',
+  'qqqqqq',
+  'yang',
+  'eunjik',
+  'eunjik1',
+  'food',
+  'hong',
+  'mhh001018',
+  'mhh1018',
+  'mhh101800',
+  'quah',
+  'hhhhh',
+  "wwwwww",
+  "eeeeee",
+  "rrrrrrr",
+  "aaaaaa"
 ];
 
 const emergencyList = ['112.152.81.70'];
