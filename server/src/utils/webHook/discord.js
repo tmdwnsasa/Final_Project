@@ -34,31 +34,33 @@ export const sendGitPushAlert = async (commitMessage, pusher) => {
 };
 
 const teamMateIp = [
-  '112.152.81.70',
-  '121.175.145.128',
-  '175.200.217.238',
-  '117.110.62.160',
-  '14.55.170.106',
-  '182.216.209.88',
-  '172.31.160.1',
-  '211.48.53.50',
-  '59.5.130.242',
-  '14.55.170.106',
+  '나린2',
+  'qqqqqq',
+  '양우성',
+  'nalyn',
+  '나린',
+  '은직',
+  '은직2',
+  '밥먹는중',
+  '노후를대비해이세계에서땅문서8만장을모읍니다',
+  'luna',
+  '강창민튜',
+  '강창민튜터',
 ];
 
-const emergencyList = ['112.152.81.70'];
+const emergencyList = ['null', 'test'];
 
 const loginHook = config.webHook.LOGIN;
-export const sendLoginAlert = async (address) => {
-  if (teamMateIp.includes(address)) {
+export const sendLoginAlert = async (playerId) => {
+  if (teamMateIp.includes(playerId)) {
     return;
   }
   let message = {
-    content: `${address}접속!! 팩트는 게임이 건강해지고 있다는거임`,
+    content: `${playerId}접속!! 팩트는 게임이 건강해지고 있다는거임`,
   };
-  if (emergencyList.includes(address)) {
+  if (emergencyList.includes(playerId)) {
     message = {
-      content: `공습경보!!!!!!초비상!!!!!!!!!!!!!!!!!!`,
+      content: `공습경보!!!!!!초비상!!!!!!!!!!!!!!!!!! 튜터님 등장`,
     };
   }
   try {
