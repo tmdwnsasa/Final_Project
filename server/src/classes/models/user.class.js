@@ -94,6 +94,7 @@ class User {
     let itemStats = [];
     itemStats = await findAllItems();
     const inventoryItems = await this.getAllInventoryItems();
+    console.log('인벤토리 아이템:', inventoryItems);
     const equippedItems = inventoryItems.filter((inventoryItem) => {
       if (inventoryItem.equippedItems === 1) return inventoryItem;
     });
