@@ -14,7 +14,6 @@ class Inventory {
     {
       this.inventoryItems = await findUserInventoryItemsByPlayerId();
     }
-    console.log('Getting all items:', this.inventoryItems);
     return this.inventoryItems;
   }
 
@@ -25,7 +24,6 @@ class Inventory {
       console.error('Failed to get equipped items:', error);
       this.equippedItems = [];
     }
-    console.log('Getting equipped items:', this.equippedItems);
     return this.equippedItems;
   }
 

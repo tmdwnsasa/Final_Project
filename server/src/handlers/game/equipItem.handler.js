@@ -54,9 +54,6 @@ const equipItemHandler = async ({ socket, userId, payload }) => {
     const allInventoryItems = await apiRequest(ENDPOINTS.user.findUserInventory, { player_id: user.playerId });
     const allEquippedItems = allInventoryItems.filter((inventoryItem) => inventoryItem.equippedItems === 1);
 
-    console.log('invenitems : ', allInventoryItems);
-    console.log('Equippeditems : ', allEquippedItems);
-
     const updatedInventoryData = {
       updatedStats,
       allInventoryItems,

@@ -112,7 +112,6 @@ export const purchaseEquipmentTransaction = async (player_id, money, item_id, eq
     await updateUserInventory(user_connection, player_id, item_id, equip_slot);
 
     await user_connection.commit();
-    console.log('트랜잭션과정 DB저장 성공');
   } catch (err) {
     await user_connection.rollback();
     console.error('트랜잭션과정 DB저장 실패:', err);
@@ -131,7 +130,6 @@ export const purchaseItemTransaction = async (playerId, newUserMoney, itemId, eq
     await createInventory(userConnection, playerId, itemId, equipSlot);
 
     await userConnection.commit();
-    console.log('트랜잭션과정 DB저장 성공');
   } catch (err) {
     await userConnection.rollback();
     console.error('트랜잭션과정 DB저장 실패:', err);
