@@ -1,6 +1,6 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
 import { matchQueueSession } from '../../sessions/session.js';
-import { addUserToQueue, removeUserFromQueue, getAllPlayersInQueue } from '../../sessions/matchQueue.session.js';
+import { addUserToQueue, removeUserFromQueue } from '../../sessions/matchQueue.session.js';
 import { getUserBySocket } from '../../sessions/user.session.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
@@ -47,13 +47,10 @@ const matchMakingHandler = ({ socket, payload }) => {
     const existingUserInQueue = matchQueueSession.some((userInQueue) => userInQueue.playerId === user.playerId);
 
     if (existingUserInQueue) {
-      console.log('이미 매칭큐에 있는 유저 입니다');
-      console.log(getAllPlayersInQueue());
       return;
     }
 
     addUserToQueue(user);
-    console.log(`${user.playerId} added to matching queue. Queue : ` + getAllPlayersInQueue());
 
     let greenIndex = [];
     let blueIndex = [];
@@ -78,10 +75,6 @@ const matchMakingHandler = ({ socket, payload }) => {
         greenTeam = greenTeam.concat(players.slice(index, index + 1));
       });
 
-      console.log(
-        `팀 매칭 완료: Green Team - ${greenTeam.map((player) => player.playerId).join(', ')}, Blue Team - ${blueTeam.map((player) => player.playerId).join(', ')}`,
-      );
-
       createGame({
         greenTeam: greenTeam.map((player) => ({ socket: player.socket, id: player.playerId })),
         blueTeam: blueTeam.map((player) => ({ socket: player.socket, id: player.playerId })),
@@ -90,8 +83,6 @@ const matchMakingHandler = ({ socket, payload }) => {
 
       greenTeam.forEach((player) => removeUserFromQueue(player.socket));
       blueTeam.forEach((player) => removeUserFromQueue(player.socket));
-
-      console.log('현재 매칭큐에 있는 유저들: ', getAllPlayersInQueue());
     }
   } catch (err) {
     handlerError(socket, err);

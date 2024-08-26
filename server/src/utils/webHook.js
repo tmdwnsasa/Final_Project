@@ -1,5 +1,5 @@
-import axios from "axios";
-import config from "../config/config.js";
+import axios from 'axios';
+import config from '../config/config.js';
 
 const webHookUrl = config.DISCORD.WEB_HOOK;
 
@@ -11,11 +11,11 @@ export const sendErrorToDiscord = async (error, message) => {
   try {
     await axios.post(webHookUrl, errorMessage);
   } catch (error) {
-    console.log("Discord로 에러 메세지를 보내는데 실패했습니다");
+    console.log('Discord로 에러 메세지를 보내는데 실패했습니다');
   }
 };
 
-export const sendGitPushAlert = async (commitMessage , pusher) => {
+export const sendGitPushAlert = async (commitMessage, pusher) => {
   const message = {
     content: `깃허브DB 서버에 git push를 하셨더라구요~... 
     커밋 메세지는 ${commitMessage} 이고 ${pusher} 님께서 올려주셨네요~
@@ -25,6 +25,6 @@ export const sendGitPushAlert = async (commitMessage , pusher) => {
   try {
     await axios.post(webHookUrl, message);
   } catch (error) {
-    console.log("Discord로 에러 메세지를 보내는데 실패했습니다");
+    console.log('Discord로 에러 메세지를 보내는데 실패했습니다');
   }
 };

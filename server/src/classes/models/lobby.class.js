@@ -7,7 +7,6 @@ class Lobby {
     this.users = [];
     this.startTime = Date.now();
     this.intervalManager = new IntervalManager();
-
     this.intervalManager.addInterval('lobby', this.sendAllLocation.bind(this), config.server.frame * 1000, 'location');
   }
 
@@ -24,17 +23,17 @@ class Lobby {
     return this.users;
   }
 
-  removeUser(playerId) {
-    this.users = this.users.filter((user) => user.playerId !== playerId);
-    this.intervalManager.removeInterval(playerId, 'ping');
-  }
-
   getMaxLatency() {
     let maxLatency = 0;
     this.users.forEach((user) => {
       maxLatency = Math.max(maxLatency, user.latency);
     });
     return maxLatency;
+  }
+
+  removeUser(playerId) {
+    this.users = this.users.filter((user) => user.playerId !== playerId);
+    this.intervalManager.removeInterval(playerId, 'ping');
   }
 
   sendAllLocation() {

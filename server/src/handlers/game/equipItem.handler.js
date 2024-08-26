@@ -4,7 +4,6 @@ import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
-import { findItemStats } from '../../db/game/game.db.js';
 import apiRequest from '../../db/apiRequest.js';
 import ENDPOINTS from '../../db/endPoint.js';
 
@@ -24,8 +23,9 @@ const equipItemHandler = async ({ socket, userId, payload }) => {
     }
 
     //아이템ID와 일치하는지 확인
-    const item = await findItemStats(itemId);
-    if (!item) {
+    const itemDatas = await apiRequest(ENDPOINTS.game.findItemStats, { item_id: itemId });
+    const item = itemDatas[0];
+    if (itemDatas.length == 0) {
       throw new CustomError(ErrorCodes.ITEM_NOT_FOUND, 'Item does not exist.');
     }
 
@@ -53,9 +53,6 @@ const equipItemHandler = async ({ socket, userId, payload }) => {
     const updatedStats = await user.getCombinedStats();
     const allInventoryItems = await apiRequest(ENDPOINTS.user.findUserInventory, { player_id: user.playerId });
     const allEquippedItems = allInventoryItems.filter((inventoryItem) => inventoryItem.equippedItems === 1);
-
-    console.log('invenitems : ', allInventoryItems);
-    console.log('Equippeditems : ', allEquippedItems);
 
     const updatedInventoryData = {
       updatedStats,

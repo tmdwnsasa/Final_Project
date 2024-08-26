@@ -31,6 +31,46 @@ class Game {
     this.skillArr = [];
   }
 
+  async startGame() {
+    this.startTime = Date.now();
+
+    // 전투할 지역 뽑기
+    const disputedArea = [];
+    mapAssets.filter((rows) =>
+      rows.filter((map) => {
+        if (map.isDisputedArea === 1 && map.count !== 0) {
+          disputedArea.push(map);
+        }
+      }),
+    );
+    const randomMapIndex = Math.floor(Math.random() * disputedArea.length);
+    const randomMap = disputedArea[randomMapIndex];
+    this.map = randomMap;
+    this.map.count--;
+    await updateCount(this.map.mapId);
+
+    const battleStartData = [
+      { playerId: this.users[0]?.name, hp: this.users[0]?.hp, team: 'green1', x: 73, y: 2 },
+      { playerId: this.users[1]?.name, hp: this.users[1]?.hp, team: 'green2', x: 73, y: -2 },
+      { playerId: this.users[2]?.name, hp: this.users[2]?.hp, team: 'blue1', x: 87, y: 2 },
+      { playerId: this.users[3]?.name, hp: this.users[3]?.hp, team: 'blue2', x: 87, y: -2 },
+    ];
+    this.users.forEach((user, index) => {
+      user.status = 'loading';
+      user.directionX = 0;
+      user.directionY = 0;
+      user.updatePosition(battleStartData[index].x, battleStartData[index].y);
+
+      setTimeout(() => {
+        user.status = 'waiting';
+      }, 1000);
+    });
+    const battleStartPacket = gameStartNotification(battleStartData, this.map.mapName);
+    this.users.forEach((user) => {
+      user.socket.write(battleStartPacket);
+    });
+  }
+
   addUser(user) {
     if (this.users.length >= MAX_PLAYERS) {
       throw new Error('Game session is full');
@@ -46,6 +86,14 @@ class Game {
 
   getAllUsers() {
     return this.users;
+  }
+
+  getMaxLatency() {
+    let maxLatency = 0;
+    this.users.forEach((user) => {
+      maxLatency = Math.max(maxLatency, user.latency);
+    });
+    return maxLatency;
   }
 
   removeUser(playerId) {
@@ -121,56 +169,6 @@ class Game {
         user.socket.write(packet);
       });
     }
-  }
-
-  getMaxLatency() {
-    let maxLatency = 0;
-    this.users.forEach((user) => {
-      maxLatency = Math.max(maxLatency, user.latency);
-    });
-    return maxLatency;
-  }
-
-  async startGame() {
-    this.startTime = Date.now();
-
-    // 전투할 지역 뽑기
-    const disputedArea = [];
-    mapAssets.filter((rows) =>
-      rows.filter((map) => {
-        if (map.isDisputedArea === 1 && map.count !== 0) {
-          disputedArea.push(map);
-        }
-      }),
-    );
-    const randomMapIndex = Math.floor(Math.random() * disputedArea.length);
-    const randomMap = disputedArea[randomMapIndex];
-    this.map = randomMap;
-    this.map.count--;
-    await updateCount(this.map.mapId);
-    console.log(`지역 이름: ${randomMap.mapName}`);
-
-    const battleStartData = [
-      { playerId: this.users[0]?.name, hp: this.users[0]?.hp, team: 'green1', x: 73, y: 2 },
-      { playerId: this.users[1]?.name, hp: this.users[1]?.hp, team: 'green2', x: 73, y: -2 },
-      { playerId: this.users[2]?.name, hp: this.users[2]?.hp, team: 'blue1', x: 87, y: 2 },
-      { playerId: this.users[3]?.name, hp: this.users[3]?.hp, team: 'blue2', x: 87, y: -2 },
-    ];
-    this.users.forEach((user, index) => {
-      user.status = 'loading';
-      user.directionX = 0;
-      user.directionY = 0;
-      user.updatePosition(battleStartData[index].x, battleStartData[index].y);
-
-      setTimeout(() => {
-        user.status = 'waiting';
-      }, 1000);
-    });
-    const battleStartPacket = gameStartNotification(battleStartData, this.map.mapName);
-    console.log(battleStartData);
-    this.users.forEach((user) => {
-      user.socket.write(battleStartPacket);
-    });
   }
 
   sendAllLocation() {
@@ -297,4 +295,5 @@ class Game {
     }
   }
 }
+
 export default Game;

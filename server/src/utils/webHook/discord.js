@@ -48,10 +48,10 @@ const teamMateIp = [
   'mhh101800',
   'quah',
   'hhhhh',
-  "wwwwww",
-  "eeeeee",
-  "rrrrrrr",
-  "aaaaaa"
+  'wwwwww',
+  'eeeeee',
+  'rrrrrr',
+  'aaaaaa',
 ];
 
 const emergencyList = ['test12345', 'undefined'];

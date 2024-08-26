@@ -2,11 +2,10 @@ import { characterAssets } from '../../assets/character.asset.js';
 import { characterSkillAssets } from '../../assets/characterskill.asset.js';
 import { config } from '../../config/config.js';
 import { createPingPacket } from '../../utils/notification/game.notification.js';
-import { findAllItems } from '../../db/game/game.db.js';
 import Inventory from './inventory.class.js';
-import CharacterSkill from './characterskill.class.js';
 import apiRequest from '../../db/apiRequest.js';
 import ENDPOINTS from '../../db/endPoint.js';
+import { itemAssets } from '../../assets/itemStat.asset.js';
 
 class User {
   constructor(playerId, name, guild, socket, sessionId) {
@@ -92,7 +91,7 @@ class User {
 
   async getEquippedItemStats() {
     let itemStats = [];
-    itemStats = await findAllItems();
+    itemStats = itemAssets;
     const inventoryItems = await this.getAllInventoryItems();
     console.log('인벤토리 아이템:', inventoryItems);
     const equippedItems = inventoryItems.filter((inventoryItem) => {

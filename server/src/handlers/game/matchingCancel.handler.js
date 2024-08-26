@@ -2,7 +2,7 @@ import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
-import { getAllPlayersInQueue, removeUserFromQueue } from '../../sessions/matchQueue.session.js';
+import { removeUserFromQueue } from '../../sessions/matchQueue.session.js';
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
 import { getLobbySession } from '../../sessions/lobby.session.js';
 
@@ -41,7 +41,6 @@ const matchingCancel = ({ socket, userId, payload }) => {
     lobbySession.sendAllChatting(head, message, type);
 
     removeUserFromQueue(socket);
-    console.log('현재 매칭큐에 있는 유저들: ', getAllPlayersInQueue());
   } catch (err) {
     handlerError(socket, err);
   }
