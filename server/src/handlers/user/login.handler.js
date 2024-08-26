@@ -31,7 +31,7 @@ const loginHandler = async ({ socket, userId, payload }) => {
     } else {
       await apiRequest(ENDPOINTS.user.updateUserLogin, { player_id: playerId });
     }
-
+    console.log(existUser);
     if (!(await bcrypt.compare(password, existUser.pw))) {
       throw new CustomError(ErrorCodes.MISMATCH_PASSWORD, '비밀번호가 틀렸습니다.');
     }
