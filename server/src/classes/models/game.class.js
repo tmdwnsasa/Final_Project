@@ -1,6 +1,6 @@
 import { mapAssets } from '../../assets/map.asset.js';
 import { config } from '../../config/config.js';
-import { changingOwnerOfMap } from '../../utils/changingOwnerOfMap.js';
+import { changingOwnerOfMap } from '../../utils/map.js';
 import { gameEnd } from '../../utils/gameEnd.js';
 import {
   createAttackedSuccessPacket,
@@ -12,7 +12,7 @@ import {
 import IntervalManager from '../manager/interval.manager.js';
 import Bullet from './bullet.class.js';
 import { createBullQueue } from '../../utils/bullQueue.js';
-import { updateBlueWinCount, updateGreenWinCount } from '../../db/map/map.db.js';
+import { updateBlueWinCount, updateCount, updateGreenWinCount } from '../../db/map/map.db.js';
 
 const MAX_PLAYERS = 4;
 
@@ -131,14 +131,14 @@ class Game {
     return maxLatency;
   }
 
-  startGame() {
+  async startGame() {
     this.startTime = Date.now();
 
     // 전투할 지역 뽑기
     const disputedArea = [];
     mapAssets.filter((rows) =>
       rows.filter((map) => {
-        if (map.isDisputedArea === 1) {
+        if (map.isDisputedArea === 1 && map.count !== 0) {
           disputedArea.push(map);
         }
       }),
@@ -146,6 +146,8 @@ class Game {
     const randomMapIndex = Math.floor(Math.random() * disputedArea.length);
     const randomMap = disputedArea[randomMapIndex];
     this.map = randomMap;
+    this.map.count--;
+    await updateCount(this.map.mapId);
     console.log(`지역 이름: ${randomMap.mapName}`);
 
     const battleStartData = [

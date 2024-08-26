@@ -22,3 +22,7 @@ export const updateGreenWinCount = async (winCount, mapId) => {
 export const changingOwner = async (isDisputedArea, ownedBy, mapId) => {
   await pools.MAP_DB.query(MAP_SQL_QUERIES.CHANGING_OWNER, [isDisputedArea, ownedBy, mapId]);
 }
+
+export const updateCount = async (mapId) => {
+  await pools.MAP_DB.query(MAP_SQL_QUERIES.UPDATE_COUNT, [mapId]);
+}
