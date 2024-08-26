@@ -156,6 +156,8 @@ class Game {
     ];
     this.users.forEach((user, index) => {
       user.status = 'loading';
+      user.directionX = 0;
+      user.directionY = 0;
       user.updatePosition(battleStartData[index].x, battleStartData[index].y);
 
       setTimeout(() => {
