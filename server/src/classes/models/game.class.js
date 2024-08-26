@@ -160,7 +160,7 @@ class Game {
 
       setTimeout(() => {
         user.status = 'waiting';
-      }, 500);
+      }, 5000);
     });
     const battleStartPacket = gameStartNotification(battleStartData, this.map.mapName);
     console.log(battleStartData);
