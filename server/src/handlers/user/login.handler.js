@@ -18,7 +18,7 @@ const loginHandler = async ({ socket, userId, payload }) => {
     const { playerId, password } = payload;
 
     //있는 계정인지 확인
-    let existUser = await apiRequest(ENDPOINTS.user.findUserByPlayerId, { player_id: playerId });
+    let [existUser] = await apiRequest(ENDPOINTS.user.findUserByPlayerId, { player_id: playerId });
     let response = null;
     //재로그인 방지
     const loggedIn = getUserById(playerId);
