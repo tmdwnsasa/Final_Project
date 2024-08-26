@@ -155,7 +155,12 @@ class Game {
       { playerId: this.users[3]?.name, hp: this.users[3]?.hp, team: 'blue2', x: 87, y: -2 },
     ];
     this.users.forEach((user, index) => {
+      user.status = 'loading';
       user.updatePosition(battleStartData[index].x, battleStartData[index].y);
+
+      setTimeout(() => {
+        user.status = 'waiting';
+      }, 500);
     });
     const battleStartPacket = gameStartNotification(battleStartData, this.map.mapName);
     console.log(battleStartData);
