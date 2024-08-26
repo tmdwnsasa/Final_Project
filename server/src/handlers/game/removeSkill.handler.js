@@ -2,8 +2,6 @@ import { handlerError } from '../../utils/error/errorHandler.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { getGameSessionByPlayerId } from '../../sessions/game.session.js';
-import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
-import { createResponse } from '../../utils/response/createResponse.js';
 
 const removeSkillHandler = ({ socket, userId, payload }) => {
   try {

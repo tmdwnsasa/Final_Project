@@ -5,13 +5,13 @@ import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
-import { findAllItems } from '../../db/game/game.db.js';
 import CustomError from '../../utils/error/customError.js';
 import { getGameSessionByPlayerId } from '../../sessions/game.session.js';
 import apiRequest from '../../db/apiRequest.js';
 import ENDPOINTS from '../../db/endPoint.js';
 import { getCharacterIds } from '../game/character.handler.js';
 import { sendLoginAlert } from '../../utils/webHook/discord.js';
+import { itemAssets } from '../../assets/itemStat.asset.js';
 
 const loginHandler = async ({ socket, userId, payload }) => {
   try {
@@ -51,10 +51,9 @@ const loginHandler = async ({ socket, userId, payload }) => {
       //인벤토리 정보
       const allInventoryItems = await apiRequest(ENDPOINTS.user.findUserInventory, { player_id: playerId });
       const allEquippedItems = await apiRequest(ENDPOINTS.user.findEquippedItems, { player_id: playerId });
-      const allItems = await findAllItems();
+      const allItems = itemAssets;
 
       const userMoney = await apiRequest(ENDPOINTS.user.findMoneyByPlayerId, { player_id: playerId });
-      console.log(userMoney);
 
       // 첫 로그인
 

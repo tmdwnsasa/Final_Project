@@ -1,4 +1,3 @@
-import CharacterSkill from '../../classes/models/characterskill.class.js';
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
 import { getLobbySession } from '../../sessions/lobby.session.js';
 import { createUserInLobby, getUserById } from '../../sessions/user.session.js';

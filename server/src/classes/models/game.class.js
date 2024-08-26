@@ -146,7 +146,6 @@ class Game {
     const randomMapIndex = Math.floor(Math.random() * disputedArea.length);
     const randomMap = disputedArea[randomMapIndex];
     this.map = randomMap;
-    console.log(`지역 이름: ${randomMap.mapName}`);
 
     const battleStartData = [
       { playerId: this.users[0]?.name, hp: this.users[0]?.hp, team: 'green1', x: 73, y: 2 },
@@ -165,7 +164,6 @@ class Game {
       }, 1000);
     });
     const battleStartPacket = gameStartNotification(battleStartData, this.map.mapName);
-    console.log(battleStartData);
     this.users.forEach((user) => {
       user.socket.write(battleStartPacket);
     });

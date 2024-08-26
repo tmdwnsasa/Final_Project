@@ -17,7 +17,6 @@ const unequipHandler = async ({ socket, userId, payload }) => {
     if (isNaN(itemIdInt)) {
       throw new CustomError(ErrorCodes.INVALID_ITEM_ID, 'Invalid item ID received.');
     }
-    console.log('Unequip Request - Received payload:', payload);
 
     const user = getUserById(userId);
     if (!user) {
@@ -25,7 +24,7 @@ const unequipHandler = async ({ socket, userId, payload }) => {
     }
 
     //해당 유저의 인벤토리에 해제하려는 장비가 있는지 확인
-    const userInventory = await apiRequest (ENDPOINTS.user.findUserInventory,{player_id : user.playerId});
+    const userInventory = await apiRequest(ENDPOINTS.user.findUserInventory, { player_id: user.playerId });
     const item = userInventory.find((item) => item.itemId === itemIdInt);
 
     if (!item) {
@@ -33,7 +32,10 @@ const unequipHandler = async ({ socket, userId, payload }) => {
     }
 
     //장착되지 않았을 경우
-    const groupedItemIdsInInventory = await apiRequest (ENDPOINTS.user.findItemIdInInventory,{player_id:user.playerId, item_id: itemIdInt});
+    const groupedItemIdsInInventory = await apiRequest(ENDPOINTS.user.findItemIdInInventory, {
+      player_id: user.playerId,
+      item_id: itemIdInt,
+    });
     const equippedItems = groupedItemIdsInInventory.filter((inventoryItem) => {
       if (inventoryItem.equippedItems === 1) return inventoryItem;
     });
@@ -50,13 +52,11 @@ const unequipHandler = async ({ socket, userId, payload }) => {
       return;
     }
 
-    await apiRequest (ENDPOINTS.user.unequipItem,{player_id:user.playerId,item_id: itemIdInt})
+    await apiRequest(ENDPOINTS.user.unequipItem, { player_id: user.playerId, item_id: itemIdInt });
     const updatedStats = await user.getCombinedStats();
-    const allInventoryItems =  await apiRequest (ENDPOINTS.user.findUserInventory,{player_id : user.playerId});
+    const allInventoryItems = await apiRequest(ENDPOINTS.user.findUserInventory, { player_id: user.playerId });
     const allEquippedItems = allInventoryItems.filter((inventoryItem) => inventoryItem.equippedItems === 1);
 
-    console.log('invenitems : ', allInventoryItems);
-    console.log('Equippeditems : ', allEquippedItems);
     const updatedInventoryData = {
       updatedStats,
       allInventoryItems,

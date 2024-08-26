@@ -10,7 +10,6 @@ import { createResponse } from '../../utils/response/createResponse.js';
 const inventoryHandler = async ({ socket, userId, payload }) => {
   try {
     const { message } = payload;
-    console.log('Received payload:', payload);
 
     const user = getUserById(userId);
     if (!user) {
@@ -27,7 +26,7 @@ const inventoryHandler = async ({ socket, userId, payload }) => {
       updatedStats,
       allInventoryItems,
       allEquippedItems,
-      money
+      money,
     };
 
     const response = createResponse(

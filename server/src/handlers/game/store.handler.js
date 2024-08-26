@@ -12,7 +12,6 @@ export const storeHandler = async ({ socket, userId, payload }) => {
   const user = getUserById(userId);
 
   if (user.sessionId !== sessionId) {
-    console.log('USER:', user.sessionId, sessionId);
     throw new CustomError(ErrorCodes.SESSION_ID_MISMATCH, '세션ID 일치하지 않습니다');
   }
 
