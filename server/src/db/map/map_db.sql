@@ -5,5 +5,6 @@ CREATE TABLE IF NOT EXISTS map_data
     is_disputed_area BOOLEAN,
     owned_by VARCHAR(36) NULL,
     count_blue_win VARCHAR(36) DEFAULT 0,
-    count_green_win VARCHAR(36) DEFAULT 0
+    count_green_win VARCHAR(36) DEFAULT 0,
+    count INT DEFAULT 3
 );
