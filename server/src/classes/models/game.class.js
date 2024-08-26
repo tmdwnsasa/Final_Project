@@ -102,7 +102,7 @@ class Game {
       if (user.x > startX && user.y < startY && user.x < endX && user.y > endY && user.hp > 0) {
         // 우리 팀이 밣았는지 체크
         if (user.team === healUser.team) {
-          const totalHp = user.hp + healUser.power * 3;
+          const totalHp = user.hp + healUser.power * 2;
           if (totalHp > user.maxHp) {
             user.hp = user.maxHp;
           } else {
