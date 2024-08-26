@@ -48,6 +48,10 @@ const ENDPOINTS = {
       url: `${API_BASE}/user/purchaseEquipment`,
       method: 'PATCH',
     },
+    countOfUsers: {
+      url: `${API_BASE}/user/countOfUsers`,
+      method: 'GET',
+    },
   },
   game: {
     dbSaveTransaction: {
