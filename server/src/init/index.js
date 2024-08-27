@@ -50,7 +50,7 @@ const initServer = async () => {
     maps.forEach((map) => {
       const mapValues = Object.values(map);
       const mapAsset = new Map(...mapValues);
-      mapAssets.push(mapAsset);
+      mapAssets[row][column] = mapAsset;
       if (column !== 4) {
         column++;
       } else {

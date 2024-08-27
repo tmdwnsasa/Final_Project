@@ -136,13 +136,12 @@ class Game {
 
     // 전투할 지역 뽑기
     const disputedArea = [];
-    mapAssets.filter((rows) =>{
-      console.log(rows);
+    mapAssets.filter((rows) =>
       rows.filter((map) => {
         if (map.isDisputedArea === 1 && map.count !== 0) {
           disputedArea.push(map);
         }
-      })},
+      }),
     );
     const randomMapIndex = Math.floor(Math.random() * disputedArea.length);
     const randomMap = disputedArea[randomMapIndex];
