@@ -33,7 +33,6 @@ export const createMatchLog = async (
     formatDate(new Date(startTime)),
     formatDate(new Date(endTime)),
   ]);
-  console.log(`${sessionId}매치로그 저장 완료`);
   return { sessionId, greenPlayer1Id, greenPlayer2Id, bluePlayer1Id, bluePlayer2Id, winTeam, endTime };
 };
 
@@ -151,7 +150,6 @@ export async function dbSaveTransaction(winTeam, loseTeam, users, gameSessionId,
     );
 
     await connection.commit();
-    console.log('트랜잭션과정 DB저장 성공');
   } catch (err) {
     await connection.rollback();
     console.error('트랜잭션과정 DB저장 실패:', err);
@@ -183,7 +181,6 @@ export const purchaseCharacterTransaction = async (playerId, newUserMoney, chara
 
     await userConnection.commit();
     await gameConnection.commit();
-    console.log('트랜잭션과정 DB저장 성공');
   } catch (err) {
     await userConnection.rollback();
     await gameConnection.rollback();
